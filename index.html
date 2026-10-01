@@ -315,9 +315,11 @@ footer.bottom b{color:var(--teal)}
 </div>
 <div id="toast" class="hidden"></div>
 
+<script src="assets/lib/html2canvas.min.js" defer></script>
+<script src="assets/lib/jspdf.umd.min.js" defer></script>
 <script>
 "use strict";
-const APP_VERSION = "1.0.2";
+const APP_VERSION = "1.0.3";
 document.getElementById("ver").textContent = APP_VERSION;
 
 /* ============================================================
@@ -708,28 +710,10 @@ function renderPeserta(o){
     h += `<p class="muted" style="font-size:.85rem;margin:0">Hasil ini bukan diagnosis. Jangan mengubah dosis obat sendiri, konsultasikan ke dokter.</p></div>`;
   }
 
-  // Porsi makan
-  const J = o.jadwal;
-  const sendok = x => x>0 ? `${fmt0(x*2)} sendok nasi (centong)` : "";
-  const item = (k, x) => {
-    if(!x) return "";
-    if(k==="nasi") return `<li>Nasi: <b>${sendok(x)}</b> <span class="muted">(atau ubi/jagung pengganti)</span></li>`;
-    if(k==="hewani") return `<li>Ikan atau ayam tanpa kulit: <b>${half(x)} potong sedang</b></li>`;
-    if(k==="nabati") return `<li>Tempe: <b>${half(x*2)} potong sedang</b> <span class="muted">(atau tahu ${half(x)} biji besar)</span></li>`;
-    if(k==="sayur") return `<li>Sayur: <b>${half(x)} mangkok</b></li>`;
-    if(k==="buah") return `<li>Buah: <b>${half(x)} potong/buah</b> <span class="muted">(pepaya, pisang, jeruk)</span></li>`;
-    if(k==="minyak") return `<li>Minyak untuk memasak: <b>${half(x)} sendok teh</b></li>`;
-    return "";
-  };
-  const waktu = ["Makan pagi","Makan siang","Makan malam","Selingan (pagi dan sore)"];
-  h += `<div class="card"><h2>Porsi makan ${s} setiap hari</h2>
-        <div class="plate" style="margin-bottom:10px">${plateSVG(76)}<p class="muted" style="margin:0">Setengah piring sayur dan buah, seperempat nasi, seperempat lauk.</p></div>
-        <div class="meal">`;
-  waktu.forEach((w,i)=>{
-    const li = ["nasi","hewani","nabati","sayur","buah","minyak"].map(k=>item(k, J[k][i])).join("");
-    if(li) h += `<div class="m"><h4>${w}</h4><ul>${li}</ul></div>`;
-  });
-  h += `</div><p class="muted" style="font-size:.85rem;margin-top:8px">1 sendok nasi (centong) peres ± 50 g nasi. 1 mangkok = mangkok sayur ukuran sedang.</p></div>`;
+  // Isi Piringku (porsi angka hanya di mode petugas)
+  h += `<div class="card"><h2>Isi piring ${s} setiap makan</h2>
+        <div class="plate">${plateSVG(84)}<div><p style="margin:0"><b>½ piring</b> sayur dan buah<br><b>¼ piring</b> nasi atau pengganti (ubi, jagung)<br><b>¼ piring</b> lauk (ikan, ayam tanpa kulit, tempe, tahu)</p></div></div>
+        <p class="note" style="margin-top:12px">Untuk jumlah porsi yang tepat, konsultasikan dengan petugas gizi saat kegiatan Prolanis.</p></div>`;
 
   // Pesan
   h += `<div class="card"><h2>Pesan untuk ${s}</h2>`;
@@ -834,6 +818,158 @@ function renderPetugas(o){
   return h;
 }
 
+
+/* ============================================================
+   PDF 1 HALAMAN (dibuat di HP, tanpa internet)
+   ============================================================ */
+const PDFCSS = `
+#pdfRoot{position:fixed;left:-10000px;top:0;width:794px;background:#fff;color:#1D2A2E;font:12px/1.38 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;padding:34px 40px}
+#pdfRoot *{box-sizing:border-box}
+#pdfRoot .ph{display:flex;align-items:center;gap:14px;border-bottom:2.5px solid #00756E;padding-bottom:8px;margin-bottom:10px}
+#pdfRoot .ph img{height:40px}
+#pdfRoot .ph .tt{flex:1;text-align:right}
+#pdfRoot .ph .tt b{display:block;font-size:15px;color:#00756E}
+#pdfRoot .ph .tt span{color:#5B6B70;font-size:11px}
+#pdfRoot h2{font-size:13.5px;color:#00756E;margin:10px 0 5px}
+#pdfRoot h4{font-size:12px;margin:6px 0 2px}
+#pdfRoot .id{font-size:12.5px;margin:0 0 8px}
+#pdfRoot .id b{font-size:14px}
+#pdfRoot .row{display:flex;gap:10px}
+#pdfRoot .row>*{flex:1;min-width:0}
+#pdfRoot .bx{border-radius:8px;padding:8px 10px;border:1.2px solid}
+#pdfRoot .bx.ok{background:#E5F5EC;border-color:#BFE5CE}
+#pdfRoot .bx.warn{background:#FFF4D9;border-color:#F1D68F}
+#pdfRoot .bx.bad{background:#FCE8E8;border-color:#F2BDBD}
+#pdfRoot .bx .k{font-weight:700;font-size:12px}
+#pdfRoot .bx .v{font-size:17px;font-weight:800;margin:1px 0}
+#pdfRoot .bx .s{font-size:11px;color:#3c4a4e}
+#pdfRoot .tg{background:#EAF6F1;border-radius:8px;padding:8px 10px;margin-top:10px;font-size:12px}
+#pdfRoot .tg b{color:#00756E}
+#pdfRoot ul{margin:2px 0 4px;padding-left:16px}
+#pdfRoot li{margin:1px 0}
+#pdfRoot table{width:100%;border-collapse:collapse;font-size:11.2px}
+#pdfRoot td,#pdfRoot th{padding:3px 5px;border-bottom:1px solid #DDE6E8;text-align:left;vertical-align:top}
+#pdfRoot th{background:#E3F6F4;color:#00756E}
+#pdfRoot td.n,#pdfRoot th.n{text-align:right;white-space:nowrap}
+#pdfRoot .kv td:first-child{color:#5B6B70;width:46%}
+#pdfRoot .kv td:last-child{font-weight:600}
+#pdfRoot .bd{display:inline-block;padding:0 6px;border-radius:9px;font-size:10px;font-weight:700}
+#pdfRoot .bd.ok{background:#E5F5EC;color:#1E8E4E}#pdfRoot .bd.warn{background:#FFF4D9;color:#A86E00}#pdfRoot .bd.bad{background:#FCE8E8;color:#C23A3A}
+#pdfRoot .plt{display:flex;gap:12px;align-items:center;border:1px solid #DDE6E8;border-radius:8px;padding:8px 10px;margin-top:10px}
+#pdfRoot .plt img{width:66px;height:66px}
+#pdfRoot .rec{font-size:11.2px}
+#pdfRoot .note{font-size:10.5px;color:#5B6B70;margin-top:8px}
+#pdfRoot .ft{margin-top:10px;border-top:1px solid #ccc;padding-top:5px;font-size:9.5px;color:#666;display:flex;justify-content:space-between;gap:10px}
+#pdfRoot .sg{text-align:center;width:200px;margin-left:auto;margin-top:6px;font-size:11.5px}
+#pdfRoot .muted{color:#5B6B70}
+`;
+function pdfHead(o, judul){
+  return `<div class="ph"><img src="assets/logo-poltekkes.png"><div class="tt"><b>${judul}</b><span>e-GiziProlanis · ${tanggalID(o.d.tgl)}</span></div></div>`;
+}
+function pdfFoot(){
+  return `<div class="ft"><span>Dibuat oleh Manjilala – Poltekkes Kemenkes Makassar · e-GiziProlanis v${APP_VERSION}</span><span>Panduan, bukan pengganti konseling gizi/dokter.</span></div>`;
+}
+function duaKolom(groups){
+  // bagi kelompok rekomendasi ke 2 kolom seimbang
+  const L = [], Rr = []; let nl = 0, nr = 0;
+  groups.forEach(g => { const n = g.isi.length + 1; if(nl <= nr){ L.push(g); nl += n; } else { Rr.push(g); nr += n; } });
+  const col = arr => arr.map(g => `<h4>${g.judul}</h4><ul>${g.isi.map(x=>`<li>${x}</li>`).join("")}</ul>`).join("");
+  return `<div class="row rec"><div>${col(L)}</div><div>${col(Rr)}</div></div>`;
+}
+function pdfPeserta(o){
+  const d = o.d, s = sapaan(d), k = o.kls;
+  let h = pdfHead(o, "Kartu Hasil Status Gizi Prolanis");
+  h += `<p class="id"><b>${d.nama ? esc(d.nama) : s}</b> · ${d.jk==="L"?"Laki-laki":"Perempuan"}, ${d.usia} tahun · ${dxLabel(d.dx)}</p>`;
+  const bbT = k.kode === "N" ? "Sehat" : k.kode === "G" ? "Agak berlebih" : k.kode === "O" ? "Berlebih" : k.kode === "KR" ? "Agak kurang" : "Kurang";
+  const bbS = o.lebih > 0 ? `Lebih <b>${fmt(o.lebih)} kg</b> dari batas sehat` : o.kurang > 0 ? `Kurang <b>${fmt(o.kurang)} kg</b> dari batas sehat` : `Sudah dalam batas sehat`;
+  h += `<div class="row">
+    <div class="bx ${k.lamp}"><div class="k">Berat badan: ${bbT}</div><div class="v">${fmt(d.bb)} kg</div><div class="s">Batas sehat ${fmt(o.bbMin)}–${fmt(o.bbMax)} kg (TB ${fmt(o.tb,0)} cm)<br>${bbS}</div></div>
+    <div class="bx ${o.lpSentral?"bad":"ok"}"><div class="k">Lingkar perut: ${o.lpSentral?"Berlebih":"Sehat"}</div><div class="v">${fmt(d.lp,0)} cm</div><div class="s">Batas sehat ≤ ${o.lpBatas} cm<br>${o.lpSentral?`Lebih <b>${fmt(o.lpLebih,0)} cm</b> dari batas sehat`:"Sudah dalam batas sehat"}</div></div>
+  </div>`;
+  const kl = [];
+  if(o.td) kl.push(`<div class="bx ${o.tdTerkendali?"ok":"bad"}"><div class="k">Tekanan darah: ${o.tdTerkendali?"Sesuai target":"Belum sesuai"}</div><div class="v">${d.sis}/${d.dia}</div><div class="s">mmHg · target &lt; 140/90</div></div>`);
+  if(o.gdpStatus){ const g=o.gdpStatus, c=g.kode==="ok"?"ok":g.kode==="rendah"?"warn":"bad", t=g.kode==="ok"?"Sesuai target":g.kode==="hipo"?"Terlalu rendah":g.kode==="rendah"?"Agak rendah":"Belum sesuai";
+    kl.push(`<div class="bx ${c}"><div class="k">Gula darah ${o.gdJenis}: ${t}</div><div class="v">${d.gdp}</div><div class="s">mg/dL · target ${o.gdTarget}</div></div>`); }
+  if(o.kol){ const t=o.kol.kode==="ok"?"Sesuai target":o.kol.kode==="batas"?"Agak tinggi":"Tinggi";
+    kl.push(`<div class="bx ${o.kol.lamp}"><div class="k">Kolesterol total: ${t}</div><div class="v">${d.kol}</div><div class="s">mg/dL · target &lt; 200</div></div>`); }
+  if(kl.length) h += `<div class="row" style="margin-top:8px">${kl.join("")}</div>`;
+  if(o.lebih > 0) h += `<div class="tg"><b>Target 3 bulan:</b> turunkan berat badan <b>${half(o.t3)} kg</b> (menjadi ± ${fmt(d.bb-o.t3)} kg), pelan-pelan ½–1 kg per minggu.${o.lpSentral?" Lingkar perut biasanya ikut mengecil.":""}</div>`;
+  else if(o.kurang > 0) h += `<div class="tg"><b>Target:</b> naikkan berat badan <b>${half(o.tKurang)} kg</b> secara bertahap, ¼–½ kg per minggu.</div>`;
+  else if(o.lpSentral) h += `<div class="tg"><b>Target:</b> kecilkan lingkar perut <b>${fmt(o.lpLebih,0)} cm</b> dengan banyak bergerak dan mengurangi makanan manis serta berlemak.</div>`;
+  h += `<div class="plt"><img src="assets/piring.png"><div><b>Isi piring setiap makan:</b> ½ piring sayur dan buah · ¼ piring nasi atau pengganti (ubi, jagung) · ¼ piring lauk (ikan, ayam tanpa kulit, tempe, tahu).<br><span class="muted">Untuk jumlah porsi yang tepat, konsultasikan dengan petugas gizi saat kegiatan Prolanis.</span></div></div>`;
+  h += `<h2>Pesan untuk ${s}</h2>` + duaKolom(rekomendasi(o,"peserta"));
+  h += `<p class="note">Hasil ini bukan diagnosis. Jangan mengubah dosis obat sendiri; konsultasikan ke petugas gizi atau dokter.</p>`;
+  return h + pdfFoot();
+}
+function pdfPetugas(o){
+  const d = o.d, k = o.kls, P = o.porsi, T = o.porsiTotal, f = o.faktor;
+  let h = pdfHead(o, "Hasil Penilaian Status Gizi Peserta Prolanis");
+  h += `<p class="id"><b>${d.nama ? esc(d.nama) : "Peserta"}</b> · ${d.jk==="L"?"Laki-laki":"Perempuan"}, ${d.usia} tahun · ${dxLabel(d.dx)} · Aktivitas ${aktLabel(d.akt).toLowerCase()}</p>`;
+  const antro = `<table class="kv"><tbody>
+    <tr><td>BB / TB</td><td>${fmt(d.bb)} kg / ${fmt(o.tb)} cm${o.tbEstimasi?` <span class="bd warn">est. TL ${fmt(d.tl)} cm</span>`:""}</td></tr>
+    <tr><td>IMT</td><td>${fmt(o.imt)} kg/m² <span class="bd ${k.lamp}">${k.label}</span></td></tr>
+    <tr><td>Rentang BB normal</td><td>${fmt(o.bbMin)}–${fmt(o.bbMax)} kg</td></tr>
+    <tr><td>${o.lebih>0?"Kelebihan BB":o.kurang>0?"Kekurangan BB":"Selisih BB"}</td><td>${o.lebih>0?`+${fmt(o.lebih)} kg`:o.kurang>0?`−${fmt(o.kurang)} kg`:"Normal"}</td></tr>
+    <tr><td>BB idaman (Broca mod.)</td><td>${fmt(o.bbi)} kg (${fmt0(d.bb/o.bbi*100)}% BBI)</td></tr>
+    <tr><td>Lingkar perut</td><td>${fmt(d.lp)} cm <span class="bd ${o.lpSentral?"bad":"ok"}">${o.lpSentral?`+${fmt(o.lpLebih)} cm`:"Normal"}</span></td></tr>
+    ${o.rlpp?`<tr><td>RLPP</td><td>${fmt(o.rlpp,2)} <span class="bd ${o.rlppRisiko?"bad":"ok"}">${o.rlppRisiko?"Berisiko":"Normal"}</span></td></tr>`:""}
+    ${o.td?`<tr><td>Tekanan darah</td><td>${d.sis}/${d.dia} <span class="bd ${o.td.lamp}">${o.td.label.replace(" (terkendali < 140/90)","")}</span></td></tr>`:""}
+    ${o.gdpStatus?`<tr><td>GD ${o.gdJenis}</td><td>${d.gdp} mg/dL <span class="bd ${o.gdpStatus.lamp}">${o.gdpStatus.kode==="ok"?"Sesuai target":o.gdpStatus.kode==="tinggi"?"Di atas target":o.gdpStatus.kode==="hipo"?"Hipoglikemia":"Di bawah target"}</span></td></tr>`:""}
+    ${o.kol?`<tr><td>Kolesterol total</td><td>${d.kol} mg/dL <span class="bd ${o.kol.lamp}">${o.kol.kode==="ok"?"Diinginkan":o.kol.kode==="batas"?"Batas tinggi":"Tinggi"}</span></td></tr>`:""}
+  </tbody></table>`;
+  const energi = `<table><tbody>
+    <tr><td>Basal (${d.jk==="L"?"30":"25"} × ${fmt(o.bbi)} kg BBI)</td><td class="n">${fmt0(o.basal)} kkal</td></tr>
+    <tr><td>Koreksi aktivitas / usia / status gizi</td><td class="n">${pct(f.akt)} / ${f.usia?pct(f.usia):"0%"} / ${f.bb?pct(f.bb):"0%"}</td></tr>
+    <tr><th>Kebutuhan energi${o.energiDibatasi?" (batas minimal)":""}</th><th class="n">${fmt0(o.energi)} kkal</th></tr>
+    <tr><td>KH 60% / Protein 15% / Lemak 25%</td><td class="n">${fmt0(o.makro.kh)} / ${fmt0(o.makro.p)} / ${fmt0(o.makro.l)} g</td></tr>
+    <tr><td>Natrium</td><td class="n">${o.natrium}</td></tr>
+  </tbody></table>`;
+  h += `<div class="row"><div><h2 style="margin-top:0">Status gizi</h2>${antro}</div><div><h2 style="margin-top:0">Kebutuhan energi (PERKENI 2021)</h2>${energi}</div></div>`;
+  if(o.lebih > 0) h += `<div class="tg"><b>Target:</b> 3 bulan turun ${half(o.t3)} kg (± 5% BB) · 6 bulan turun ${half(o.t6)} kg (± 10% BB) · laju 0,5–1 kg/minggu.${o.lpSentral?` Pantau LP (target ≤ ${o.lpBatas} cm).`:""}</div>`;
+  else if(o.kurang > 0) h += `<div class="tg"><b>Target:</b> naik ${half(o.tKurang)} kg hingga IMT 18,5, laju 0,25–0,5 kg/minggu.</div>`;
+  else if(o.lpSentral) h += `<div class="tg"><b>Target:</b> turunkan LP ${fmt(o.lpLebih)} cm hingga ≤ ${o.lpBatas} cm.</div>`;
+  const keys = ["nasi","hewani","nabati","sayur","buah","minyak"];
+  const urtS = {nasi:"2 sdk nasi/centong (100 g)", hewani:"1 ptg sdg ikan/ayam (40 g)", nabati:"2 ptg tempe / 1 tahu bsr", sayur:"1 mangkok (100 g)", buah:"1 ptg pepaya / 1 pisang", minyak:"1 sdt (5 g)"};
+  h += `<h2>Susunan porsi penukar sehari (± ${fmt0(T.kkal)} kkal)</h2><table><thead><tr><th>Golongan</th><th class="n">Pagi</th><th class="n">Siang</th><th class="n">Malam</th><th class="n">Selingan</th><th class="n">Total</th><th>1 porsi =</th></tr></thead><tbody>`
+    + keys.map(kk => `<tr><td>${PENUKAR[kk].nama}</td>${o.jadwal[kk].map(x=>`<td class="n">${x?half(x):"–"}</td>`).join("")}<td class="n"><b>${half(P[kk])} P</b></td><td class="muted">${urtS[kk]}</td></tr>`).join("")
+    + `</tbody></table>`;
+  h += `<h2>Rekomendasi gizi dan gaya hidup</h2>` + duaKolom(rekomendasi(o,"petugas"));
+  h += `<div class="sg">Petugas Gizi,<br><br><br>( ${d.petugas ? esc(d.petugas) : "............................................"} )</div>`;
+  return h + pdfFoot();
+}
+function namaFile(o){
+  const n = (o.d.nama || "peserta").replace(/[^A-Za-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,30) || "peserta";
+  return `e-GiziProlanis_${n}_${o.d.tgl || today()}.pdf`;
+}
+async function unduhPDF(o, mode){
+  const btn = $("#printBtn"), label = btn.textContent;
+  if(!window.html2canvas || !window.jspdf){ toast("Komponen PDF belum siap. Coba sebentar lagi."); return; }
+  btn.disabled = true; btn.textContent = "Menyiapkan PDF…";
+  let root = null, st = null;
+  try{
+    st = document.createElement("style"); st.textContent = PDFCSS; document.head.appendChild(st);
+    root = document.createElement("div"); root.id = "pdfRoot";
+    root.innerHTML = mode === "petugas" ? pdfPetugas(o) : pdfPeserta(o);
+    document.body.appendChild(root);
+    await Promise.all(Array.from(root.querySelectorAll("img")).map(im => im.complete ? 0 : new Promise(r => { im.onload = im.onerror = r; })));
+    const canvas = await html2canvas(root, {scale:2, backgroundColor:"#ffffff", useCORS:true, logging:false});
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({unit:"mm", format:"a4", orientation:"portrait"});
+    const pw = 210, ph = 297;
+    let w = pw, hgt = canvas.height * pw / canvas.width;
+    if(hgt > ph){ hgt = ph; w = canvas.width * ph / canvas.height; }   // paksa muat 1 halaman
+    pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", (pw - w)/2, 0, w, hgt);
+    pdf.setProperties({title: "e-GiziProlanis", author: "Manjilala – Poltekkes Kemenkes Makassar"});
+    pdf.save(namaFile(o));
+    toast("PDF tersimpan di folder Unduhan (Download).");
+  }catch(e){
+    toast("Gagal membuat PDF. Coba lagi.");
+  }finally{
+    if(root) root.remove(); if(st) st.remove();
+    btn.disabled = false; btn.textContent = label;
+  }
+}
+
 /* ============================================================
    ALUR APLIKASI
    ============================================================ */
@@ -912,14 +1048,14 @@ $("#f").addEventListener("submit", ev => {
   const res = $("#result");
   res.innerHTML = (MODE === "petugas" ? renderPetugas(o) : renderPeserta(o)) +
     `<div class="actions noprint">
-       <button class="btn primary" type="button" id="printBtn">🖨️ Cetak / Simpan PDF</button>
+       <button class="btn primary" type="button" id="printBtn">⬇️ Unduh PDF</button>
        <button class="btn ghost" type="button" id="editBtn">Ubah data</button>
        <button class="btn ghost" type="button" id="newBtn">Peserta baru</button>
      </div>`;
   $("#formCard").classList.add("hidden");
   res.classList.remove("hidden");
   window.scrollTo(0,0);
-  $("#printBtn").addEventListener("click", () => window.print());
+  $("#printBtn").addEventListener("click", () => unduhPDF(o, MODE));
   $("#editBtn").addEventListener("click", () => { res.classList.add("hidden"); $("#formCard").classList.remove("hidden"); window.scrollTo(0,0); });
   $("#newBtn").addEventListener("click", () => { resetForm(); res.classList.add("hidden"); $("#formCard").classList.remove("hidden"); window.scrollTo(0,0); });
 });
