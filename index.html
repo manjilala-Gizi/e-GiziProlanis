@@ -397,7 +397,7 @@ footer.bottom b{color:var(--teal)}
 <script src="assets/lib/html2canvas.min.js" defer></script>
 <script>
 "use strict";
-const APP_VERSION = "1.2.2";
+const APP_VERSION = "1.2.3";
 document.getElementById("ver").textContent = APP_VERSION;
 
 /* ============================================================
@@ -1373,7 +1373,7 @@ function toast(msg, ms=3500){ const t = $("#toast"); t.textContent = msg; t.clas
 if("serviceWorker" in navigator && location.protocol !== "file:"){
   const hadController = !!navigator.serviceWorker.controller;
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js").then(reg => {
+    navigator.serviceWorker.register("sw.js", {updateViaCache: "none"}).then(reg => {
       if(reg.active) $("#netStatus").textContent = "Siap dipakai tanpa internet";
       reg.addEventListener("updatefound", () => {
         const nw = reg.installing;
