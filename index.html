@@ -78,7 +78,36 @@ details.opt summary{cursor:pointer;font-weight:600;color:var(--teal)}
 .check{display:flex;gap:8px;align-items:flex-start;font-size:.92rem;margin-top:6px}
 .check input{width:20px;height:20px;margin-top:2px;accent-color:var(--teal)}
 .note{background:var(--teal-soft);border-radius:10px;padding:10px 12px;font-size:.9rem}
+.guide{margin-top:18px}
+.guide h2{font-size:1.05rem;margin:0 0 8px}
+.guide details{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:8px}
+.guide summary{cursor:pointer;padding:13px 16px;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:10px}
+.guide summary::-webkit-details-marker{display:none}
+.guide summary::after{content:"▾";color:var(--muted)}
+.guide details[open] summary::after{content:"▴"}
+.guide .gb{padding:0 16px 12px;font-size:.93rem}
+.guide ol{padding-left:1.2em;margin:.2em 0}
+.guide ol li{margin:.35em 0}
+.guide .legend{list-style:none;padding:0;margin:.2em 0 .8em}
+.guide .legend li{display:flex;gap:10px;align-items:center;margin:.4em 0}
+.guide table.kv td:first-child{width:56px;font-weight:700;color:var(--teal)}
+.guide table.kv td:last-child{font-weight:400}
+.guide .dotc{flex:none;width:26px;height:26px;border-radius:50%;color:#fff;font-weight:800;display:grid;place-items:center;font-size:.85rem}
 .klinis{border-top:1px dashed var(--line);margin-top:16px}
+.refbtn{width:100%;margin-bottom:12px;padding:11px 14px}
+#refSec details{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+#refSec summary{cursor:pointer;padding:14px 16px;font-weight:700;color:var(--teal);list-style:none;display:flex;justify-content:space-between;gap:10px}
+#refSec summary::-webkit-details-marker{display:none}
+#refSec summary::after{content:"▾";color:var(--muted)}
+#refSec details[open] summary::after{content:"▴"}
+#refSec .rb{padding:0 16px 14px;font-size:.93rem}
+#refSec .rb p{margin:.4em 0}
+#refSec .rumus{background:var(--teal-soft);border-radius:8px;padding:8px 12px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9rem;margin:6px 0;overflow-x:auto}
+#refSec .src{font-size:.82rem;color:var(--muted);border-top:1px dashed var(--line);padding-top:6px;margin-top:8px}
+#refSec .app{display:inline-block;background:var(--warn-bg);color:var(--warn);border-radius:6px;padding:0 6px;font-size:.78rem;font-weight:700}
+#refSec ol.steps{padding-left:1.2em;margin:.3em 0}
+#refSec ol.steps li{margin:.3em 0}
+#refSec .pus p{padding-left:2em;text-indent:-2em;margin:.5em 0;font-size:.9rem}
 .err{background:var(--bad-bg);color:var(--bad);border-radius:10px;padding:10px 12px;font-size:.92rem;margin-top:12px}
 .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
 .btn{appearance:none;border:0;border-radius:12px;padding:14px 18px;font:inherit;font-weight:700;cursor:pointer}
@@ -167,23 +196,69 @@ footer.bottom b{color:var(--teal)}
     <div class="choose">
       <button class="choice" type="button" data-mode="petugas">
         <span class="ic" aria-hidden="true">🩺</span>
-        <div><b>Saya Petugas</b><span>Hasil lengkap: IMT, BB ideal, lingkar perut, kebutuhan energi, porsi penukar, dan cetak hasil konseling.</span></div>
+        <div><b>Saya Petugas</b><span>Hasil lengkap: IMT, BBI, lingkar perut, kebutuhan energi, porsi penukar, rekomendasi gizi, serta rumus dan referensinya.</span></div>
       </button>
       <button class="choice" type="button" data-mode="peserta">
         <span class="ic" aria-hidden="true">🙂</span>
-        <div><b>Saya Peserta Prolanis</b><span>Hasil sederhana dan mudah dipahami, lengkap dengan porsi makan sehari-hari.</span></div>
+        <div><b>Saya Peserta Prolanis</b><span>Hasil sederhana dan mudah dipahami, lengkap dengan target dan pesan gizi.</span></div>
       </button>
     </div>
-    <details class="card noprint" style="margin-top:16px">
-      <summary><b>Cara memasang aplikasi di HP</b></summary>
-      <p><b>Android (Chrome):</b> buka menu ⋮ lalu pilih <i>Instal aplikasi</i> atau <i>Tambahkan ke layar utama</i>.</p>
-      <p><b>iPhone (Safari):</b> ketuk tombol Bagikan lalu pilih <i>Tambahkan ke Layar Utama</i>.</p>
-      <p class="muted">Setelah terpasang, aplikasi bisa dipakai tanpa internet.</p>
-    </details>
+    <div class="guide noprint">
+      <h2>📘 Panduan Penggunaan</h2>
+      <details>
+        <summary>1. Memasang aplikasi di HP</summary>
+        <div class="gb">
+          <p><b>Android (Chrome):</b> buka alamat aplikasi, lalu ketuk <i>Pasang</i> pada tawaran yang muncul. Bisa juga lewat menu ⋮ → <i>Instal aplikasi</i> atau <i>Tambahkan ke layar utama</i>.</p>
+          <p><b>iPhone (Safari):</b> buka alamat aplikasi, ketuk tombol <i>Bagikan</i> → <i>Tambahkan ke Layar Utama</i>.</p>
+          <p>Ikon e-GiziProlanis akan muncul di layar HP. Pemasangan pertama memerlukan internet; setelah itu aplikasi <b>bisa dipakai tanpa internet</b>.</p>
+        </div>
+      </details>
+      <details>
+        <summary>2. Cara memakai untuk petugas</summary>
+        <div class="gb"><ol>
+          <li>Pilih <b>Saya Petugas</b>.</li>
+          <li>Isi data pengukuran: jenis kelamin, usia, berat badan, tinggi badan, lingkar perut, penyakit, dan aktivitas sehari-hari.</li>
+          <li>Bila perlu, isi data opsional: lingkar panggul (untuk RLPP), tinggi lutut (untuk lansia yang sulit berdiri tegak), serta tekanan darah, gula darah, dan kolesterol total.</li>
+          <li>Ketuk <b>Hitung Status Gizi</b>. Hasil berisi status gizi, BBI, kebutuhan energi, susunan porsi penukar, target penurunan BB, dan rekomendasi gizi.</li>
+          <li>Ketuk <b>Simpan Gambar</b> untuk menyimpan hasil 1 halaman, atau <b>Bagikan</b> untuk mengirim lewat WhatsApp.</li>
+          <li>Rumus, ketentuan, dan sumber perhitungan dapat dilihat di menu <b>📖 Rumus &amp; Referensi</b>.</li>
+        </ol></div>
+      </details>
+      <details>
+        <summary>3. Cara memakai untuk peserta</summary>
+        <div class="gb"><ol>
+          <li>Siapkan kartu atau catatan hasil pengukuran dari petugas saat kegiatan Prolanis.</li>
+          <li>Pilih <b>Saya Peserta Prolanis</b>.</li>
+          <li>Isi angka-angkanya sesuai catatan dari petugas. Hasil pemeriksaan tekanan darah, gula darah, dan kolesterol boleh dikosongkan bila tidak ada.</li>
+          <li>Ketuk <b>Hitung Status Gizi</b>, lalu baca hasil dan pesannya.</li>
+          <li>Simpan gambar hasilnya dan bawa saat konsultasi berikutnya dengan petugas gizi.</li>
+        </ol></div>
+      </details>
+      <details>
+        <summary>4. Arti warna dan istilah</summary>
+        <div class="gb">
+          <ul class="legend">
+            <li><span class="dotc" style="background:var(--ok)">✓</span><span><b>Hijau</b>: sudah sehat atau sesuai target. Pertahankan.</span></li>
+            <li><span class="dotc" style="background:#E0A100">!</span><span><b>Kuning</b>: perlu diperhatikan.</span></li>
+            <li><span class="dotc" style="background:var(--bad)">!</span><span><b>Merah</b>: perlu diperbaiki; konsultasikan dengan petugas gizi atau dokter.</span></li>
+          </ul>
+          <table class="kv"><tbody>
+            <tr><td>BB</td><td>Berat badan (kg)</td></tr>
+            <tr><td>TB</td><td>Tinggi badan (cm)</td></tr>
+            <tr><td>LP</td><td>Lingkar perut (cm)</td></tr>
+            <tr><td>IMT</td><td>Indeks Massa Tubuh: berat badan dibandingkan tinggi badan</td></tr>
+            <tr><td>BBI</td><td>Berat Badan Ideal (rumus Broca modifikasi)</td></tr>
+            <tr><td>TD</td><td>Tekanan darah (mmHg)</td></tr>
+            <tr><td>GD</td><td>Gula darah (mg/dL)</td></tr>
+          </tbody></table>
+        </div>
+      </details>
+    </div>
   </section>
 
   <!-- FORMULIR -->
   <section id="formCard" class="card hidden">
+    <button class="btn ghost only-petugas refbtn" type="button" data-ref="1">📖 Rumus &amp; Referensi</button>
     <h2 id="formTitle">Data Pengukuran</h2>
     <p class="note only-peserta">Isi sesuai hasil pengukuran petugas saat kegiatan Prolanis (lihat kartu atau catatan dari petugas).</p>
     <form id="f" novalidate autocomplete="off">
@@ -235,10 +310,11 @@ footer.bottom b{color:var(--teal)}
         <div class="full">
           <span style="display:block;font-weight:600;font-size:.92rem;margin-bottom:4px">Aktivitas sehari-hari</span>
           <div class="seg stack" role="radiogroup">
-            <label><input type="radio" name="akt" value="10"><span>Sangat ringan / banyak istirahat<small>Lebih banyak duduk atau berbaring, jarang keluar rumah</small></span></label>
-            <label><input type="radio" name="akt" value="20" checked><span>Ringan<small>Pekerjaan rumah ringan, jalan santai, ikut senam Prolanis</small></span></label>
-            <label><input type="radio" name="akt" value="30"><span>Sedang<small>Berkebun, berdagang keliling, jalan cepat rutin</small></span></label>
-            <label><input type="radio" name="akt" value="40"><span>Berat<small>Bertani, nelayan, buruh angkut, pekerjaan fisik berat</small></span></label>
+            <label><input type="radio" name="akt" value="10"><span>Istirahat<small>Lebih banyak duduk atau berbaring, jarang beraktivitas</small></span></label>
+            <label><input type="radio" name="akt" value="20" checked><span>Ringan<small>Pegawai kantor, guru, ibu rumah tangga</small></span></label>
+            <label><input type="radio" name="akt" value="30"><span>Sedang<small>Pegawai industri ringan, mahasiswa, berdagang keliling</small></span></label>
+            <label><input type="radio" name="akt" value="40"><span>Berat<small>Petani, nelayan, buruh</small></span></label>
+            <label><input type="radio" name="akt" value="50"><span>Sangat berat<small>Tukang becak, tukang gali, kuli angkut</small></span></label>
           </div>
         </div>
       </div>
@@ -301,6 +377,9 @@ footer.bottom b{color:var(--teal)}
   <!-- HASIL -->
   <section id="result" class="hidden" aria-live="polite"></section>
 
+  <!-- RUMUS & REFERENSI (mode petugas) -->
+  <section id="refSec" class="hidden"></section>
+
 </main>
 
 <footer class="bottom">
@@ -318,15 +397,18 @@ footer.bottom b{color:var(--teal)}
 <script src="assets/lib/html2canvas.min.js" defer></script>
 <script>
 "use strict";
-const APP_VERSION = "1.0.4";
+const APP_VERSION = "1.2.2";
 document.getElementById("ver").textContent = APP_VERSION;
 
 /* ============================================================
    KONSTANTA & REFERENSI
-   - Klasifikasi IMT dewasa: Kemenkes RI (P2PTM)
+   - Klasifikasi IMT dewasa: WHO Asia-Pasifik (dipakai PERKENI 2024 & PNPK Hipertensi 2026)
    - Lingkar perut: Kemenkes RI (L > 90 cm, P > 80 cm)
    - RLPP: WHO (L ≥ 0,90; P ≥ 0,85)
-   - BB idaman & kebutuhan energi: PERKENI 2021 (rumus Broca modifikasi)
+   - BBI (Berat Badan Ideal) & kebutuhan energi: PERKENI 2024 (rumus Broca modifikasi)
+   - Natrium hipertensi: PNPK Tata Laksana Hipertensi Dewasa (KMK HK.01.07/MENKES/303/2026)
+   - Target penurunan BB non-DM: Pedoman Pengelolaan Obesitas di FKTP (Kemenkes 2021)
+   - Bahan makanan dianjurkan/tidak: Standar Makanan Rumah Sakit (Penuntun Diet & Terapi Gizi ed. 4)
    - Nilai penukar: Daftar Bahan Makanan Penukar (Kemenkes/PERSAGI)
    - Estimasi TB dari tinggi lutut: Chumlea (1985)
    ============================================================ */
@@ -387,11 +469,11 @@ function splitPortion(total, weights){
    ============================================================ */
 function klasifikasiIMT(imt){
   const v = r1(imt);
-  if(v < 17.0)  return {kode:"KB", label:"Kurus", ket:"Kekurangan berat badan tingkat berat", lamp:"bad"};
-  if(v < 18.5)  return {kode:"KR", label:"Kurus", ket:"Kekurangan berat badan tingkat ringan", lamp:"warn"};
-  if(v <= 25.0) return {kode:"N",  label:"Normal", ket:"Berat badan normal", lamp:"ok"};
-  if(v <= 27.0) return {kode:"G",  label:"Gemuk", ket:"Kelebihan berat badan tingkat ringan", lamp:"warn"};
-  return               {kode:"O",  label:"Obesitas", ket:"Kelebihan berat badan tingkat berat", lamp:"bad"};
+  if(v < 18.5) return {kode:"K",  label:"BB kurang", ket:"Berat badan kurang (IMT < 18,5)", lamp:"warn"};
+  if(v < 23.0) return {kode:"N",  label:"Normal", ket:"Berat badan normal (IMT 18,5–22,9)", lamp:"ok"};
+  if(v < 25.0) return {kode:"L",  label:"BB lebih", ket:"BB lebih, dengan risiko (IMT 23,0–24,9)", lamp:"warn"};
+  if(v < 30.0) return {kode:"O1", label:"Obese I", ket:"Obesitas tingkat I (IMT 25,0–29,9)", lamp:"bad"};
+  return              {kode:"O2", label:"Obese II", ket:"Obesitas tingkat II (IMT ≥ 30,0)", lamp:"bad"};
 }
 
 function hitung(d){
@@ -407,12 +489,12 @@ function hitung(d){
   o.imt = d.bb/(m*m);
   o.kls = klasifikasiIMT(o.imt);
   o.bbMin = 18.5*m*m;
-  o.bbMax = 25.0*m*m;
+  o.bbMax = 22.9*m*m;
   o.lebih = Math.max(0, d.bb - o.bbMax);
   o.kurang = Math.max(0, o.bbMin - d.bb);
   if(o.kls.kode === "N"){ o.lebih = 0; o.kurang = 0; }
 
-  // BB idaman (PERKENI 2021, Broca modifikasi)
+  // BBI = Berat Badan Ideal (PERKENI 2024, Broca modifikasi)
   const bawahTB = (d.jk === "L" && o.tb < 160) || (d.jk === "P" && o.tb < 150);
   o.bbi = bawahTB ? (o.tb - 100) : 0.9*(o.tb - 100);
   o.bbiRumus = bawahTB ? "TB − 100 (TB pendek)" : "90% × (TB − 100)";
@@ -429,22 +511,25 @@ function hitung(d){
     o.rlppRisiko = o.rlpp >= o.rlppBatas;
   }
 
-  // Kebutuhan energi (PERKENI 2021)
+  // Kebutuhan energi (PERKENI 2024)
   const basalPerKg = d.jk === "L" ? 30 : 25;
   o.basal = o.bbi * basalPerKg;
   const fAkt = d.akt/100;
   const fUsia = d.usia >= 70 ? -0.20 : d.usia >= 60 ? -0.10 : d.usia >= 40 ? -0.05 : 0;
-  const fBB = o.kls.kode === "O" ? -0.30 : o.kls.kode === "G" ? -0.20 : (o.kls.kode === "KB" || o.kls.kode === "KR") ? 0.20 : 0;
+  const kk = o.kls.kode;
+  const fBB = (kk === "O1" || kk === "O2") ? -0.30 : kk === "L" ? -0.20 : kk === "K" ? 0.20 : 0;
   o.faktor = {akt:fAkt, usia:fUsia, bb:fBB};
   o.energiHitung = o.basal * (1 + fAkt + fUsia + fBB);
-  o.energiMin = d.jk === "L" ? 1400 : 1200;
+  o.energiMin = 1200;   // PERKENI: P 1.000–1.200, L 1.200–1.600; < 1.200 mendekati diet kalori sangat rendah
   o.energiDibatasi = o.energiHitung < o.energiMin;
   o.energi = Math.round(Math.max(o.energiHitung, o.energiMin)/50)*50;
 
-  // Target zat gizi makro: KH 60%, protein 15%, lemak 25%
-  o.makro = { kh: o.energi*0.60/4, p: o.energi*0.15/4, l: o.energi*0.25/9 };
-  o.natrium = (d.dx === "HT" || d.dx === "DMHT") ? "< 2.000 mg (± 1 sdt garam/hari)" : "< 2.300 mg (≤ 1 sdt garam/hari)";
-  o.serat = "20–35 g/hari";
+  // Anjuran zat gizi (PERKENI 2024: tidak ada persentase ideal KH/protein/lemak)
+  o.dm = d.dx === "DM" || d.dx === "DMHT";
+  o.ht = d.dx === "HT" || d.dx === "DMHT";
+  o.seratMin = Math.ceil(o.energi/1000*14);
+  o.lemakJenuhMax = Math.floor(o.energi*0.10/9);
+  o.persenBBI = d.bb / o.bbi * 100;
 
   // Susunan porsi penukar sehari
   const E = o.energi;
@@ -460,18 +545,26 @@ function hitung(d){
   o.porsi = P;
   o.porsiTotal = Object.keys(P).reduce((t,k)=>{ t.kkal+=P[k]*PENUKAR[k].kkal; t.kh+=P[k]*PENUKAR[k].kh; t.p+=P[k]*PENUKAR[k].p; t.l+=P[k]*PENUKAR[k].l; return t; },{kkal:0,kh:0,p:0,l:0});
 
-  // Pembagian per waktu makan: Pagi, Siang, Malam, Selingan (pagi & sore)
-  const W = {
-    nasi:[0.3,0.4,0.3,0], hewani:[0.3,0.4,0.3,0], nabati:[0.3,0.4,0.3,0],
-    sayur:[0.3,0.4,0.3,0], buah:[0,0,0,1], minyak:[0.3,0.4,0.3,0]
-  };
+  // Pembagian per waktu makan (PERKENI 2024): pagi 20%, siang 30%, malam 25%, selingan 2x (sisanya)
+  const SHARE = [0.20, 0.30, 0.25, 0.25];
+  const W = { hewani:[0.27,0.40,0.33,0], nabati:[0.27,0.40,0.33,0], sayur:[1/3,1/3,1/3,0], buah:[0,0,0,1], minyak:[0.25,0.4,0.35,0] };
   o.jadwal = {};
   for(const k in W) o.jadwal[k] = splitPortion(P[k], W[k]);
+  const sisa = SHARE.map((sh,i) => Math.max(0, sh*o.porsiTotal.kkal - ["hewani","nabati","sayur","buah","minyak"].reduce((t,k)=>t + o.jadwal[k][i]*PENUKAR[k].kkal, 0)));
+  const tot = sisa.reduce((a,b)=>a+b,0) || 1;
+  o.jadwal.nasi = splitPortion(P.nasi, sisa.map(x => x/tot));
+  { // urutkan nasi makan utama mengikuti proporsi PERKENI: pagi ≤ malam ≤ siang
+    const u = o.jadwal.nasi.slice(0,3).sort((x,y)=>x-y);
+    o.jadwal.nasi = [u[0], u[2], u[1], o.jadwal.nasi[3]];
+  }
+  o.jadwalKkal = [0,1,2,3].map(i => Object.keys(o.jadwal).reduce((t,k)=>t + o.jadwal[k][i]*PENUKAR[k].kkal, 0));
 
   // Target bertahap
   if(o.lebih > 0){
-    o.t3 = Math.max(0.5, r05(Math.min(0.05*d.bb, o.lebih)));
-    o.t6 = Math.max(0.5, r05(Math.min(0.10*d.bb, o.lebih)));
+    // DM: minimal 7–10% (PERKENI 2024); non-DM: 5–10% dalam 3–6 bulan (Pedoman Obesitas FKTP 2021)
+    o.tA = Math.max(0.5, r05(Math.min((o.dm ? 0.07 : 0.05)*d.bb, o.lebih)));
+    o.tB = Math.max(0.5, r05(Math.min(0.10*d.bb, o.lebih)));
+    o.t5 = Math.max(0.5, r05(0.05*d.bb));
     o.mingguLebih = Math.ceil(o.lebih/0.75);
   }
   if(o.kurang > 0){
@@ -497,6 +590,14 @@ function hitung(d){
                : (puasa && d.gdp < 80) ? {label:"Di bawah target ("+o.gdTarget+")", lamp:"warn", kode:"rendah"}
                : (puasa ? d.gdp <= 130 : d.gdp < 180) ? {label:"Sesuai target ("+o.gdTarget+")", lamp:"ok", kode:"ok"}
                : {label:"Di atas target ("+o.gdTarget+")", lamp:"bad", kode:"tinggi"};
+  }
+  // Natrium (PNPK Hipertensi 2026 untuk HT; PERKENI 2024 untuk lainnya)
+  if(o.ht){
+    o.naBatas = (o.td && !o.tdTerkendali) ? 1500 : 2000;
+    o.natrium = o.naBatas === 1500 ? "≤ 1.500 mg/hari (± ¾ sdt garam)" : "≤ 2.000 mg/hari (± 1 sdt garam)";
+  } else {
+    o.naBatas = 2300;
+    o.natrium = "< 2.300 mg/hari (± 1 sdt garam)";
   }
   if(d.kol){
     o.kol = d.kol < 200 ? {label:"Diinginkan (< 200 mg/dL)", lamp:"ok", kode:"ok"}
@@ -536,11 +637,17 @@ function rekomendasi(o, mode){
   if(dm){
     const a = [];
     a.push(pes ? "Ingat 3J: makan Jadwal yang teratur, Jumlah sesuai porsi, dan Jenis makanan yang tepat."
-               : "Prinsip 3J: tepat Jadwal, Jumlah, dan Jenis makanan.");
+               : "Prinsip 3J (Jadwal, Jumlah, Jenis). Pembagian energi: pagi 20%, siang 30%, malam 25%, selingan 2–3 kali @10–15%.");
     a.push(pes ? "Ganti sebagian nasi putih dengan nasi merah, jagung, atau ubi. Porsi tetap sesuai anjuran."
-               : "Pilih karbohidrat kompleks tinggi serat (nasi merah, jagung, ubi, roti gandum) dengan porsi sesuai penukar.");
-    a.push("Hindari minuman manis: teh manis, sirup, minuman kemasan, dan kue-kue manis.");
-    a.push("Makan buah utuh, bukan jus. Buah dimakan sebagai selingan.");
+               : `Utamakan karbohidrat berkualitas dan tinggi serat (≥ 14 g/1.000 kkal, ± ${o.seratMin} g/hari): sayur, buah, biji-bijian utuh, kacang-kacangan.`);
+    a.push(pes ? "Hindari gula, madu, sirup, selai, dodol, kue manis, susu kental manis, minuman kemasan, dan es krim."
+               : "Hindari karbohidrat sederhana: gula, madu, sirup, selai, dodol, kue manis, susu kental manis, minuman kemasan, es krim.");
+    a.push(pes ? "Ganti minuman manis dan jus dengan air putih. Buah dimakan utuh sebagai selingan."
+               : "Minuman manis, termasuk jus buah, diganti air atau minuman tanpa kalori; buah dikonsumsi utuh.");
+    a.push(pes ? "Kalau ingin rasa manis, boleh memakai pemanis tanpa kalori (misalnya stevia atau sukralosa) secukupnya."
+               : "Pemanis tanpa kalori (sukralosa, stevia, aspartam) boleh dalam batas aman harian (ADI).");
+    a.push(pes ? "Makan ikan minimal 2 kali seminggu. Kurangi lemak daging dan gorengan."
+               : "Lemak jenuh < 10% energi, batasi lemak trans; konsumsi ikan minimal 2 kali/minggu.");
     a.push(pes ? "Jangan telat makan jika minum obat diabetes. Jika gemetar, keringat dingin, atau pusing, segera minum teh manis atau makan permen, lalu lapor petugas."
                : "Edukasi hipoglikemia: tidak melewatkan makan saat terapi OHO/insulin; kenali tanda gemetar, keringat dingin, lemas, dan cara penanganan awal.");
     if(o.gdpStatus && o.gdpStatus.kode === "tinggi") a.push(pes ? "Gula darah masih di atas target. Perhatikan lagi jumlah nasi, hindari minuman manis, dan makan tepat waktu."
@@ -550,15 +657,25 @@ function rekomendasi(o, mode){
   }
   if(ht){
     const a = [];
-    a.push(pes ? "Garam paling banyak 1 sendok teh sehari, sudah termasuk garam dalam masakan."
-               : "Batasi natrium < 2.000 mg/hari (± 1 sdt garam), termasuk dari bumbu dan penyedap.");
-    a.push("Kurangi makanan asin dan olahan: ikan asin, ikan kering, mi instan, kerupuk, makanan kaleng, saus, kecap asin, dan penyedap rasa.");
+    const ketat = o.naBatas === 1500;
+    a.push(pes ? (ketat ? "Tekanan darah belum sesuai target. Kurangi garam lebih ketat: kurang dari 1 sendok teh sehari (± ¾ sendok teh), sudah termasuk garam dalam masakan."
+                        : "Garam paling banyak 1 sendok teh sehari, sudah termasuk garam dalam masakan.")
+               : (ketat ? "Natrium ≤ 1.500 mg/hari (± ¾ sdt garam) karena TD belum mencapai target (PNPK Hipertensi 2026)."
+                        : "Natrium ≤ 2.000 mg/hari (± 1 sdt garam), termasuk dari bumbu dan penyedap (PNPK Hipertensi 2026)."));
+    a.push(pes ? "Kurangi makanan asin dan olahan: ikan asin, ikan kering, ikan asap, ikan kaleng, kornet, sosis, mi instan, kerupuk, asinan, dan manisan."
+               : "Hindari bahan tinggi natrium: ikan asin/kering/asap, ikan kaleng, kornet, sosis, mi instan, kerupuk, nasi uduk, asinan, manisan, biskuit dengan pengawet natrium.");
+    a.push(pes ? "Kurangi vetsin, kecap, saus, dan bumbu instan. Pakai rempah dan bumbu segar."
+               : "Bumbu: utamakan rempah dan bumbu segar; hindari vetsin, kecap, saus, bumbu instan; gunakan margarin/mentega tanpa garam.");
     a.push(pes ? "Coto, konro, dan pallubasa tinggi garam dan lemak. Makan sesekali saja, porsi kecil, tanpa jeroan."
                : "Batasi coto, konro, pallubasa, dan olahan jeroan (tinggi natrium, lemak jenuh, dan kolesterol).");
-    a.push(pes ? "Perbanyak sayur dan buah setiap hari, seperti pisang, pepaya, bayam, dan kangkung."
-               : "Pola DASH: perbanyak sayur, buah, dan sumber kalium (pisang, pepaya, sayuran hijau) bila tidak ada gangguan ginjal.");
-    if(o.td && !o.tdTerkendali) a.push(pes ? "Tekanan darah masih tinggi. Perketat pembatasan garam dan minum obat sesuai anjuran dokter."
-                                            : "TD belum terkendali (≥ 140/90): perketat pembatasan natrium dan tekankan kepatuhan minum obat.");
+    a.push(pes ? "Perbanyak sayur dan buah segar setiap hari, kacang-kacangan, dan susu rendah lemak."
+               : "Pola DASH: sayur dan buah 4–5 porsi/hari, susu rendah lemak, biji-bijian utuh, kacang-kacangan; kalium ± 4.700 mg/hari (bila fungsi ginjal baik), kalsium > 800 mg/hari, magnesium cukup.");
+    a.push(pes ? "Telur paling banyak 1 butir sehari. Hindari ati, ampela, dan daging berlemak."
+               : "Protein hewani: ikan, unggas tanpa kulit, telur maksimal 1 butir/hari; batasi daging merah berlemak, ati, ampela.");
+    if(!pes) a.push("Target TD < 140/90 mmHg; bila dapat ditoleransi ≤ 130/80 mmHg (PNPK Hipertensi 2026).");
+    if(!pes && o.persenBBI >= 115) a.push(`BB ${fmt0(o.persenBBI)}% BBI (≥ 115%): dianjurkan diet rendah kalori dan olahraga (Standar Makanan RS).`);
+    if(o.td && !o.tdTerkendali) a.push(pes ? "Minum obat darah tinggi sesuai anjuran dokter dan periksa tekanan darah secara rutin."
+                                            : "TD belum terkendali (≥ 140/90): tekankan kepatuhan minum obat dan pemantauan TD rutin.");
     R.push({judul: pes ? "Khusus darah tinggi" : "Hipertensi", isi:a});
   }
 
@@ -567,7 +684,7 @@ function rekomendasi(o, mode){
       pes ? "Kurangi jeroan (babat, usus, hati, paru), otak, kulit ayam, dan kuning telur. Telur cukup 3–4 butir seminggu."
           : "Batasi kolesterol makanan < 200 mg/hari: jeroan, otak, kulit ayam, kuning telur berlebih.",
       pes ? "Kurangi santan kental, gorengan, dan lemak daging. Masak dengan cara direbus, dikukus, atau dibakar."
-          : "Batasi lemak jenuh < 7% energi: santan kental, gorengan, lemak daging, mentega; utamakan minyak nabati secukupnya.",
+          : "Batasi lemak jenuh < 10% energi dan lemak trans: santan kental, gorengan, lemak daging, mentega; utamakan minyak nabati secukupnya.",
       pes ? "Coto, konro, dan pallubasa yang memakai jeroan sebaiknya dihindari dulu."
           : "Batasi coto, konro, pallubasa berjeroan, serta kepala ikan bersantan.",
       pes ? "Perbanyak sayur, buah, kacang-kacangan, tempe, dan ikan."
@@ -580,20 +697,21 @@ function rekomendasi(o, mode){
   if(o.gdpStatus && o.gdpStatus.kode === "tinggi" && !dm) cekLain.push(pes ? "Gula darah melebihi batas normal. Periksakan ulang ke dokter atau Puskesmas."
                                                      : "GD di atas target pada peserta tanpa diagnosis DM: rujuk untuk pemeriksaan ulang ke dokter.");
   if(cekLain.length) R.push({judul: pes ? "Perlu diperiksa ulang" : "Perlu rujukan pemeriksaan", isi:cekLain});
-  const k = o.kls.kode;
-  if(d.dx === "NONE" && (k === "G" || k === "O" || o.lpSentral || d.usia >= 40)){
+  const k = o.kls.kode, lebihBB = (k === "L" || k === "O1" || k === "O2");
+  if(d.dx === "NONE" && (lebihBB || o.lpSentral || d.usia >= 40)){
     R.push({judul: pes ? "Cegah diabetes dan darah tinggi" : "Pencegahan PTM", isi:[
       pes ? "Periksa gula darah dan tekanan darah secara rutin di Posbindu atau Puskesmas, minimal sekali setahun."
           : "Anjurkan skrining PTM rutin (GD, TD, kolesterol) di Posbindu PTM/Puskesmas minimal 1 kali setahun.",
-      ...((k === "G" || k === "O" || o.lpSentral) ? [pes ? "Berat badan atau lingkar perut yang berlebih meningkatkan risiko diabetes dan darah tinggi. Menurunkannya sedikit saja sudah bermanfaat."
+      ...((lebihBB || o.lpSentral) ? [pes ? "Berat badan atau lingkar perut yang berlebih meningkatkan risiko diabetes dan darah tinggi. Menurunkannya sedikit saja sudah bermanfaat."
           : "Kelebihan BB/obesitas sentral merupakan faktor risiko utama DM tipe 2 dan hipertensi; penurunan 5–10% BB menurunkan risiko secara bermakna."] : [])
     ]});
   }
-  if(k === "G" || k === "O" || o.lpSentral){
+  if(lebihBB || o.lpSentral){
     const a = [];
-    if(k === "G" || k === "O"){
+    if(lebihBB){
       a.push(pes ? "Kurangi porsi sedikit demi sedikit, terutama nasi, gorengan, dan camilan manis."
-                 : "Defisit energi bertahap sesuai kebutuhan energi di atas; target turun 0,5–1 kg per minggu.");
+                 : (o.dm ? "Target penurunan BB minimal 7–10% (PERKENI 2024), defisit energi 500–750 kkal/hari, laju 0,5–1 kg/minggu."
+                         : "Target penurunan BB 5–10% dalam 3–6 bulan, laju 0,5–1 kg/minggu (Pedoman Obesitas FKTP, Kemenkes 2021)."));
       a.push(pes ? "Ganti camilan dengan buah atau sayur. Hindari makan larut malam."
                  : "Ganti selingan tinggi energi dengan buah; hindari makan larut malam.");
     }
@@ -601,7 +719,7 @@ function rekomendasi(o, mode){
                                : "Obesitas sentral meningkatkan risiko resistensi insulin dan penyakit kardiovaskular: batasi gula sederhana dan lemak jenuh, tingkatkan aktivitas aerobik.");
     R.push({judul: pes ? "Menurunkan berat badan dan lingkar perut" : "Penurunan BB dan lingkar perut", isi:a});
   }
-  if(k === "KB" || k === "KR"){
+  if(k === "K"){
     R.push({judul: pes ? "Menaikkan berat badan" : "Peningkatan BB", isi:[
       pes ? "Makan sedikit tapi sering, 5–6 kali sehari." : "Makan porsi kecil tapi sering (5–6 kali/hari) dengan selingan padat gizi.",
       pes ? "Tambah lauk di setiap makan, misalnya ikan, telur, tahu, atau tempe." : "Cukupi protein setiap kali makan (ikan, telur, ayam, tahu, tempe).",
@@ -634,6 +752,7 @@ function lamp(cls, mark, title, body){
   return `<div class="lamp ${cls}"><div class="dot" aria-hidden="true">${mark}</div><div><b class="t">${title}</b>${body}</div></div>`;
 }
 function markOf(c){ return c === "ok" ? "✓" : "!"; }
+function bbTeks(kode){ return {K:"Kurang", N:"Sehat", L:"Agak berlebih", O1:"Berlebih", O2:"Berlebih"}[kode]; }
 function sapaan(d){ return d.jk === "L" ? "Bapak" : "Ibu"; }
 function tanggalID(s){
   try{ const t = s ? new Date(s+"T00:00:00") : new Date(); return t.toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"}); }catch(e){ return s||""; }
@@ -647,7 +766,7 @@ function printFoot(){
     Hasil ini bersifat panduan dan tidak menggantikan konseling langsung dengan petugas gizi atau dokter.</div>`;
 }
 function dxLabel(dx){ return dx === "DM" ? "Diabetes Melitus Tipe 2" : dx === "HT" ? "Hipertensi" : dx === "NONE" ? "Tidak ada DM/hipertensi" : "DM Tipe 2 dan Hipertensi"; }
-function aktLabel(a){ return {10:"Sangat ringan / istirahat",20:"Ringan",30:"Sedang",40:"Berat"}[a]; }
+function aktLabel(a){ return {10:"Istirahat",20:"Ringan",30:"Sedang",40:"Berat",50:"Sangat berat"}[a]; }
 function pct(x){ return (x>0?"+":x<0?"−":"") + Math.abs(Math.round(x*100)) + "%"; }
 
 function renderPeserta(o){
@@ -657,27 +776,31 @@ function renderPeserta(o){
         <p class="muted">${dxLabel(d.dx)} · ${d.usia} tahun · ${d.jk==="L"?"Laki-laki":"Perempuan"}</p></div>`;
 
   // Berat badan
-  let bodyBB = `<div>Berat badan ${s}: <span class="big">${fmt(d.bb)} kg</span></div>
-                <div>Berat badan sehat untuk tinggi ${fmt(o.tb,0)} cm: <b>${fmt(o.bbMin)}–${fmt(o.bbMax)} kg</b></div>`;
-  if(o.lebih > 0) bodyBB += `<div style="margin-top:6px">Berat badan <b>lebih ${fmt(o.lebih)} kg</b> dari batas sehat.</div>`;
-  else if(o.kurang > 0) bodyBB += `<div style="margin-top:6px">Berat badan <b>kurang ${fmt(o.kurang)} kg</b> dari batas sehat.</div>`;
-  else bodyBB += `<div style="margin-top:6px">Berat badan sudah <b>sehat</b>. Pertahankan!</div>`;
-  const ttlBB = k.kode === "N" ? "Berat badan: Sehat" : k.kode === "G" ? "Berat badan: Agak berlebih" : k.kode === "O" ? "Berat badan: Berlebih" : k.kode === "KR" ? "Berat badan: Agak kurang" : "Berat badan: Kurang";
+  let bodyBB = `<div>Berat badan saat ini: <span class="big">${fmt(d.bb)} kg</span></div>
+                <div>Batas sehat (TB ${fmt(o.tb,0)} cm): <b>${fmt(o.bbMin)}–${fmt(o.bbMax)} kg</b></div>`;
+  if(o.lebih > 0) bodyBB += `<div>Kelebihan: <b>${fmt(o.lebih)} kg</b></div>`;
+  else if(o.kurang > 0) bodyBB += `<div>Kekurangan: <b>${fmt(o.kurang)} kg</b></div>`;
+  else bodyBB += `<div style="margin-top:4px">Sudah dalam batas sehat. Pertahankan!</div>`;
+  const ttlBB = "Berat badan: " + bbTeks(k.kode);
   h += lamp(k.lamp, markOf(k.lamp), ttlBB, bodyBB);
 
   // Lingkar perut
   const lpCls = o.lpSentral ? "bad" : "ok";
-  let bodyLP = `<div>Lingkar perut ${s}: <span class="big">${fmt(d.lp,0)} cm</span></div>
-                <div>Batas sehat: <b>${o.lpBatas} cm</b> atau kurang</div>`;
-  bodyLP += o.lpSentral ? `<div style="margin-top:6px">Lingkar perut <b>lebih ${fmt(o.lpLebih,0)} cm</b> dari batas sehat.</div>`
-                        : `<div style="margin-top:6px">Lingkar perut sudah <b>sehat</b>.</div>`;
+  let bodyLP = `<div>Lingkar perut saat ini: <span class="big">${fmt(d.lp,0)} cm</span></div>
+                <div>Batas sehat: <b>≤ ${o.lpBatas} cm</b></div>`;
+  bodyLP += o.lpSentral ? `<div>Kelebihan: <b>${fmt(o.lpLebih,0)} cm</b></div>` : `<div style="margin-top:4px">Sudah dalam batas sehat.</div>`;
   h += lamp(lpCls, markOf(lpCls), o.lpSentral ? "Lingkar perut: Berlebih" : "Lingkar perut: Sehat", bodyLP);
 
   // Target
   if(o.lebih > 0){
-    h += `<div class="target"><b>🎯 Target ${s} 3 bulan ke depan</b>
-      <p>Turunkan berat badan <b>${half(o.t3)} kg</b>, menjadi sekitar <b>${fmt(d.bb - o.t3)} kg</b>.</p>
-      <p>Pelan-pelan saja, cukup <b>½ sampai 1 kg per minggu</b>. Turun ${half(o.t6)} kg dalam 6 bulan sudah sangat baik untuk gula darah dan tekanan darah.</p>
+    h += o.dm ? `<div class="target"><b>🎯 Target ${s}</b>
+      <p>Turunkan berat badan minimal <b>${half(o.tA)} kg</b>${o.tB > o.tA ? `, lebih baik sampai <b>${half(o.tB)} kg</b>` : ""}.</p>
+      <p>Pelan-pelan saja, cukup <b>½ sampai 1 kg per minggu</b>. Turun ${half(o.t5)} kg saja sudah mulai bermanfaat untuk gula darah, tekanan darah, dan kolesterol.</p>
+      ${o.lpSentral ? `<p>Lingkar perut biasanya ikut mengecil saat berat badan turun. Ukur lagi setiap kegiatan Prolanis.</p>` : ``}
+    </div>`
+    : `<div class="target"><b>🎯 Target ${s} 3–6 bulan ke depan</b>
+      <p>Turunkan berat badan <b>${half(o.tA)} kg</b>${o.tB > o.tA ? ` sampai <b>${half(o.tB)} kg</b>` : ""}, menjadi sekitar <b>${fmt(d.bb - o.tA)} kg</b> atau kurang.</p>
+      <p>Pelan-pelan saja, cukup <b>½ sampai 1 kg per minggu</b>.</p>
       ${o.lpSentral ? `<p>Lingkar perut biasanya ikut mengecil saat berat badan turun. Ukur lagi setiap kegiatan Prolanis.</p>` : ``}
     </div>`;
   } else if(o.kurang > 0){
@@ -694,17 +817,17 @@ function renderPeserta(o){
     if(o.td){
       const c = o.tdTerkendali ? "ok" : "bad";
       h += lamp(c, markOf(c), "Tekanan darah: " + (o.tdTerkendali ? "Sesuai target" : "Belum sesuai target"),
-        `<div><span class="big">${d.sis}/${d.dia}</span> mmHg</div><div>Target: di bawah <b>140/90</b> mmHg</div>`);
+        `<div>Tekanan darah saat ini: <span class="big">${d.sis}/${d.dia}</span> mmHg</div><div>Target: di bawah <b>140/90</b> mmHg</div>`);
     }
     if(o.gdpStatus){
       const g = o.gdpStatus, c = g.kode === "ok" ? "ok" : g.kode === "rendah" ? "warn" : "bad";
       const t = g.kode === "ok" ? "Sesuai target" : g.kode === "hipo" ? "Terlalu rendah" : g.kode === "rendah" ? "Agak rendah" : "Belum sesuai target";
       h += lamp(c, markOf(c), "Gula darah " + o.gdJenis + ": " + t,
-        `<div><span class="big">${d.gdp}</span> mg/dL</div><div>Target: <b>${o.gdTarget}</b></div>`);
+        `<div>Gula darah ${o.gdJenis} saat ini: <span class="big">${d.gdp}</span> mg/dL</div><div>Target: <b>${o.gdTarget}</b></div>`);
     }
     if(o.kol){
       const c = o.kol.lamp, t = o.kol.kode === "ok" ? "Sesuai target" : o.kol.kode === "batas" ? "Agak tinggi" : "Tinggi";
-      h += lamp(c, markOf(c), "Kolesterol total: " + t, `<div><span class="big">${d.kol}</span> mg/dL</div><div>Target: di bawah <b>200</b> mg/dL</div>`);
+      h += lamp(c, markOf(c), "Kolesterol total: " + t, `<div>Kolesterol total saat ini: <span class="big">${d.kol}</span> mg/dL</div><div>Target: di bawah <b>200</b> mg/dL</div>`);
     }
     h += `<p class="muted" style="font-size:.85rem;margin:0">Hasil ini bukan diagnosis. Jangan mengubah dosis obat sendiri, konsultasikan ke dokter.</p></div>`;
   }
@@ -738,11 +861,11 @@ function renderPetugas(o){
     <tr><td>Berat badan</td><td>${fmt(d.bb)} kg</td></tr>
     <tr><td>Tinggi badan</td><td>${fmt(o.tb)} cm${o.tbEstimasi ? ` <span class="badge warn">estimasi tinggi lutut ${fmt(d.tl)} cm</span>` : ""}</td></tr>
     <tr><td>IMT</td><td>${fmt(o.imt)} kg/m² <span class="badge ${k.lamp}">${k.label}</span><br><span class="muted" style="font-weight:400">${k.ket}</span></td></tr>
-    <tr><td>Rentang BB normal (IMT 18,5–25,0)</td><td>${fmt(o.bbMin)} – ${fmt(o.bbMax)} kg</td></tr>
+    <tr><td>Rentang BB normal (IMT 18,5–22,9)</td><td>${fmt(o.bbMin)} – ${fmt(o.bbMax)} kg</td></tr>
     <tr><td>${o.lebih>0?"Kelebihan BB (terhadap batas atas normal)":o.kurang>0?"Kekurangan BB (terhadap batas bawah normal)":"Selisih BB"}</td>
         <td>${o.lebih>0?`<span class="badge ${k.lamp}">+${fmt(o.lebih)} kg</span>`:o.kurang>0?`<span class="badge ${k.lamp}">−${fmt(o.kurang)} kg</span>`:"Dalam rentang normal"}</td></tr>
-    <tr><td>BB idaman (Broca modifikasi)</td><td>${fmt(o.bbi)} kg <span class="muted" style="font-weight:400">· ${o.bbiRumus}; rentang ± 10%: ${fmt(o.bbi*0.9)}–${fmt(o.bbi*1.1)} kg</span></td></tr>
-    <tr><td>Selisih terhadap BB idaman</td><td>${d.bb>=o.bbi?"+":"−"}${fmt(Math.abs(d.bb-o.bbi))} kg (${fmt0(d.bb/o.bbi*100)}% BBI)</td></tr>
+    <tr><td>BBI (Berat Badan Ideal), Broca modifikasi</td><td>${fmt(o.bbi)} kg <span class="muted" style="font-weight:400">· ${o.bbiRumus}; rentang ± 10%: ${fmt(o.bbi*0.9)}–${fmt(o.bbi*1.1)} kg</span></td></tr>
+    <tr><td>Selisih terhadap BBI</td><td>${d.bb>=o.bbi?"+":"−"}${fmt(Math.abs(d.bb-o.bbi))} kg (${fmt0(o.persenBBI)}% BBI)</td></tr>
     <tr><td>Lingkar perut</td><td>${fmt(d.lp)} cm <span class="badge ${o.lpSentral?"bad":"ok"}">${o.lpSentral?"Obesitas sentral":"Normal"}</span><br>
         <span class="muted" style="font-weight:400">Batas ${d.jk==="L"?"> 90":"> 80"} cm${o.lpSentral?` · kelebihan ${fmt(o.lpLebih)} cm`:""}</span></td></tr>
     ${o.rlpp ? `<tr><td>RLPP (lingkar panggul ${fmt(d.lpg)} cm)</td><td>${fmt(o.rlpp,2)} <span class="badge ${o.rlppRisiko?"bad":"ok"}">${o.rlppRisiko?"Berisiko":"Tidak berisiko"}</span><br><span class="muted" style="font-weight:400">Batas ≥ ${fmt(o.rlppBatas,2)}</span></td></tr>` : ""}
@@ -753,9 +876,12 @@ function renderPetugas(o){
 
   // Target
   if(o.lebih > 0){
-    h += `<div class="target"><b>Target penurunan BB bertahap</b>
-      <p>3 bulan: turun <b>${half(o.t3)} kg</b> (± 5% BB) → ± ${fmt(d.bb-o.t3)} kg · 6 bulan: turun <b>${half(o.t6)} kg</b> (± 10% BB) → ± ${fmt(d.bb-o.t6)} kg.</p>
-      <p>Laju aman 0,5–1 kg/minggu; mencapai batas atas IMT normal memerlukan ± ${o.mingguLebih} minggu (laju 0,75 kg/minggu).${o.lpSentral?` Pantau LP setiap pertemuan Prolanis (target ≤ ${o.lpBatas} cm).`:""}</p></div>`;
+    h += o.dm ? `<div class="target"><b>Target penurunan BB (PERKENI 2024)</b>
+      <p>Minimal 7–10% BB awal: turun <b>${half(o.tA)}–${half(o.tB)} kg</b> → ± ${fmt(d.bb-o.tB)}–${fmt(d.bb-o.tA)} kg. Manfaat glikemik, lipid, dan TD mulai tampak pada penurunan 5% (${half(o.t5)} kg).</p>
+      <p>Defisit 500–750 kkal/hari, laju 0,5–1 kg/minggu; batas atas IMT normal (22,9) tercapai dalam ± ${o.mingguLebih} minggu.${o.lpSentral?` Pantau LP setiap pertemuan Prolanis (target ≤ ${o.lpBatas} cm).`:""}</p></div>`
+    : `<div class="target"><b>Target penurunan BB (Pedoman Obesitas FKTP, Kemenkes 2021)</b>
+      <p>5–10% BB awal dalam 3–6 bulan: turun <b>${half(o.tA)}–${half(o.tB)} kg</b> → ± ${fmt(d.bb-o.tB)}–${fmt(d.bb-o.tA)} kg.</p>
+      <p>Laju 0,5–1 kg/minggu; batas atas IMT normal (22,9) tercapai dalam ± ${o.mingguLebih} minggu.${o.lpSentral?` Pantau LP setiap pertemuan Prolanis (target ≤ ${o.lpBatas} cm).`:""}</p></div>`;
   } else if(o.kurang > 0){
     h += `<div class="target"><b>Target peningkatan BB bertahap</b>
       <p>Naik <b>${half(o.tKurang)} kg</b> untuk mencapai IMT 18,5, dengan laju 0,25–0,5 kg/minggu (± ${o.mingguKurang} minggu).</p></div>`;
@@ -766,7 +892,7 @@ function renderPetugas(o){
   // Energi
   const f = o.faktor;
   h += `<div class="card"><h2>Kebutuhan Energi dan Zat Gizi</h2>
-    <p class="muted" style="font-size:.9rem">Metode PERKENI 2021: kalori basal × BB idaman, dikoreksi aktivitas, usia, dan status gizi.</p>
+    <p class="muted" style="font-size:.9rem">Metode PERKENI 2024: kalori basal × BBI (Berat Badan Ideal), dikoreksi aktivitas, usia, dan status gizi (IMT Asia-Pasifik).${o.dm ? "" : " Untuk peserta non-DM dipakai sebagai perkiraan kebutuhan energi."}</p>
     <div class="tbl-scroll"><table><tbody>
       <tr><td>Kalori basal (${d.jk==="L"?"30":"25"} kkal × ${fmt(o.bbi)} kg BBI)</td><td class="num">${fmt0(o.basal)} kkal</td></tr>
       <tr><td>Koreksi aktivitas (${aktLabel(d.akt).toLowerCase()})</td><td class="num">${pct(f.akt)}</td></tr>
@@ -775,14 +901,15 @@ function renderPetugas(o){
       <tr><td>Hasil hitung</td><td class="num">${fmt0(o.energiHitung)} kkal</td></tr>
       <tr><th>Kebutuhan energi yang dianjurkan</th><th class="num">${fmt0(o.energi)} kkal/hari</th></tr>
     </tbody></table></div>
-    ${o.energiDibatasi ? `<p class="note" style="margin-top:8px">Hasil hitung di bawah batas minimal, sehingga dipakai ${fmt0(o.energiMin)} kkal (batas minimal aplikasi untuk ${d.jk==="L"?"laki-laki":"perempuan"}, mengacu PERKENI: P 1.000–1.200, L 1.200–1.600 kkal).</p>` : ""}
-    <h3>Target zat gizi makro</h3>
-    <div class="tbl-scroll"><table><thead><tr><th>Zat gizi</th><th class="num">% energi</th><th class="num">Gram/hari</th></tr></thead><tbody>
-      <tr><td>Karbohidrat</td><td class="num">60%</td><td class="num">${fmt0(o.makro.kh)} g</td></tr>
-      <tr><td>Protein</td><td class="num">15%</td><td class="num">${fmt0(o.makro.p)} g</td></tr>
-      <tr><td>Lemak (lemak jenuh &lt; 7%)</td><td class="num">25%</td><td class="num">${fmt0(o.makro.l)} g</td></tr>
-      <tr><td>Natrium</td><td class="num" colspan="2">${o.natrium}</td></tr>
-      <tr><td>Serat</td><td class="num" colspan="2">${o.serat}</td></tr>
+    ${o.energiDibatasi ? `<p class="note" style="margin-top:8px">Hasil hitung di bawah batas minimal, sehingga dipakai ${fmt0(o.energiMin)} kkal. PERKENI 2024: paling sedikit P 1.000–1.200 dan L 1.200–1.600 kkal; asupan &lt; 1.200 kkal mendekati diet kalori sangat rendah yang memerlukan pengawasan ketat.</p>` : ""}
+    <h3>Anjuran zat gizi</h3>
+    <p class="muted" style="font-size:.88rem;margin-top:0">PERKENI 2024: tidak ada persentase ideal karbohidrat, protein, dan lemak; distribusi disesuaikan pola makan, pilihan, dan target metabolik peserta.</p>
+    <div class="tbl-scroll"><table><tbody>
+      <tr><td>Serat (≥ 14 g/1.000 kkal)</td><td class="num">≥ ${o.seratMin} g/hari</td></tr>
+      <tr><td>Lemak jenuh (&lt; 10% energi); batasi lemak trans</td><td class="num">&lt; ${o.lemakJenuhMax} g/hari</td></tr>
+      <tr><td>Natrium${o.ht ? " (PNPK Hipertensi 2026)" : ""}</td><td class="num">${o.natrium}</td></tr>
+      ${o.ht ? `<tr><td>Kalium / kalsium (DASH)</td><td class="num">± 4.700 mg / &gt; 800 mg</td></tr>` : ""}
+      <tr><td>Ikan</td><td class="num">≥ 2 kali/minggu</td></tr>
     </tbody></table></div></div>`;
 
   // Porsi penukar
@@ -794,7 +921,7 @@ function renderPetugas(o){
     h += `<tr><td>${PENUKAR[kk].nama}</td>${j.map(x=>`<td class="num">${x?half(x):"–"}</td>`).join("")}<td class="num"><b>${half(P[kk])} P</b></td></tr>`;
   });
   h += `</tbody></table></div>
-    <p class="muted" style="font-size:.88rem;margin-top:8px">Susunan porsi menghasilkan ± ${fmt0(T.kkal)} kkal · KH ${fmt0(T.kh)} g · protein ${fmt0(T.p)} g · lemak ${fmt0(T.l)} g. Selingan berupa buah (pagi dan sore).</p>
+    <p class="muted" style="font-size:.88rem;margin-top:8px">Susunan porsi menghasilkan ± ${fmt0(T.kkal)} kkal (pagi ${fmt0(o.jadwalKkal[0]/T.kkal*100)}% · siang ${fmt0(o.jadwalKkal[1]/T.kkal*100)}% · malam ${fmt0(o.jadwalKkal[2]/T.kkal*100)}% · selingan ${fmt0(o.jadwalKkal[3]/T.kkal*100)}%) · KH ${fmt0(T.kh)} g · protein ${fmt0(T.p)} g · lemak ${fmt0(T.l)} g. Selingan 2 kali (pagi dan sore): buah, ditambah ubi/jagung/roti bila ada porsi makanan pokok.</p>
     <h3>Ukuran rumah tangga (1 porsi)</h3><ul class="rec">${keys.map(kk=>`<li><b>${PENUKAR[kk].nama}:</b> ${URT[kk]}</li>`).join("")}</ul></div>`;
 
   // Rekomendasi
@@ -803,16 +930,7 @@ function renderPetugas(o){
   h += `<p class="disclaimer">Rekomendasi bersifat panduan umum dan perlu disesuaikan dengan kondisi klinis, terapi obat, dan kebiasaan makan peserta melalui konseling gizi.</p>
     <div class="sign"><div>Petugas Gizi,<br><br><br><br>( ${d.petugas ? esc(d.petugas) : "...................................."} )</div></div></div>`;
 
-  h += `<details class="card noprint"><summary><b>Catatan metode dan referensi</b></summary><ul class="rec" style="font-size:.9rem">
-    <li>Klasifikasi IMT dewasa Kemenkes RI: &lt; 17,0 kurus berat; 17,0–18,4 kurus ringan; 18,5–25,0 normal; 25,1–27,0 gemuk; &gt; 27,0 obesitas.</li>
-    <li>Lingkar perut (Kemenkes RI): obesitas sentral bila L &gt; 90 cm, P &gt; 80 cm. RLPP (WHO): berisiko bila L ≥ 0,90, P ≥ 0,85.</li>
-    <li>BB idaman dan kebutuhan energi: PERKENI 2021 (Broca modifikasi; basal L 30, P 25 kkal/kg BBI; koreksi usia 40–59 th −5%, 60–69 th −10%, ≥ 70 th −20%; aktivitas +10% s.d. +40%; gemuk −20%, obesitas −30%, kurus +20%).</li>
-    <li>Estimasi TB dari tinggi lutut: Chumlea (L = 64,19 − 0,04×usia + 2,02×TL; P = 84,88 − 0,24×usia + 1,83×TL).</li>
-    <li>Porsi penukar: Daftar Bahan Makanan Penukar. Batas konsumsi gula, garam, lemak: Permenkes No. 30 Tahun 2013.</li>
-    <li>Target GD puasa 80–130 mg/dL, GD 2 jam setelah makan &lt; 180 mg/dL, hipoglikemia &lt; 70 mg/dL (PERKENI). TD terkendali &lt; 140/90 mmHg.</li>
-    <li>Kolesterol total (NCEP ATP III): &lt; 200 diinginkan; 200–239 batas tinggi; ≥ 240 tinggi.</li>
-    <li>Ukuran nasi: 1 sendok nasi (centong) peres ± 50 g; 1 porsi penukar (100 g) = 2 sendok nasi.</li>
-  </ul></details>`;
+
   h += printFoot();
   return h;
 }
@@ -841,6 +959,7 @@ const PDFCSS = `
 #pdfRoot .bx.bad{background:#FCE8E8;border-color:#F2BDBD}
 #pdfRoot .bx .k{font-weight:700;font-size:12px}
 #pdfRoot .bx .v{font-size:17px;font-weight:800;margin:1px 0}
+#pdfRoot .bx .v .lb{font-size:11.5px;font-weight:500;color:#3c4a4e}
 #pdfRoot .bx .s{font-size:11px;color:#3c4a4e}
 #pdfRoot .tg{background:#EAF6F1;border-radius:8px;padding:8px 10px;margin-top:10px;font-size:12px}
 #pdfRoot .tg b{color:#00756E}
@@ -879,20 +998,22 @@ function pdfPeserta(o){
   const d = o.d, s = sapaan(d), k = o.kls;
   let h = pdfHead(o, "Kartu Hasil Status Gizi Prolanis");
   h += `<p class="id"><b>${d.nama ? esc(d.nama) : s}</b> · ${d.jk==="L"?"Laki-laki":"Perempuan"}, ${d.usia} tahun · ${dxLabel(d.dx)}</p>`;
-  const bbT = k.kode === "N" ? "Sehat" : k.kode === "G" ? "Agak berlebih" : k.kode === "O" ? "Berlebih" : k.kode === "KR" ? "Agak kurang" : "Kurang";
-  const bbS = o.lebih > 0 ? `Lebih <b>${fmt(o.lebih)} kg</b> dari batas sehat` : o.kurang > 0 ? `Kurang <b>${fmt(o.kurang)} kg</b> dari batas sehat` : `Sudah dalam batas sehat`;
+  const bbT = bbTeks(k.kode);
+  const bbS = o.lebih > 0 ? `Kelebihan: <b>${fmt(o.lebih)} kg</b>` : o.kurang > 0 ? `Kekurangan: <b>${fmt(o.kurang)} kg</b>` : `Sudah dalam batas sehat`;
   h += `<div class="row">
-    <div class="bx ${k.lamp}"><div class="k">Berat badan: ${bbT}</div><div class="v">${fmt(d.bb)} kg</div><div class="s">Batas sehat ${fmt(o.bbMin)}–${fmt(o.bbMax)} kg (TB ${fmt(o.tb,0)} cm)<br>${bbS}</div></div>
-    <div class="bx ${o.lpSentral?"bad":"ok"}"><div class="k">Lingkar perut: ${o.lpSentral?"Berlebih":"Sehat"}</div><div class="v">${fmt(d.lp,0)} cm</div><div class="s">Batas sehat ≤ ${o.lpBatas} cm<br>${o.lpSentral?`Lebih <b>${fmt(o.lpLebih,0)} cm</b> dari batas sehat`:"Sudah dalam batas sehat"}</div></div>
+    <div class="bx ${k.lamp}"><div class="k">Berat badan: ${bbT}</div><div class="v"><span class="lb">Berat badan saat ini:</span> ${fmt(d.bb)} kg</div><div class="s">Batas sehat: ${fmt(o.bbMin)}–${fmt(o.bbMax)} kg (TB ${fmt(o.tb,0)} cm)<br>${bbS}</div></div>
+    <div class="bx ${o.lpSentral?"bad":"ok"}"><div class="k">Lingkar perut: ${o.lpSentral?"Berlebih":"Sehat"}</div><div class="v"><span class="lb">Lingkar perut saat ini:</span> ${fmt(d.lp,0)} cm</div><div class="s">Batas sehat: ≤ ${o.lpBatas} cm<br>${o.lpSentral?`Kelebihan: <b>${fmt(o.lpLebih,0)} cm</b>`:"Sudah dalam batas sehat"}</div></div>
   </div>`;
   const kl = [];
-  if(o.td) kl.push(`<div class="bx ${o.tdTerkendali?"ok":"bad"}"><div class="k">Tekanan darah: ${o.tdTerkendali?"Sesuai target":"Belum sesuai"}</div><div class="v">${d.sis}/${d.dia}</div><div class="s">mmHg · target &lt; 140/90</div></div>`);
+  if(o.td) kl.push(`<div class="bx ${o.tdTerkendali?"ok":"bad"}"><div class="k">Tekanan darah: ${o.tdTerkendali?"Sesuai target":"Belum sesuai"}</div><div class="v"><span class="lb">Saat ini:</span> ${d.sis}/${d.dia}</div><div class="s">mmHg · target &lt; 140/90</div></div>`);
   if(o.gdpStatus){ const g=o.gdpStatus, c=g.kode==="ok"?"ok":g.kode==="rendah"?"warn":"bad", t=g.kode==="ok"?"Sesuai target":g.kode==="hipo"?"Terlalu rendah":g.kode==="rendah"?"Agak rendah":"Belum sesuai";
-    kl.push(`<div class="bx ${c}"><div class="k">Gula darah ${o.gdJenis}: ${t}</div><div class="v">${d.gdp}</div><div class="s">mg/dL · target ${o.gdTarget}</div></div>`); }
+    kl.push(`<div class="bx ${c}"><div class="k">Gula darah ${o.gdJenis}: ${t}</div><div class="v"><span class="lb">Saat ini:</span> ${d.gdp}</div><div class="s">mg/dL · target ${o.gdTarget}</div></div>`); }
   if(o.kol){ const t=o.kol.kode==="ok"?"Sesuai target":o.kol.kode==="batas"?"Agak tinggi":"Tinggi";
-    kl.push(`<div class="bx ${o.kol.lamp}"><div class="k">Kolesterol total: ${t}</div><div class="v">${d.kol}</div><div class="s">mg/dL · target &lt; 200</div></div>`); }
+    kl.push(`<div class="bx ${o.kol.lamp}"><div class="k">Kolesterol total: ${t}</div><div class="v"><span class="lb">Saat ini:</span> ${d.kol}</div><div class="s">mg/dL · target &lt; 200</div></div>`); }
   if(kl.length) h += `<div class="row" style="margin-top:8px">${kl.join("")}</div>`;
-  if(o.lebih > 0) h += `<div class="tg"><b>Target 3 bulan:</b> turunkan berat badan <b>${half(o.t3)} kg</b> (menjadi ± ${fmt(d.bb-o.t3)} kg), pelan-pelan ½–1 kg per minggu.${o.lpSentral?" Lingkar perut biasanya ikut mengecil.":""}</div>`;
+  if(o.lebih > 0) h += o.dm
+    ? `<div class="tg"><b>Target:</b> turunkan berat badan minimal <b>${half(o.tA)} kg</b>${o.tB>o.tA?`, lebih baik sampai <b>${half(o.tB)} kg</b>`:""}, pelan-pelan ½–1 kg per minggu.${o.lpSentral?" Lingkar perut biasanya ikut mengecil.":""}</div>`
+    : `<div class="tg"><b>Target 3–6 bulan:</b> turunkan berat badan <b>${half(o.tA)}${o.tB>o.tA?`–${half(o.tB)}`:""} kg</b>, pelan-pelan ½–1 kg per minggu.${o.lpSentral?" Lingkar perut biasanya ikut mengecil.":""}</div>`;
   else if(o.kurang > 0) h += `<div class="tg"><b>Target:</b> naikkan berat badan <b>${half(o.tKurang)} kg</b> secara bertahap, ¼–½ kg per minggu.</div>`;
   else if(o.lpSentral) h += `<div class="tg"><b>Target:</b> kecilkan lingkar perut <b>${fmt(o.lpLebih,0)} cm</b> dengan banyak bergerak dan mengurangi makanan manis serta berlemak.</div>`;
   h += `<div class="plt"><img src="assets/piring.png"><div><b>Isi piring setiap makan:</b> ½ piring sayur dan buah · ¼ piring nasi atau pengganti (ubi, jagung) · ¼ piring lauk (ikan, ayam tanpa kulit, tempe, tahu).<br><span class="muted">Untuk jumlah porsi yang tepat, konsultasikan dengan petugas gizi saat kegiatan Prolanis.</span></div></div>`;
@@ -909,7 +1030,7 @@ function pdfPetugas(o){
     <tr><td>IMT</td><td>${fmt(o.imt)} kg/m² <span class="bd ${k.lamp}">${k.label}</span></td></tr>
     <tr><td>Rentang BB normal</td><td>${fmt(o.bbMin)}–${fmt(o.bbMax)} kg</td></tr>
     <tr><td>${o.lebih>0?"Kelebihan BB":o.kurang>0?"Kekurangan BB":"Selisih BB"}</td><td>${o.lebih>0?`+${fmt(o.lebih)} kg`:o.kurang>0?`−${fmt(o.kurang)} kg`:"Normal"}</td></tr>
-    <tr><td>BB idaman (Broca mod.)</td><td>${fmt(o.bbi)} kg (${fmt0(d.bb/o.bbi*100)}% BBI)</td></tr>
+    <tr><td>BBI (Berat Badan Ideal)</td><td>${fmt(o.bbi)} kg (${fmt0(o.persenBBI)}% BBI)</td></tr>
     <tr><td>Lingkar perut</td><td>${fmt(d.lp)} cm <span class="bd ${o.lpSentral?"bad":"ok"}">${o.lpSentral?`+${fmt(o.lpLebih)} cm`:"Normal"}</span></td></tr>
     ${o.rlpp?`<tr><td>RLPP</td><td>${fmt(o.rlpp,2)} <span class="bd ${o.rlppRisiko?"bad":"ok"}">${o.rlppRisiko?"Berisiko":"Normal"}</span></td></tr>`:""}
     ${o.td?`<tr><td>Tekanan darah</td><td>${d.sis}/${d.dia} <span class="bd ${o.td.lamp}">${o.td.label.replace(" (terkendali < 140/90)","")}</span></td></tr>`:""}
@@ -920,11 +1041,11 @@ function pdfPetugas(o){
     <tr><td>Basal (${d.jk==="L"?"30":"25"} × ${fmt(o.bbi)} kg BBI)</td><td class="n">${fmt0(o.basal)} kkal</td></tr>
     <tr><td>Koreksi aktivitas / usia / status gizi</td><td class="n">${pct(f.akt)} / ${f.usia?pct(f.usia):"0%"} / ${f.bb?pct(f.bb):"0%"}</td></tr>
     <tr><th>Kebutuhan energi${o.energiDibatasi?" (batas minimal)":""}</th><th class="n">${fmt0(o.energi)} kkal</th></tr>
-    <tr><td>KH 60% / Protein 15% / Lemak 25%</td><td class="n">${fmt0(o.makro.kh)} / ${fmt0(o.makro.p)} / ${fmt0(o.makro.l)} g</td></tr>
+    <tr><td>Serat / lemak jenuh</td><td class="n">≥ ${o.seratMin} g / &lt; ${o.lemakJenuhMax} g</td></tr>
     <tr><td>Natrium</td><td class="n">${o.natrium}</td></tr>
   </tbody></table>`;
-  h += `<div class="row"><div><h2 style="margin-top:0">Status gizi</h2>${antro}</div><div><h2 style="margin-top:0">Kebutuhan energi (PERKENI 2021)</h2>${energi}</div></div>`;
-  if(o.lebih > 0) h += `<div class="tg"><b>Target:</b> 3 bulan turun ${half(o.t3)} kg (± 5% BB) · 6 bulan turun ${half(o.t6)} kg (± 10% BB) · laju 0,5–1 kg/minggu.${o.lpSentral?` Pantau LP (target ≤ ${o.lpBatas} cm).`:""}</div>`;
+  h += `<div class="row"><div><h2 style="margin-top:0">Status gizi</h2>${antro}</div><div><h2 style="margin-top:0">Kebutuhan energi (PERKENI 2024)</h2>${energi}</div></div>`;
+  if(o.lebih > 0) h += `<div class="tg"><b>Target:</b> ${o.dm ? "minimal 7–10% BB (PERKENI 2024)" : "5–10% BB dalam 3–6 bulan (Pedoman Obesitas FKTP 2021)"}: turun ${half(o.tA)}–${half(o.tB)} kg · laju 0,5–1 kg/minggu${o.dm?" · defisit 500–750 kkal/hari":""}.${o.lpSentral?` Pantau LP (target ≤ ${o.lpBatas} cm).`:""}</div>`;
   else if(o.kurang > 0) h += `<div class="tg"><b>Target:</b> naik ${half(o.tKurang)} kg hingga IMT 18,5, laju 0,25–0,5 kg/minggu.</div>`;
   else if(o.lpSentral) h += `<div class="tg"><b>Target:</b> turunkan LP ${fmt(o.lpLebih)} cm hingga ≤ ${o.lpBatas} cm.</div>`;
   const keys = ["nasi","hewani","nabati","sayur","buah","minyak"];
@@ -985,6 +1106,161 @@ async function simpanGambar(o, mode, bagikan){
     btn.disabled = false; btn.textContent = label;
   }
 }
+
+/* ============================================================
+   MENU RUMUS & REFERENSI (mode petugas)
+   ============================================================ */
+let LAST = null, REF_FROM = "form";
+const CONTOH = {nama:"Contoh", tgl:"", jk:"P", dx:"DM", akt:20, usia:62, bb:68.5, tb:151, lp:96};
+function langkahEnergi(o){
+  const d = o.d, f = o.faktor, pendek = o.bbiRumus.indexOf("pendek") >= 0;
+  const persen = x => (x>0?"+":x<0?"−":"") + Math.abs(Math.round(x*100)) + "%";
+  const total = f.akt + f.usia + f.bb;
+  return `<ol class="steps">
+    <li><b>Data:</b> ${d.jk==="L"?"laki-laki":"perempuan"}, ${d.usia} tahun, BB ${fmt(d.bb)} kg, TB ${fmt(o.tb)} cm${o.tbEstimasi?" (estimasi tinggi lutut)":""}, aktivitas ${aktLabel(d.akt).toLowerCase()}.</li>
+    <li><b>IMT</b> = ${fmt(d.bb)} ÷ (${fmt(o.tb/100,2)})² = <b>${fmt(o.imt)} kg/m²</b> → ${o.kls.label}.</li>
+    <li><b>BBI</b> = ${pendek ? `(${fmt(o.tb)} − 100)` : `90% × (${fmt(o.tb)} − 100)`} = <b>${fmt(o.bbi)} kg</b>${pendek ? ` (${d.jk==="L"?"pria < 160 cm":"wanita < 150 cm"})` : ""}.</li>
+    <li><b>Kalori basal</b> = ${d.jk==="L"?"30":"25"} × ${fmt(o.bbi)} = <b>${fmt0(o.basal)} kkal</b>.</li>
+    <li><b>Koreksi:</b> aktivitas ${persen(f.akt)}, usia ${f.usia?persen(f.usia):"0%"}, status gizi ${f.bb?persen(f.bb):"0%"} (${o.kls.label}) → total ${persen(total)}.</li>
+    <li><b>Energi</b> = ${fmt0(o.basal)} × (1 ${total<0?"−":"+"} ${fmt(Math.abs(total),2)}) = ${fmt0(o.energiHitung)} kkal${o.energiDibatasi ? ` → di bawah batas minimal, dipakai <b>${fmt0(o.energiMin)} kkal</b>` : ` → dibulatkan <b>${fmt0(o.energi)} kkal</b>`}.</li>
+  </ol>`;
+}
+function refHTML(){
+  const pakaiPeserta = !!LAST;
+  const o = LAST || hitung(CONTOH);
+  const blk = (judul, isi, buka) => `<details${buka?" open":""}><summary>${judul}</summary><div class="rb">${isi}</div></details>`;
+  let h = `<div class="card" style="margin-bottom:12px"><h2 style="margin-bottom:4px">📖 Rumus &amp; Referensi</h2>
+    <p class="muted" style="margin:0;font-size:.92rem">Rumus, ketentuan, dan sumber yang dipakai e-GiziProlanis v${APP_VERSION}. Ketuk judul untuk membuka. Label <span class="app" style="display:inline-block;background:var(--warn-bg);color:var(--warn);border-radius:6px;padding:0 6px;font-size:.78rem;font-weight:700">Ketentuan aplikasi</span> menandai keputusan tim pengembang, bukan isi pedoman.</p></div>`;
+
+  h += blk("1. IMT dan klasifikasi status gizi", `
+    <div class="rumus">IMT = BB (kg) ÷ [TB (m)]²</div>
+    <table><thead><tr><th>Kategori (Asia-Pasifik)</th><th class="num">IMT (kg/m²)</th></tr></thead><tbody>
+      <tr><td>BB kurang</td><td class="num">&lt; 18,5</td></tr><tr><td>Normal</td><td class="num">18,5–22,9</td></tr>
+      <tr><td>BB lebih (dengan risiko)</td><td class="num">23,0–24,9</td></tr><tr><td>Obese I</td><td class="num">25,0–29,9</td></tr>
+      <tr><td>Obese II</td><td class="num">≥ 30,0</td></tr></tbody></table>
+    <p><b>Rentang BB normal</b> = 18,5 × TB² sampai 22,9 × TB². <b>Kelebihan BB</b> = BB − (22,9 × TB²); <b>kekurangan BB</b> = (18,5 × TB²) − BB.</p>
+    <p>Di mode peserta: BB kurang = "Kurang", Normal = "Sehat", BB lebih = "Agak berlebih", Obese I dan II = "Berlebih".</p>
+    <div class="src">WHO WPRO/IASO/IOTF (2000); PERKENI (2024); Kemenkes (2026).</div>`);
+
+  h += blk("2. Lingkar perut dan RLPP", `
+    <p><b>Obesitas sentral:</b> lingkar perut laki-laki &gt; 90 cm, perempuan &gt; 80 cm. Kelebihan LP = LP − batas.</p>
+    <div class="rumus">RLPP = lingkar perut (cm) ÷ lingkar panggul (cm)</div>
+    <p><b>RLPP berisiko:</b> laki-laki ≥ 0,90; perempuan ≥ 0,85.</p>
+    <div class="src">Kemenkes (2021, 2026); WHO (2011).</div>`);
+
+  h += blk("3. BBI – Berat Badan Ideal (Broca modifikasi)", `
+    <div class="rumus">BBI = 90% × (TB cm − 100)</div>
+    <p>Untuk <b>pria TB &lt; 160 cm</b> dan <b>wanita TB &lt; 150 cm</b>:</p>
+    <div class="rumus">BBI = TB cm − 100</div>
+    <p>Status menurut BBI: normal = BBI ± 10%; kurus &lt; BBI − 10%; gemuk &gt; BBI + 10%. <b>%BBI</b> = BB ÷ BBI × 100%.</p>
+    <p>Pada hipertensi, BB ≥ 115% BBI → dianjurkan diet rendah kalori dan olahraga (Standar Makanan RS).</p>
+    <div class="src">PERKENI (2024); PERSAGI &amp; AsDI (2019).</div>`);
+
+  h += blk("4. Estimasi TB dari tinggi lutut (Chumlea)", `
+    <div class="rumus">Laki-laki: TB = 64,19 − (0,04 × usia) + (2,02 × TL)<br>Perempuan: TB = 84,88 − (0,24 × usia) + (1,83 × TL)</div>
+    <p>TL = tinggi lutut (cm). Dipakai untuk lansia yang sulit berdiri tegak; dikembangkan untuk usia 60–90 tahun.</p>
+    <div class="src">Chumlea dkk. (1985).</div>`);
+
+  h += blk("5. Kebutuhan energi (PERKENI 2024)", `
+    <div class="rumus">Energi = Kalori basal × (1 + koreksi aktivitas + koreksi usia + koreksi status gizi)</div>
+    <p><b>Kalori basal:</b> perempuan 25 kkal/kg BBI; laki-laki 30 kkal/kg BBI.</p>
+    <table><thead><tr><th>Faktor</th><th>Koreksi</th></tr></thead><tbody>
+      <tr><td>Usia 40–59 / 60–69 / ≥ 70 tahun</td><td>−5% / −10% / −20%</td></tr>
+      <tr><td>Aktivitas istirahat</td><td>+10%</td></tr>
+      <tr><td>Ringan (pegawai kantor, guru, ibu rumah tangga)</td><td>+20%</td></tr>
+      <tr><td>Sedang (pegawai industri ringan, mahasiswa)</td><td>+30%</td></tr>
+      <tr><td>Berat (petani, buruh)</td><td>+40%</td></tr>
+      <tr><td>Sangat berat (tukang becak, tukang gali)</td><td>+50%</td></tr>
+      <tr><td>Status gizi: kurus / BB lebih / obese</td><td>+20% / −20% / −30%</td></tr>
+    </tbody></table>
+    <p>PERKENI menyebut gemuk −20–30% dan kurus +20–30% "tergantung tingkat kegemukan". <span class="app">Ketentuan aplikasi</span> BB lebih −20%, obese I–II −30%, kurus +20%.</p>
+    <p>PERKENI: energi paling sedikit 1.000–1.200 kkal (P) dan 1.200–1.600 kkal (L). <span class="app">Ketentuan aplikasi</span> batas minimal 1.200 kkal untuk semua, karena &lt; 1.200 kkal mendekati diet kalori sangat rendah (800–1.000 kkal) yang memerlukan pengawasan ketat. Hasil dibulatkan ke kelipatan 50 kkal.</p>
+    <p>Untuk peserta non-DM, cara yang sama dipakai sebagai perkiraan kebutuhan energi.</p>
+    <h3 style="margin:12px 0 4px">Contoh perhitungan ${pakaiPeserta ? `(data peserta ${o.d.nama ? esc(o.d.nama) : "yang baru dihitung"})` : "(contoh)"}</h3>
+    ${langkahEnergi(o)}
+    ${pakaiPeserta ? "" : `<p class="muted" style="font-size:.85rem">Setelah menghitung data peserta, contoh ini otomatis memakai data peserta tersebut.</p>`}
+    <div class="src">PERKENI (2024), Tabel 17.</div>`, pakaiPeserta);
+
+  h += blk("6. Anjuran zat gizi dan pembagian makan", `
+    <ul class="rec">
+      <li>Tidak ada persentase ideal karbohidrat, protein, dan lemak; disesuaikan pola makan, pilihan, dan target metabolik.</li>
+      <li><b>Serat</b> ≥ 14 g per 1.000 kkal → serat minimal = energi ÷ 1.000 × 14.</li>
+      <li><b>Lemak jenuh</b> &lt; 10% energi → batas (g) = energi × 10% ÷ 9; batasi lemak trans.</li>
+      <li><b>Natrium</b> &lt; 2.300 mg/hari (DM dan non-hipertensi); hipertensi lihat bagian 10.</li>
+      <li>Ikan minimal 2 kali/minggu. Minuman manis, termasuk jus, diganti air. Pemanis tanpa kalori boleh dalam batas ADI.</li>
+      <li><b>Pembagian makan:</b> pagi 20%, siang 30%, malam 25%, selingan 2–3 kali @10–15%.</li>
+    </ul>
+    <div class="src">PERKENI (2024).</div>`);
+
+  h += blk("7. Porsi penukar dan ukuran rumah tangga", `
+    <table><thead><tr><th>Golongan (1 porsi)</th><th class="num">kkal</th><th class="num">KH</th><th class="num">P</th><th class="num">L</th></tr></thead><tbody>
+      ${["nasi","hewani","nabati","sayur","buah","minyak"].map(k=>`<tr><td>${PENUKAR[k].nama}</td><td class="num">${PENUKAR[k].kkal}</td><td class="num">${PENUKAR[k].kh}</td><td class="num">${PENUKAR[k].p}</td><td class="num">${PENUKAR[k].l}</td></tr>`).join("")}
+    </tbody></table>
+    <ul class="rec">${["nasi","hewani","nabati","sayur","buah","minyak"].map(k=>`<li><b>${PENUKAR[k].nama}:</b> ${URT[k]}</li>`).join("")}</ul>
+    <p><span class="app">Ketentuan aplikasi</span> Jumlah porsi disusun otomatis: sayur 3 P; buah 2–4 P dan lauk hewani 2–4 P menurut tingkat energi; lauk nabati 2–3 P; minyak dari target lemak ± 25% energi; makanan pokok mengisi sisa energi. Porsi lalu dibagi ke waktu makan mendekati proporsi PERKENI. Susunan ini titik awal konseling dan dapat disesuaikan petugas.</p>
+    <p><span class="app">Ketentuan aplikasi</span> 1 sendok nasi (centong) peres ± 50 g, sehingga 1 porsi nasi (100 g) = 2 sendok nasi.</p>
+    <div class="src">PERSAGI &amp; AsDI (2019), Daftar Bahan Makanan Penukar.</div>`);
+
+  h += blk("8. Target penurunan berat badan", `
+    <ul class="rec">
+      <li><b>Peserta DM:</b> minimal 7–10% BB awal; manfaat glikemik, lipid, dan TD mulai tampak sejak turun 5%. Defisit 500–750 kkal/hari.</li>
+      <li><b>Peserta non-DM:</b> 5–10% BB awal dalam 3–6 bulan.</li>
+      <li>Laju aman 0,5–1 kg/minggu. Target tidak melebihi jumlah kelebihan BB terhadap IMT 22,9.</li>
+      <li>BB kurang: naik bertahap 0,25–0,5 kg/minggu hingga IMT 18,5.</li>
+    </ul>
+    <div class="src">PERKENI (2024); Kemenkes (2021).</div>`);
+
+  h += blk("9. Interpretasi data klinis", `
+    <table><thead><tr><th>Parameter</th><th>Ketentuan</th></tr></thead><tbody>
+      <tr><td>Tekanan darah</td><td>Normal &lt; 120/80; pra-hipertensi 120–139/80–89; hipertensi derajat 1: 140–159/90–99; derajat 2: ≥ 160/100. Terkendali &lt; 140/90.</td></tr>
+      <tr><td>GD puasa</td><td>Target 80–130 mg/dL</td></tr>
+      <tr><td>GD 1–2 jam setelah makan</td><td>Target &lt; 180 mg/dL</td></tr>
+      <tr><td>Hipoglikemia</td><td>GD &lt; 70 mg/dL</td></tr>
+      <tr><td>Kolesterol total</td><td>&lt; 200 diinginkan; 200–239 batas tinggi; ≥ 240 tinggi</td></tr>
+    </tbody></table>
+    <p>Data klinis hanya untuk menajamkan rekomendasi gizi, bukan untuk diagnosis.</p>
+    <div class="src">PERKENI (2024); Kemenkes (2026); NCEP (2002).</div>`);
+
+  h += blk("10. Hipertensi: natrium dan pola DASH", `
+    <ul class="rec">
+      <li><b>Natrium ≤ 2.000 mg/hari</b> (± 5–6 g garam, ± 1 sdt). Bila TD yang diisi ≥ 140/90 → <b>≤ 1.500 mg/hari</b> (± ¾ sdt garam).</li>
+      <li>Target TD &lt; 140/90 mmHg; bila dapat ditoleransi ≤ 130/80 mmHg.</li>
+      <li>Pola DASH: sayur dan buah 4–5 porsi/hari, susu rendah lemak, biji-bijian utuh, kacang-kacangan; kalium ± 4.700 mg/hari (bila fungsi ginjal baik), kalsium &gt; 800 mg/hari, magnesium cukup; telur maksimal 1 butir/hari.</li>
+      <li>Dihindari: ikan asin/kering/asap, ikan kaleng, kornet, sosis, ati-ampela, nasi uduk, asinan, manisan, vetsin, kecap, saus, bumbu instan, margarin/mentega bergaram.</li>
+    </ul>
+    <div class="src">Kemenkes (2026); PERSAGI &amp; AsDI (2019), Diet Rendah Natrium.</div>`);
+
+  h += blk("11. Daftar pustaka (APA 7)", `<div class="pus">
+    <p>Chumlea, W. C., Roche, A. F., &amp; Steinbaugh, M. L. (1985). Estimating stature from knee height for persons 60 to 90 years of age. <i>Journal of the American Geriatrics Society, 33</i>(2), 116–120.</p>
+    <p>Kementerian Kesehatan Republik Indonesia. (2013). <i>Peraturan Menteri Kesehatan Nomor 30 Tahun 2013 tentang pencantuman informasi kandungan gula, garam, dan lemak serta pesan kesehatan untuk pangan olahan dan pangan siap saji</i>.</p>
+    <p>Kementerian Kesehatan Republik Indonesia. (2021). <i>Pedoman pengelolaan dan pencegahan obesitas bagi tenaga kesehatan di fasilitas kesehatan tingkat pertama</i>.</p>
+    <p>Kementerian Kesehatan Republik Indonesia. (2026). <i>Keputusan Menteri Kesehatan Nomor HK.01.07/MENKES/303/2026 tentang pedoman nasional pelayanan klinis tata laksana hipertensi dewasa</i>.</p>
+    <p>National Cholesterol Education Program Expert Panel. (2002). Third report of the National Cholesterol Education Program (NCEP) Expert Panel on Detection, Evaluation, and Treatment of High Blood Cholesterol in Adults (Adult Treatment Panel III) final report. <i>Circulation, 106</i>(25), 3143–3421.</p>
+    <p>Perkumpulan Endokrinologi Indonesia. (2024). <i>Pedoman pengelolaan dan pencegahan diabetes melitus tipe 2 dewasa di Indonesia 2024</i>. PB PERKENI.</p>
+    <p>Persatuan Ahli Gizi Indonesia, &amp; Asosiasi Dietisien Indonesia. (2019). <i>Penuntun diet dan terapi gizi</i> (Suharyati, S. A. B. Hartati, T. Kresnawan, Sunarti, F. Hudayani, &amp; F. Darmarini, Eds.; Ed. ke-4). Penerbit Buku Kedokteran EGC.</p>
+    <p>World Health Organization. (2011). <i>Waist circumference and waist–hip ratio: Report of a WHO expert consultation, Geneva, 8–11 December 2008</i>.</p>
+    <p>World Health Organization Regional Office for the Western Pacific, International Association for the Study of Obesity, &amp; International Obesity Task Force. (2000). <i>The Asia-Pacific perspective: Redefining obesity and its treatment</i>. Health Communications Australia.</p>
+  </div>`);
+
+  h += `<div class="actions"><button class="btn primary" type="button" id="refBack">← Kembali</button></div>`;
+  return h;
+}
+function bukaRef(dari){
+  REF_FROM = dari;
+  const sec = $("#refSec");
+  sec.innerHTML = refHTML();
+  $("#formCard").classList.add("hidden"); $("#result").classList.add("hidden");
+  sec.classList.remove("hidden");
+  $("#refBack").addEventListener("click", tutupRef);
+  window.scrollTo(0,0);
+}
+function tutupRef(){
+  $("#refSec").classList.add("hidden");
+  (REF_FROM === "result" ? $("#result") : $("#formCard")).classList.remove("hidden");
+  window.scrollTo(0,0);
+}
+document.addEventListener("click", e => { const b = e.target.closest && e.target.closest(".refbtn"); if(b) bukaRef(b.dataset.ref === "2" ? "result" : "form"); });
+
 /* ============================================================
    ALUR APLIKASI
    ============================================================ */
@@ -998,6 +1274,7 @@ function setMode(m){
   $("#home").classList.add("hidden");
   $("#formCard").classList.remove("hidden");
   $("#result").classList.add("hidden");
+  $("#refSec").classList.add("hidden");
   $("#modeBtn").classList.remove("hidden");
   $("#modeBtn").textContent = (m === "petugas" ? "Petugas" : "Peserta") + " ⇄";
   $("#formTitle").textContent = m === "petugas" ? "Data Pengukuran Peserta" : "Data Pengukuran Saya";
@@ -1008,6 +1285,7 @@ function goHome(){
   $("#home").classList.remove("hidden");
   $("#formCard").classList.add("hidden");
   $("#result").classList.add("hidden");
+  $("#refSec").classList.add("hidden");
   $("#modeBtn").classList.add("hidden");
   document.body.classList.remove("mode-peserta","mode-petugas");
   try{ localStorage.removeItem("egp-mode"); }catch(e){}
@@ -1060,6 +1338,7 @@ $("#f").addEventListener("submit", ev => {
   if(E.length){ err.innerHTML = E.map(esc).join("<br>"); err.classList.remove("hidden"); err.scrollIntoView({behavior:"smooth",block:"center"}); return; }
   err.classList.add("hidden");
   const o = hitung(d);
+  if(MODE === "petugas") LAST = o;
   const res = $("#result");
   res.innerHTML = (MODE === "petugas" ? renderPetugas(o) : renderPeserta(o)) +
     `<div class="actions noprint">
@@ -1067,7 +1346,7 @@ $("#f").addEventListener("submit", ev => {
        <button class="btn ghost hidden" type="button" id="shareBtn">📤 Bagikan</button>
        <button class="btn ghost" type="button" id="editBtn">Ubah data</button>
        <button class="btn ghost" type="button" id="newBtn">Peserta baru</button>
-     </div>`;
+     </div>` + (MODE === "petugas" ? `<button class="btn ghost refbtn noprint" type="button" data-ref="2" style="margin-top:10px">📖 Rumus &amp; Referensi</button>` : "");
   $("#formCard").classList.add("hidden");
   res.classList.remove("hidden");
   window.scrollTo(0,0);
