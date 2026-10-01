@@ -78,6 +78,7 @@ details.opt summary{cursor:pointer;font-weight:600;color:var(--teal)}
 .check{display:flex;gap:8px;align-items:flex-start;font-size:.92rem;margin-top:6px}
 .check input{width:20px;height:20px;margin-top:2px;accent-color:var(--teal)}
 .note{background:var(--teal-soft);border-radius:10px;padding:10px 12px;font-size:.9rem}
+.klinis{border-top:1px dashed var(--line);margin-top:16px}
 .err{background:var(--bad-bg);color:var(--bad);border-radius:10px;padding:10px 12px;font-size:.92rem;margin-top:12px}
 .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
 .btn{appearance:none;border:0;border-radius:12px;padding:14px 18px;font:inherit;font-weight:700;cursor:pointer}
@@ -228,6 +229,7 @@ footer.bottom b{color:var(--teal)}
             <label><input type="radio" name="dx" value="DM"><span>Diabetes (DM)</span></label>
             <label><input type="radio" name="dx" value="HT"><span>Hipertensi</span></label>
             <label><input type="radio" name="dx" value="DMHT"><span>Keduanya</span></label>
+            <label><input type="radio" name="dx" value="NONE"><span>Tidak ada</span></label>
           </div>
         </div>
         <div class="full">
@@ -258,24 +260,35 @@ footer.bottom b{color:var(--teal)}
         </div>
       </details>
 
-      <details class="opt only-petugas" id="optKlinis">
-        <summary>Data klinis terakhir (opsional)</summary>
-        <p class="muted" style="font-size:.88rem">Hanya untuk menajamkan rekomendasi gizi, bukan untuk diagnosis.</p>
+      <div class="klinis" id="klinis">
+        <h3 style="margin:16px 0 2px;color:var(--teal)">Hasil pemeriksaan terakhir <span class="muted" style="font-weight:400;font-size:.88rem">(opsional, isi jika ada)</span></h3>
+        <p class="muted" style="font-size:.88rem;margin:0 0 10px">Hanya untuk menajamkan rekomendasi gizi, bukan untuk diagnosis.</p>
         <div class="grid">
           <div>
-            <label class="f" for="sis">TD sistolik</label>
+            <label class="f" for="sis">Tekanan darah atas <em>(sistolik)</em></label>
             <div class="unit"><input id="sis" inputmode="numeric" placeholder="cth. 145"><i>mmHg</i></div>
           </div>
           <div>
-            <label class="f" for="dia">TD diastolik</label>
+            <label class="f" for="dia">Tekanan darah bawah <em>(diastolik)</em></label>
             <div class="unit"><input id="dia" inputmode="numeric" placeholder="cth. 90"><i>mmHg</i></div>
           </div>
+          <div class="full">
+            <span style="display:block;font-weight:600;font-size:.92rem;margin-bottom:4px">Jenis pemeriksaan gula darah</span>
+            <div class="seg" role="radiogroup">
+              <label><input type="radio" name="gdj" value="P" checked><span>Puasa</span></label>
+              <label><input type="radio" name="gdj" value="PP"><span>2 jam setelah makan</span></label>
+            </div>
+          </div>
           <div>
-            <label class="f" for="gdp">Gula darah puasa</label>
+            <label class="f" for="gdp">Gula darah</label>
             <div class="unit"><input id="gdp" inputmode="numeric" placeholder="cth. 160"><i>mg/dL</i></div>
           </div>
+          <div>
+            <label class="f" for="kol">Kolesterol total</label>
+            <div class="unit"><input id="kol" inputmode="numeric" placeholder="cth. 220"><i>mg/dL</i></div>
+          </div>
         </div>
-      </details>
+      </div>
 
       <div id="err" class="err hidden" role="alert"></div>
       <div class="actions">
@@ -304,7 +317,7 @@ footer.bottom b{color:var(--teal)}
 
 <script>
 "use strict";
-const APP_VERSION = "1.0.0";
+const APP_VERSION = "1.0.2";
 document.getElementById("ver").textContent = APP_VERSION;
 
 /* ============================================================
@@ -325,7 +338,7 @@ const PENUKAR = {
   minyak: {nama:"Minyak / lemak",                 kkal:50,  kh:0,  p:0,  l:5}
 };
 const URT = {
-  nasi:   "¾ gelas nasi (100 g) / 1 buah ubi jalar sedang (135 g) / 3 iris roti tawar (70 g)",
+  nasi:   "2 sendok nasi (centong) peres, ± 100 g / 1 buah ubi jalar sedang (135 g) / 3 iris roti tawar (70 g)",
   hewani: "1 potong sedang ikan segar (40 g) / 1 potong sedang ayam tanpa kulit (40 g)",
   nabati: "2 potong sedang tempe (50 g) / 1 biji besar tahu (110 g)",
   sayur:  "1 mangkok sayuran matang tanpa kuah (100 g)",
@@ -475,9 +488,19 @@ function hitung(d){
     o.tdTerkendali = s < 140 && di < 90;
   }
   if(d.gdp){
-    o.gdpStatus = d.gdp < 80 ? {label:"Di bawah target (waspada hipoglikemia)", lamp:"warn"}
-               : d.gdp <= 130 ? {label:"Sesuai target (80–130 mg/dL)", lamp:"ok"}
-               : {label:"Di atas target (80–130 mg/dL)", lamp:"bad"};
+    const puasa = d.gdj !== "PP";
+    o.gdJenis = puasa ? "puasa" : "2 jam setelah makan";
+    o.gdTarget = puasa ? "80–130 mg/dL" : "< 180 mg/dL";
+    o.hipo = d.gdp < 70;
+    o.gdpStatus = o.hipo ? {label:"Terlalu rendah (hipoglikemia)", lamp:"bad", kode:"hipo"}
+               : (puasa && d.gdp < 80) ? {label:"Di bawah target ("+o.gdTarget+")", lamp:"warn", kode:"rendah"}
+               : (puasa ? d.gdp <= 130 : d.gdp < 180) ? {label:"Sesuai target ("+o.gdTarget+")", lamp:"ok", kode:"ok"}
+               : {label:"Di atas target ("+o.gdTarget+")", lamp:"bad", kode:"tinggi"};
+  }
+  if(d.kol){
+    o.kol = d.kol < 200 ? {label:"Diinginkan (< 200 mg/dL)", lamp:"ok", kode:"ok"}
+          : d.kol < 240 ? {label:"Batas tinggi (200–239 mg/dL)", lamp:"warn", kode:"batas"}
+          : {label:"Tinggi (≥ 240 mg/dL)", lamp:"bad", kode:"tinggi"};
   }
   return o;
 }
@@ -489,6 +512,14 @@ function rekomendasi(o, mode){
   const d = o.d, dm = d.dx === "DM" || d.dx === "DMHT", ht = d.dx === "HT" || d.dx === "DMHT";
   const pes = mode === "peserta";
   const R = [];
+  if(o.hipo){
+    R.push({judul: pes ? "⚠️ Gula darah terlalu rendah" : "⚠️ Hipoglikemia (GD < 70 mg/dL)", isi:[
+      pes ? "Segera minum teh manis atau air gula, atau makan 3–4 permen, lalu periksa lagi setelah 15 menit."
+          : "Tangani segera: berikan 15–20 g glukosa (teh manis/air gula/permen), periksa ulang 15 menit kemudian.",
+      pes ? "Setelah membaik, makanlah makanan utama atau selingan. Laporkan kejadian ini ke dokter atau petugas Puskesmas."
+          : "Setelah GD normal, berikan makanan; laporkan ke dokter untuk evaluasi terapi dan pola makan."
+    ]});
+  }
   const umum = [];
   umum.push(pes ? "Isi piring setiap makan: ½ piring sayur dan buah, ¼ piring nasi atau pengganti, ¼ piring lauk."
                 : "Terapkan pola Isi Piringku: ½ piring sayur dan buah, ¼ makanan pokok, ¼ lauk pauk.");
@@ -511,8 +542,9 @@ function rekomendasi(o, mode){
     a.push("Makan buah utuh, bukan jus. Buah dimakan sebagai selingan.");
     a.push(pes ? "Jangan telat makan jika minum obat diabetes. Jika gemetar, keringat dingin, atau pusing, segera minum teh manis atau makan permen, lalu lapor petugas."
                : "Edukasi hipoglikemia: tidak melewatkan makan saat terapi OHO/insulin; kenali tanda gemetar, keringat dingin, lemas, dan cara penanganan awal.");
-    if(o.gdpStatus && o.gdpStatus.lamp === "bad") a.push("GDP masih di atas target: evaluasi jumlah porsi makanan pokok, minuman manis, dan jadwal makan bersama peserta.");
-    if(o.gdpStatus && o.gdpStatus.lamp === "warn" && !pes) a.push("GDP di bawah 80 mg/dL: periksa kecukupan dan keteraturan makan, koordinasikan dengan dokter.");
+    if(o.gdpStatus && o.gdpStatus.kode === "tinggi") a.push(pes ? "Gula darah masih di atas target. Perhatikan lagi jumlah nasi, hindari minuman manis, dan makan tepat waktu."
+                                                               : "Gula darah masih di atas target: evaluasi jumlah porsi makanan pokok, minuman manis, dan jadwal makan bersama peserta.");
+    if(o.gdpStatus && o.gdpStatus.kode === "rendah" && !pes) a.push("GDP di bawah 80 mg/dL: periksa kecukupan dan keteraturan makan, koordinasikan dengan dokter.");
     R.push({judul: pes ? "Khusus diabetes" : "Diabetes Melitus Tipe 2", isi:a});
   }
   if(ht){
@@ -529,7 +561,33 @@ function rekomendasi(o, mode){
     R.push({judul: pes ? "Khusus darah tinggi" : "Hipertensi", isi:a});
   }
 
+  if(o.kol && o.kol.kode !== "ok"){
+    R.push({judul: pes ? "Menurunkan kolesterol" : "Kolesterol total " + (o.kol.kode === "tinggi" ? "tinggi" : "batas tinggi"), isi:[
+      pes ? "Kurangi jeroan (babat, usus, hati, paru), otak, kulit ayam, dan kuning telur. Telur cukup 3–4 butir seminggu."
+          : "Batasi kolesterol makanan < 200 mg/hari: jeroan, otak, kulit ayam, kuning telur berlebih.",
+      pes ? "Kurangi santan kental, gorengan, dan lemak daging. Masak dengan cara direbus, dikukus, atau dibakar."
+          : "Batasi lemak jenuh < 7% energi: santan kental, gorengan, lemak daging, mentega; utamakan minyak nabati secukupnya.",
+      pes ? "Coto, konro, dan pallubasa yang memakai jeroan sebaiknya dihindari dulu."
+          : "Batasi coto, konro, pallubasa berjeroan, serta kepala ikan bersantan.",
+      pes ? "Perbanyak sayur, buah, kacang-kacangan, tempe, dan ikan."
+          : "Tingkatkan serat larut (kacang-kacangan, oat, sayur, buah) dan pilih ikan sebagai sumber protein hewani."
+    ]});
+  }
+  const cekLain = [];
+  if(o.td && !o.tdTerkendali && !ht) cekLain.push(pes ? "Tekanan darah " + d.sis + "/" + d.dia + " mmHg tergolong tinggi. Periksakan ulang ke dokter atau Puskesmas."
+                                                     : "TD ≥ 140/90 mmHg pada peserta tanpa diagnosis hipertensi: rujuk untuk pemeriksaan ulang ke dokter.");
+  if(o.gdpStatus && o.gdpStatus.kode === "tinggi" && !dm) cekLain.push(pes ? "Gula darah melebihi batas normal. Periksakan ulang ke dokter atau Puskesmas."
+                                                     : "GD di atas target pada peserta tanpa diagnosis DM: rujuk untuk pemeriksaan ulang ke dokter.");
+  if(cekLain.length) R.push({judul: pes ? "Perlu diperiksa ulang" : "Perlu rujukan pemeriksaan", isi:cekLain});
   const k = o.kls.kode;
+  if(d.dx === "NONE" && (k === "G" || k === "O" || o.lpSentral || d.usia >= 40)){
+    R.push({judul: pes ? "Cegah diabetes dan darah tinggi" : "Pencegahan PTM", isi:[
+      pes ? "Periksa gula darah dan tekanan darah secara rutin di Posbindu atau Puskesmas, minimal sekali setahun."
+          : "Anjurkan skrining PTM rutin (GD, TD, kolesterol) di Posbindu PTM/Puskesmas minimal 1 kali setahun.",
+      ...((k === "G" || k === "O" || o.lpSentral) ? [pes ? "Berat badan atau lingkar perut yang berlebih meningkatkan risiko diabetes dan darah tinggi. Menurunkannya sedikit saja sudah bermanfaat."
+          : "Kelebihan BB/obesitas sentral merupakan faktor risiko utama DM tipe 2 dan hipertensi; penurunan 5–10% BB menurunkan risiko secara bermakna."] : [])
+    ]});
+  }
   if(k === "G" || k === "O" || o.lpSentral){
     const a = [];
     if(k === "G" || k === "O"){
@@ -587,7 +645,7 @@ function printFoot(){
   return `<div class="printfoot">Dicetak dari e-GiziProlanis v${APP_VERSION} · Dibuat oleh Manjilala – Poltekkes Kemenkes Makassar.
     Hasil ini bersifat panduan dan tidak menggantikan konseling langsung dengan petugas gizi atau dokter.</div>`;
 }
-function dxLabel(dx){ return dx === "DM" ? "Diabetes Melitus Tipe 2" : dx === "HT" ? "Hipertensi" : "DM Tipe 2 dan Hipertensi"; }
+function dxLabel(dx){ return dx === "DM" ? "Diabetes Melitus Tipe 2" : dx === "HT" ? "Hipertensi" : dx === "NONE" ? "Tidak ada DM/hipertensi" : "DM Tipe 2 dan Hipertensi"; }
 function aktLabel(a){ return {10:"Sangat ringan / istirahat",20:"Ringan",30:"Sedang",40:"Berat"}[a]; }
 function pct(x){ return (x>0?"+":x<0?"−":"") + Math.abs(Math.round(x*100)) + "%"; }
 
@@ -629,12 +687,33 @@ function renderPeserta(o){
       <p>Berat badan sudah sehat, tinggal kecilkan lingkar perut <b>${fmt(o.lpLebih,0)} cm</b> lagi dengan banyak bergerak dan mengurangi makanan manis serta berlemak.</p></div>`;
   }
 
+  // Hasil pemeriksaan (opsional)
+  if(o.td || o.gdpStatus || o.kol){
+    h += `<div class="card"><h2>Hasil pemeriksaan ${s}</h2>`;
+    if(o.td){
+      const c = o.tdTerkendali ? "ok" : "bad";
+      h += lamp(c, markOf(c), "Tekanan darah: " + (o.tdTerkendali ? "Sesuai target" : "Belum sesuai target"),
+        `<div><span class="big">${d.sis}/${d.dia}</span> mmHg</div><div>Target: di bawah <b>140/90</b> mmHg</div>`);
+    }
+    if(o.gdpStatus){
+      const g = o.gdpStatus, c = g.kode === "ok" ? "ok" : g.kode === "rendah" ? "warn" : "bad";
+      const t = g.kode === "ok" ? "Sesuai target" : g.kode === "hipo" ? "Terlalu rendah" : g.kode === "rendah" ? "Agak rendah" : "Belum sesuai target";
+      h += lamp(c, markOf(c), "Gula darah " + o.gdJenis + ": " + t,
+        `<div><span class="big">${d.gdp}</span> mg/dL</div><div>Target: <b>${o.gdTarget}</b></div>`);
+    }
+    if(o.kol){
+      const c = o.kol.lamp, t = o.kol.kode === "ok" ? "Sesuai target" : o.kol.kode === "batas" ? "Agak tinggi" : "Tinggi";
+      h += lamp(c, markOf(c), "Kolesterol total: " + t, `<div><span class="big">${d.kol}</span> mg/dL</div><div>Target: di bawah <b>200</b> mg/dL</div>`);
+    }
+    h += `<p class="muted" style="font-size:.85rem;margin:0">Hasil ini bukan diagnosis. Jangan mengubah dosis obat sendiri, konsultasikan ke dokter.</p></div>`;
+  }
+
   // Porsi makan
   const J = o.jadwal;
-  const gelas = x => x>0 ? `${quarter(x*0.75)} gelas nasi` : "";
+  const sendok = x => x>0 ? `${fmt0(x*2)} sendok nasi (centong)` : "";
   const item = (k, x) => {
     if(!x) return "";
-    if(k==="nasi") return `<li>Nasi: <b>${gelas(x)}</b> <span class="muted">(atau ubi/jagung pengganti)</span></li>`;
+    if(k==="nasi") return `<li>Nasi: <b>${sendok(x)}</b> <span class="muted">(atau ubi/jagung pengganti)</span></li>`;
     if(k==="hewani") return `<li>Ikan atau ayam tanpa kulit: <b>${half(x)} potong sedang</b></li>`;
     if(k==="nabati") return `<li>Tempe: <b>${half(x*2)} potong sedang</b> <span class="muted">(atau tahu ${half(x)} biji besar)</span></li>`;
     if(k==="sayur") return `<li>Sayur: <b>${half(x)} mangkok</b></li>`;
@@ -650,7 +729,7 @@ function renderPeserta(o){
     const li = ["nasi","hewani","nabati","sayur","buah","minyak"].map(k=>item(k, J[k][i])).join("");
     if(li) h += `<div class="m"><h4>${w}</h4><ul>${li}</ul></div>`;
   });
-  h += `</div><p class="muted" style="font-size:.85rem;margin-top:8px">Satu gelas = gelas belimbing (± 200 ml). Satu mangkok = mangkok sayur ukuran sedang.</p></div>`;
+  h += `</div><p class="muted" style="font-size:.85rem;margin-top:8px">1 sendok nasi (centong) peres ± 50 g nasi. 1 mangkok = mangkok sayur ukuran sedang.</p></div>`;
 
   // Pesan
   h += `<div class="card"><h2>Pesan untuk ${s}</h2>`;
@@ -667,7 +746,7 @@ function renderPetugas(o){
     <tr><td>Nama peserta</td><td>${d.nama ? esc(d.nama) : "–"}</td></tr>
     <tr><td>Tanggal pengukuran</td><td>${tanggalID(d.tgl)}</td></tr>
     <tr><td>Jenis kelamin / usia</td><td>${d.jk==="L"?"Laki-laki":"Perempuan"} / ${d.usia} tahun</td></tr>
-    <tr><td>Diagnosis Prolanis</td><td>${dxLabel(d.dx)}</td></tr>
+    <tr><td>Diagnosis</td><td>${dxLabel(d.dx)}</td></tr>
     <tr><td>Tingkat aktivitas</td><td>${aktLabel(d.akt)}</td></tr>
   </tbody></table></div>`;
 
@@ -685,7 +764,8 @@ function renderPetugas(o){
         <span class="muted" style="font-weight:400">Batas ${d.jk==="L"?"> 90":"> 80"} cm${o.lpSentral?` · kelebihan ${fmt(o.lpLebih)} cm`:""}</span></td></tr>
     ${o.rlpp ? `<tr><td>RLPP (lingkar panggul ${fmt(d.lpg)} cm)</td><td>${fmt(o.rlpp,2)} <span class="badge ${o.rlppRisiko?"bad":"ok"}">${o.rlppRisiko?"Berisiko":"Tidak berisiko"}</span><br><span class="muted" style="font-weight:400">Batas ≥ ${fmt(o.rlppBatas,2)}</span></td></tr>` : ""}
     ${o.td ? `<tr><td>Tekanan darah</td><td>${d.sis}/${d.dia} mmHg <span class="badge ${o.td.lamp}">${o.td.label}</span></td></tr>` : ""}
-    ${o.gdpStatus ? `<tr><td>Gula darah puasa</td><td>${d.gdp} mg/dL <span class="badge ${o.gdpStatus.lamp}">${o.gdpStatus.label}</span></td></tr>` : ""}
+    ${o.gdpStatus ? `<tr><td>Gula darah ${o.gdJenis}</td><td>${d.gdp} mg/dL <span class="badge ${o.gdpStatus.lamp}">${o.gdpStatus.label}</span></td></tr>` : ""}
+    ${o.kol ? `<tr><td>Kolesterol total</td><td>${d.kol} mg/dL <span class="badge ${o.kol.lamp}">${o.kol.label}</span></td></tr>` : ""}
   </tbody></table></div></div>`;
 
   // Target
@@ -746,7 +826,9 @@ function renderPetugas(o){
     <li>BB idaman dan kebutuhan energi: PERKENI 2021 (Broca modifikasi; basal L 30, P 25 kkal/kg BBI; koreksi usia 40–59 th −5%, 60–69 th −10%, ≥ 70 th −20%; aktivitas +10% s.d. +40%; gemuk −20%, obesitas −30%, kurus +20%).</li>
     <li>Estimasi TB dari tinggi lutut: Chumlea (L = 64,19 − 0,04×usia + 2,02×TL; P = 84,88 − 0,24×usia + 1,83×TL).</li>
     <li>Porsi penukar: Daftar Bahan Makanan Penukar. Batas konsumsi gula, garam, lemak: Permenkes No. 30 Tahun 2013.</li>
-    <li>Target GDP 80–130 mg/dL (PERKENI). TD terkendali &lt; 140/90 mmHg.</li>
+    <li>Target GD puasa 80–130 mg/dL, GD 2 jam setelah makan &lt; 180 mg/dL, hipoglikemia &lt; 70 mg/dL (PERKENI). TD terkendali &lt; 140/90 mmHg.</li>
+    <li>Kolesterol total (NCEP ATP III): &lt; 200 diinginkan; 200–239 batas tinggi; ≥ 240 tinggi.</li>
+    <li>Ukuran nasi: 1 sendok nasi (centong) peres ± 50 g; 1 porsi penukar (100 g) = 2 sendok nasi.</li>
   </ul></details>`;
   h += printFoot();
   return h;
@@ -792,11 +874,11 @@ function bacaForm(){
     usia: num("usia"), bb: num("bb"), tb: num("tb"), lp: num("lp"),
     lpg: MODE==="petugas" ? num("lpg") : null, tl: MODE==="petugas" ? num("tl") : null,
     pakaiTL: MODE==="petugas" && $("#pakaiTL").checked,
-    sis: MODE==="petugas" ? num("sis") : null, dia: MODE==="petugas" ? num("dia") : null, gdp: MODE==="petugas" ? num("gdp") : null
+    sis: num("sis"), dia: num("dia"), gdp: num("gdp"), gdj: radio("gdj") || "P", kol: num("kol")
   };
   const E = [];
   if(!d.jk) E.push("Pilih jenis kelamin.");
-  if(!d.dx) E.push("Pilih penyakit yang diderita (DM, hipertensi, atau keduanya).");
+  if(!d.dx) E.push("Pilih penyakit yang diderita (DM, hipertensi, keduanya, atau tidak ada).");
   const cek = (v, nama, min, max, wajib=true) => {
     if(v === null){ if(wajib) E.push(`${nama} belum diisi.`); return; }
     if(isNaN(v) || v < min || v > max) E.push(`${nama} harus antara ${min} dan ${max}.`);
@@ -813,7 +895,8 @@ function bacaForm(){
   if(!d.pakaiTL) cek(d.tl, "Tinggi lutut", 35, 70, false);
   cek(d.sis, "TD sistolik", 60, 280, false);
   cek(d.dia, "TD diastolik", 30, 180, false);
-  cek(d.gdp, "Gula darah puasa", 30, 700, false);
+  cek(d.gdp, "Gula darah", 30, 700, false);
+  cek(d.kol, "Kolesterol total", 50, 700, false);
   if((d.sis && !d.dia) || (!d.sis && d.dia)) E.push("Isi TD sistolik dan diastolik sekaligus.");
   if(d.usia !== null && !isNaN(d.usia)) d.usia = Math.round(d.usia);
   return {d, E};

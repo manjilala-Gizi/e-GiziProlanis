@@ -1,7 +1,7 @@
 /* e-GiziProlanis — service worker (mode offline)
    Naikkan CACHE_VERSION setiap kali ada file yang diubah,
    agar HP pengguna mengambil versi terbaru saat online. */
-const CACHE_VERSION = "egiziprolanis-v1.0.0";
+const CACHE_VERSION = "egiziprolanis-v1.0.2";
 const FILES = [
   "./",
   "./index.html",
