@@ -1,7 +1,7 @@
 /* e-GiziProlanis — service worker (mode offline)
    Naikkan CACHE_VERSION setiap kali ada file yang diubah,
    agar HP pengguna mengambil versi terbaru saat online. */
-const CACHE_VERSION = "egiziprolanis-v1.0.3";
+const CACHE_VERSION = "egiziprolanis-v1.0.4";
 const FILES = [
   "./",
   "./index.html",
@@ -13,8 +13,7 @@ const FILES = [
   "./assets/apple-touch-icon.png",
   "./assets/favicon.png",
   "./assets/piring.png",
-  "./assets/lib/html2canvas.min.js",
-  "./assets/lib/jspdf.umd.min.js"
+  "./assets/lib/html2canvas.min.js"
 ];
 
 self.addEventListener("install", event => {

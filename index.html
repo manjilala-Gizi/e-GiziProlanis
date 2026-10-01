@@ -316,10 +316,9 @@ footer.bottom b{color:var(--teal)}
 <div id="toast" class="hidden"></div>
 
 <script src="assets/lib/html2canvas.min.js" defer></script>
-<script src="assets/lib/jspdf.umd.min.js" defer></script>
 <script>
 "use strict";
-const APP_VERSION = "1.0.3";
+const APP_VERSION = "1.0.4";
 document.getElementById("ver").textContent = APP_VERSION;
 
 /* ============================================================
@@ -939,12 +938,10 @@ function pdfPetugas(o){
 }
 function namaFile(o){
   const n = (o.d.nama || "peserta").replace(/[^A-Za-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,30) || "peserta";
-  return `e-GiziProlanis_${n}_${o.d.tgl || today()}.pdf`;
+  return `e-GiziProlanis_${n}_${o.d.tgl || today()}.jpg`;
 }
-async function unduhPDF(o, mode){
-  const btn = $("#printBtn"), label = btn.textContent;
-  if(!window.html2canvas || !window.jspdf){ toast("Komponen PDF belum siap. Coba sebentar lagi."); return; }
-  btn.disabled = true; btn.textContent = "Menyiapkan PDF…";
+async function buatGambar(o, mode){
+  // render laporan 1 halaman (rasio A4) menjadi JPG
   let root = null, st = null;
   try{
     st = document.createElement("style"); st.textContent = PDFCSS; document.head.appendChild(st);
@@ -952,24 +949,42 @@ async function unduhPDF(o, mode){
     root.innerHTML = mode === "petugas" ? pdfPetugas(o) : pdfPeserta(o);
     document.body.appendChild(root);
     await Promise.all(Array.from(root.querySelectorAll("img")).map(im => im.complete ? 0 : new Promise(r => { im.onload = im.onerror = r; })));
-    const canvas = await html2canvas(root, {scale:2, backgroundColor:"#ffffff", useCORS:true, logging:false});
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF({unit:"mm", format:"a4", orientation:"portrait"});
-    const pw = 210, ph = 297;
-    let w = pw, hgt = canvas.height * pw / canvas.width;
-    if(hgt > ph){ hgt = ph; w = canvas.width * ph / canvas.height; }   // paksa muat 1 halaman
-    pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", (pw - w)/2, 0, w, hgt);
-    pdf.setProperties({title: "e-GiziProlanis", author: "Manjilala – Poltekkes Kemenkes Makassar"});
-    pdf.save(namaFile(o));
-    toast("PDF tersimpan di folder Unduhan (Download).");
-  }catch(e){
-    toast("Gagal membuat PDF. Coba lagi.");
-  }finally{
+    const src = await html2canvas(root, {scale:2, backgroundColor:"#ffffff", logging:false});
+    const W = src.width, H = Math.round(W * 297 / 210);          // kanvas rasio A4
+    const out = document.createElement("canvas"); out.width = W; out.height = H;
+    const ctx = out.getContext("2d"); ctx.fillStyle = "#fff"; ctx.fillRect(0,0,W,H);
+    const sc = Math.min(1, H / src.height);                         // perkecil bila lebih dari 1 halaman
+    const w = W*sc, h = src.height*sc;
+    ctx.drawImage(src, (W-w)/2, 0, w, h);
+    return await new Promise(res => out.toBlob(res, "image/jpeg", 0.9));
+  } finally {
     if(root) root.remove(); if(st) st.remove();
+  }
+}
+async function simpanGambar(o, mode, bagikan){
+  const btn = bagikan ? $("#shareBtn") : $("#printBtn"), label = btn.textContent;
+  if(!window.html2canvas){ toast("Komponen gambar belum siap. Coba sebentar lagi."); return; }
+  btn.disabled = true; btn.textContent = "Menyiapkan gambar…";
+  try{
+    const blob = await buatGambar(o, mode);
+    const nama = namaFile(o);
+    const file = new File([blob], nama, {type:"image/jpeg"});
+    if(bagikan){
+      try{ await navigator.share({files:[file], title:"Hasil e-GiziProlanis"}); }
+      catch(e){ if(e && e.name !== "AbortError") toast("Gagal membagikan. Coba tombol Simpan Gambar."); }
+    } else {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a"); a.href = url; a.download = nama;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+      toast("Gambar tersimpan. Cek album Download di galeri HP.");
+    }
+  }catch(e){
+    toast("Gagal membuat gambar. Coba lagi.");
+  }finally{
     btn.disabled = false; btn.textContent = label;
   }
 }
-
 /* ============================================================
    ALUR APLIKASI
    ============================================================ */
@@ -1048,14 +1063,17 @@ $("#f").addEventListener("submit", ev => {
   const res = $("#result");
   res.innerHTML = (MODE === "petugas" ? renderPetugas(o) : renderPeserta(o)) +
     `<div class="actions noprint">
-       <button class="btn primary" type="button" id="printBtn">⬇️ Unduh PDF</button>
+       <button class="btn primary" type="button" id="printBtn">🖼️ Simpan Gambar</button>
+       <button class="btn ghost hidden" type="button" id="shareBtn">📤 Bagikan</button>
        <button class="btn ghost" type="button" id="editBtn">Ubah data</button>
        <button class="btn ghost" type="button" id="newBtn">Peserta baru</button>
      </div>`;
   $("#formCard").classList.add("hidden");
   res.classList.remove("hidden");
   window.scrollTo(0,0);
-  $("#printBtn").addEventListener("click", () => unduhPDF(o, MODE));
+  $("#printBtn").addEventListener("click", () => simpanGambar(o, MODE, false));
+  try{ if(navigator.canShare && navigator.canShare({files:[new File([""], "x.jpg", {type:"image/jpeg"})]})) $("#shareBtn").classList.remove("hidden"); }catch(e){}
+  $("#shareBtn").addEventListener("click", () => simpanGambar(o, MODE, true));
   $("#editBtn").addEventListener("click", () => { res.classList.add("hidden"); $("#formCard").classList.remove("hidden"); window.scrollTo(0,0); });
   $("#newBtn").addEventListener("click", () => { resetForm(); res.classList.add("hidden"); $("#formCard").classList.remove("hidden"); window.scrollTo(0,0); });
 });
