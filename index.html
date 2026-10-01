@@ -1,0 +1,889 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>e-GiziProlanis</title>
+<meta name="description" content="Kalkulator status gizi peserta Prolanis (DM Tipe 2 dan Hipertensi) untuk petugas gizi dan peserta.">
+<meta name="theme-color" content="#00756E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="GiziProlanis">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>
+:root{
+  --teal:#00756E; --teal-2:#00B8AD; --teal-soft:#E3F6F4;
+  --lime:#CDDC29; --green-k:#74D58C; --blue-k:#60BFD0;
+  --ink:#1D2A2E; --muted:#5B6B70; --line:#D8E3E5; --bg:#F5F8F8; --card:#FFFFFF;
+  --ok:#1E8E4E; --ok-bg:#E5F5EC; --warn:#A86E00; --warn-bg:#FFF4D9; --bad:#C23A3A; --bad-bg:#FCE8E8;
+  --radius:14px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",Arial,sans-serif}
+body.mode-peserta{font-size:18px}
+a{color:var(--teal)}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px}
+header.top{font-size:16px;background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+header.top .wrap{display:flex;align-items:center;gap:12px;padding-top:10px;padding-bottom:10px}
+header.top img.logo{height:34px;width:auto}
+@media (max-width:480px){header.top img.logo{height:26px}.brand small{display:none!important}.brand b{font-size:1rem!important}}
+.brand{flex:1;min-width:0}
+.brand b{display:block;font-size:1.05rem;color:var(--teal);line-height:1.2}
+.brand small{display:block;color:var(--muted);font-size:.78rem;line-height:1.2}
+.modebtn{border:1px solid var(--line);background:var(--teal-soft);color:var(--teal);border-radius:999px;padding:6px 12px;font:inherit;font-size:.8rem;font-weight:600;cursor:pointer;white-space:nowrap}
+main{padding:18px 0 32px}
+h1{font-size:1.45rem;margin:.2em 0 .3em;line-height:1.25}
+h2{font-size:1.15rem;margin:0 0 .6em;color:var(--teal)}
+h3{font-size:1rem;margin:1em 0 .4em}
+p{margin:.4em 0}
+.muted{color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin:0 0 14px}
+.hidden{display:none!important}
+
+/* Beranda */
+.hero{text-align:center;padding:10px 0 4px}
+.hero img{width:96px;height:96px;border-radius:22px;box-shadow:0 6px 18px rgba(0,117,110,.18)}
+.choose{display:grid;gap:12px;margin-top:16px}
+.choice{display:flex;align-items:center;gap:14px;text-align:left;width:100%;background:var(--card);border:2px solid var(--line);border-radius:var(--radius);padding:16px;font:inherit;cursor:pointer;color:var(--ink)}
+.choice:hover,.choice:focus-visible{border-color:var(--teal-2);outline:none}
+.choice .ic{flex:none;width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-size:1.6rem;background:var(--teal-soft)}
+.choice b{display:block;font-size:1.08rem}
+.choice span{color:var(--muted);font-size:.9rem}
+
+/* Form */
+.grid{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+.grid .full{grid-column:1/-1}
+@media (max-width:420px){.grid{grid-template-columns:1fr}}
+label.f{display:block;font-weight:600;font-size:.92rem;margin-bottom:4px}
+label.f em{font-weight:400;font-style:normal;color:var(--muted);font-size:.85em}
+input[type=text],input[type=date],input[inputmode]{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:10px;font:inherit;background:#fff;color:var(--ink)}
+input:focus{outline:none;border-color:var(--teal-2);box-shadow:0 0 0 3px rgba(0,184,173,.18)}
+.unit{position:relative}
+.unit input{padding-right:52px}
+.unit i{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-style:normal;color:var(--muted);font-size:.85rem;pointer-events:none}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg label{flex:1 1 auto;min-width:96px}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg span{display:block;text-align:center;padding:11px 10px;border:1.5px solid var(--line);border-radius:10px;cursor:pointer;font-weight:600;background:#fff}
+.seg input:checked+span{border-color:var(--teal);background:var(--teal-soft);color:var(--teal)}
+.seg input:focus-visible+span{box-shadow:0 0 0 3px rgba(0,184,173,.3)}
+.seg.stack{flex-direction:column}
+.seg.stack span{text-align:left;font-weight:600}
+.seg.stack span small{display:block;font-weight:400;color:var(--muted);font-size:.85rem}
+details.opt{border:1px dashed var(--line);border-radius:10px;padding:10px 12px;margin-top:12px}
+details.opt summary{cursor:pointer;font-weight:600;color:var(--teal)}
+.check{display:flex;gap:8px;align-items:flex-start;font-size:.92rem;margin-top:6px}
+.check input{width:20px;height:20px;margin-top:2px;accent-color:var(--teal)}
+.note{background:var(--teal-soft);border-radius:10px;padding:10px 12px;font-size:.9rem}
+.err{background:var(--bad-bg);color:var(--bad);border-radius:10px;padding:10px 12px;font-size:.92rem;margin-top:12px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.btn{appearance:none;border:0;border-radius:12px;padding:14px 18px;font:inherit;font-weight:700;cursor:pointer}
+.btn.primary{background:var(--teal);color:#fff;flex:1 1 200px}
+.btn.ghost{background:#fff;color:var(--teal);border:1.5px solid var(--teal)}
+.btn:focus-visible{outline:3px solid rgba(0,184,173,.45);outline-offset:2px}
+
+/* Hasil */
+.lamp{display:flex;gap:14px;align-items:flex-start;border-radius:var(--radius);padding:16px;margin-bottom:12px;border:1.5px solid}
+.lamp .dot{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:1.2rem}
+.lamp.ok{background:var(--ok-bg);border-color:#BFE5CE}.lamp.ok .dot{background:var(--ok)}
+.lamp.warn{background:var(--warn-bg);border-color:#F1D68F}.lamp.warn .dot{background:#E0A100}
+.lamp.bad{background:var(--bad-bg);border-color:#F2BDBD}.lamp.bad .dot{background:var(--bad)}
+.lamp b.t{display:block;font-size:1.05rem}
+.lamp .big{font-size:1.25rem;font-weight:800}
+.badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.8rem;font-weight:700}
+.badge.ok{background:var(--ok-bg);color:var(--ok)}.badge.warn{background:var(--warn-bg);color:var(--warn)}.badge.bad{background:var(--bad-bg);color:var(--bad)}
+table{width:100%;border-collapse:collapse;font-size:.93rem}
+th,td{padding:8px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--teal-soft);color:var(--teal);font-weight:700}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.kv td:first-child{color:var(--muted);width:52%}
+.kv td:last-child{font-weight:600}
+ul.rec{margin:.3em 0 .6em;padding-left:1.2em}
+ul.rec li{margin:.25em 0}
+.target{background:linear-gradient(135deg,#E3F6F4,#F3F8D6);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.target b{color:var(--teal)}
+.meal{display:grid;grid-template-columns:1fr;gap:10px}
+.meal .m{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}
+.meal .m h4{margin:0 0 6px;color:var(--teal);font-size:1rem}
+.meal .m ul{margin:0;padding-left:1.1em}
+@media (min-width:600px){.meal{grid-template-columns:1fr 1fr}}
+.plate{display:flex;gap:14px;align-items:center}
+.plate svg{flex:none}
+.disclaimer{font-size:.85rem;color:var(--muted);border-top:1px dashed var(--line);padding-top:10px;margin-top:6px}
+.printhead,.printfoot{display:none}
+
+footer.bottom{text-align:center;color:var(--muted);font-size:.82rem;padding:8px 16px 28px}
+footer.bottom b{color:var(--teal)}
+#installBar{position:fixed;left:12px;right:12px;bottom:12px;background:var(--ink);color:#fff;border-radius:14px;padding:12px 14px;display:flex;gap:10px;align-items:center;z-index:20;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+#installBar p{flex:1;margin:0;font-size:.9rem}
+#installBar button{border:0;border-radius:10px;padding:9px 12px;font:inherit;font-weight:700;cursor:pointer}
+#toast{position:fixed;left:16px;right:16px;bottom:16px;max-width:480px;margin:0 auto;text-align:center;background:var(--teal);color:#fff;padding:10px 16px;border-radius:12px;font-size:15px;z-index:30;box-shadow:0 6px 18px rgba(0,0,0,.2)}
+
+/* Cetak */
+@media print{
+  @page{size:A4;margin:12mm}
+  body{background:#fff;font-size:11pt}
+  body.mode-peserta{font-size:13pt}
+  header.top,#home,#formCard,.actions,footer.bottom,#installBar,#toast,.noprint{display:none!important}
+  .card{border:0;padding:0;margin:0 0 10pt}
+  .printhead{display:flex!important;align-items:center;gap:12pt;border-bottom:2pt solid var(--teal);padding-bottom:6pt;margin-bottom:10pt}
+  .printhead img{height:40pt}
+  .printhead div{flex:1;text-align:right}
+  .printhead b{font-size:14pt;color:var(--teal)}
+  .printfoot{display:block!important;margin-top:14pt;font-size:9pt;color:#555;border-top:1px solid #ccc;padding-top:6pt}
+  .lamp,.target,.meal .m,table,tr{break-inside:avoid}
+  .lamp,.badge,.target,th,.lamp .dot{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sign{display:flex!important}
+  .meal{grid-template-columns:1fr 1fr}
+}
+.sign{display:none;justify-content:flex-end;margin-top:18pt}
+.sign div{text-align:center;min-width:180pt}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <img class="logo" src="assets/logo-poltekkes.png" alt="Kemenkes Poltekkes Makassar">
+    <div class="brand"><b>e-GiziProlanis</b><small>Status Gizi Peserta Prolanis</small></div>
+    <button class="modebtn hidden" id="modeBtn" type="button">Ganti mode</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- BERANDA: pilih mode -->
+  <section id="home">
+    <div class="hero">
+      <img src="assets/icon-192.png" alt="">
+      <h1>e-GiziProlanis</h1>
+      <p class="muted">Kalkulator status gizi peserta Prolanis<br>(Diabetes Melitus Tipe 2 dan Hipertensi)</p>
+    </div>
+    <div class="choose">
+      <button class="choice" type="button" data-mode="petugas">
+        <span class="ic" aria-hidden="true">🩺</span>
+        <div><b>Saya Petugas</b><span>Hasil lengkap: IMT, BB ideal, lingkar perut, kebutuhan energi, porsi penukar, dan cetak hasil konseling.</span></div>
+      </button>
+      <button class="choice" type="button" data-mode="peserta">
+        <span class="ic" aria-hidden="true">🙂</span>
+        <div><b>Saya Peserta Prolanis</b><span>Hasil sederhana dan mudah dipahami, lengkap dengan porsi makan sehari-hari.</span></div>
+      </button>
+    </div>
+    <details class="card noprint" style="margin-top:16px">
+      <summary><b>Cara memasang aplikasi di HP</b></summary>
+      <p><b>Android (Chrome):</b> buka menu ⋮ lalu pilih <i>Instal aplikasi</i> atau <i>Tambahkan ke layar utama</i>.</p>
+      <p><b>iPhone (Safari):</b> ketuk tombol Bagikan lalu pilih <i>Tambahkan ke Layar Utama</i>.</p>
+      <p class="muted">Setelah terpasang, aplikasi bisa dipakai tanpa internet.</p>
+    </details>
+  </section>
+
+  <!-- FORMULIR -->
+  <section id="formCard" class="card hidden">
+    <h2 id="formTitle">Data Pengukuran</h2>
+    <p class="note only-peserta">Isi sesuai hasil pengukuran petugas saat kegiatan Prolanis (lihat kartu atau catatan dari petugas).</p>
+    <form id="f" novalidate autocomplete="off">
+      <div class="grid">
+        <div class="full">
+          <label class="f" for="nama">Nama peserta <em>(boleh dikosongkan)</em></label>
+          <input type="text" id="nama" maxlength="60">
+        </div>
+        <div class="only-petugas">
+          <label class="f" for="tgl">Tanggal pengukuran</label>
+          <input type="date" id="tgl">
+        </div>
+        <div class="only-petugas">
+          <label class="f" for="petugas">Nama petugas <em>(opsional)</em></label>
+          <input type="text" id="petugas" maxlength="60">
+        </div>
+        <div class="full">
+          <span class="f" style="display:block;font-weight:600;font-size:.92rem;margin-bottom:4px">Jenis kelamin</span>
+          <div class="seg" role="radiogroup">
+            <label><input type="radio" name="jk" value="L"><span>Laki-laki</span></label>
+            <label><input type="radio" name="jk" value="P"><span>Perempuan</span></label>
+          </div>
+        </div>
+        <div>
+          <label class="f" for="usia">Usia</label>
+          <div class="unit"><input id="usia" inputmode="numeric" placeholder="cth. 58"><i>tahun</i></div>
+        </div>
+        <div>
+          <label class="f" for="bb">Berat badan</label>
+          <div class="unit"><input id="bb" inputmode="decimal" placeholder="cth. 68,5"><i>kg</i></div>
+        </div>
+        <div>
+          <label class="f" for="tb">Tinggi badan</label>
+          <div class="unit"><input id="tb" inputmode="decimal" placeholder="cth. 156"><i>cm</i></div>
+        </div>
+        <div>
+          <label class="f" for="lp">Lingkar perut</label>
+          <div class="unit"><input id="lp" inputmode="decimal" placeholder="cth. 92"><i>cm</i></div>
+        </div>
+        <div class="full">
+          <span style="display:block;font-weight:600;font-size:.92rem;margin-bottom:4px">Penyakit yang diderita</span>
+          <div class="seg" role="radiogroup">
+            <label><input type="radio" name="dx" value="DM"><span>Diabetes (DM)</span></label>
+            <label><input type="radio" name="dx" value="HT"><span>Hipertensi</span></label>
+            <label><input type="radio" name="dx" value="DMHT"><span>Keduanya</span></label>
+          </div>
+        </div>
+        <div class="full">
+          <span style="display:block;font-weight:600;font-size:.92rem;margin-bottom:4px">Aktivitas sehari-hari</span>
+          <div class="seg stack" role="radiogroup">
+            <label><input type="radio" name="akt" value="10"><span>Sangat ringan / banyak istirahat<small>Lebih banyak duduk atau berbaring, jarang keluar rumah</small></span></label>
+            <label><input type="radio" name="akt" value="20" checked><span>Ringan<small>Pekerjaan rumah ringan, jalan santai, ikut senam Prolanis</small></span></label>
+            <label><input type="radio" name="akt" value="30"><span>Sedang<small>Berkebun, berdagang keliling, jalan cepat rutin</small></span></label>
+            <label><input type="radio" name="akt" value="40"><span>Berat<small>Bertani, nelayan, buruh angkut, pekerjaan fisik berat</small></span></label>
+          </div>
+        </div>
+      </div>
+
+      <details class="opt only-petugas" id="optUkur">
+        <summary>Pengukuran tambahan (opsional)</summary>
+        <div class="grid" style="margin-top:10px">
+          <div>
+            <label class="f" for="lpg">Lingkar panggul</label>
+            <div class="unit"><input id="lpg" inputmode="decimal" placeholder="untuk RLPP"><i>cm</i></div>
+          </div>
+          <div>
+            <label class="f" for="tl">Tinggi lutut</label>
+            <div class="unit"><input id="tl" inputmode="decimal" placeholder="cth. 48"><i>cm</i></div>
+          </div>
+          <div class="full">
+            <label class="check"><input type="checkbox" id="pakaiTL"> <span>Pakai estimasi TB dari tinggi lutut (Chumlea) — untuk lansia yang sulit berdiri tegak. TB yang diisi di atas akan diabaikan.</span></label>
+          </div>
+        </div>
+      </details>
+
+      <details class="opt only-petugas" id="optKlinis">
+        <summary>Data klinis terakhir (opsional)</summary>
+        <p class="muted" style="font-size:.88rem">Hanya untuk menajamkan rekomendasi gizi, bukan untuk diagnosis.</p>
+        <div class="grid">
+          <div>
+            <label class="f" for="sis">TD sistolik</label>
+            <div class="unit"><input id="sis" inputmode="numeric" placeholder="cth. 145"><i>mmHg</i></div>
+          </div>
+          <div>
+            <label class="f" for="dia">TD diastolik</label>
+            <div class="unit"><input id="dia" inputmode="numeric" placeholder="cth. 90"><i>mmHg</i></div>
+          </div>
+          <div>
+            <label class="f" for="gdp">Gula darah puasa</label>
+            <div class="unit"><input id="gdp" inputmode="numeric" placeholder="cth. 160"><i>mg/dL</i></div>
+          </div>
+        </div>
+      </details>
+
+      <div id="err" class="err hidden" role="alert"></div>
+      <div class="actions">
+        <button class="btn primary" type="submit">Hitung Status Gizi</button>
+        <button class="btn ghost" type="button" id="resetBtn">Kosongkan</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- HASIL -->
+  <section id="result" class="hidden" aria-live="polite"></section>
+
+</main>
+
+<footer class="bottom">
+  <div>Dibuat oleh <b>Manjilala</b> – Poltekkes Kemenkes Makassar</div>
+  <div>e-GiziProlanis v<span id="ver"></span> · <span id="netStatus">Bisa dipakai tanpa internet setelah dipasang</span></div>
+</footer>
+
+<div id="installBar" class="hidden">
+  <p>Pasang e-GiziProlanis di HP agar bisa dipakai tanpa internet.</p>
+  <button id="installYes" style="background:var(--lime);color:var(--ink)">Pasang</button>
+  <button id="installNo" style="background:transparent;color:#fff">Nanti</button>
+</div>
+<div id="toast" class="hidden"></div>
+
+<script>
+"use strict";
+const APP_VERSION = "1.0.0";
+document.getElementById("ver").textContent = APP_VERSION;
+
+/* ============================================================
+   KONSTANTA & REFERENSI
+   - Klasifikasi IMT dewasa: Kemenkes RI (P2PTM)
+   - Lingkar perut: Kemenkes RI (L > 90 cm, P > 80 cm)
+   - RLPP: WHO (L ≥ 0,90; P ≥ 0,85)
+   - BB idaman & kebutuhan energi: PERKENI 2021 (rumus Broca modifikasi)
+   - Nilai penukar: Daftar Bahan Makanan Penukar (Kemenkes/PERSAGI)
+   - Estimasi TB dari tinggi lutut: Chumlea (1985)
+   ============================================================ */
+const PENUKAR = {
+  nasi:   {nama:"Makanan pokok (nasi)",          kkal:175, kh:40, p:4,  l:0},
+  hewani: {nama:"Lauk hewani rendah lemak",      kkal:50,  kh:0,  p:7,  l:2},
+  nabati: {nama:"Lauk nabati (tempe/tahu)",      kkal:75,  kh:7,  p:5,  l:3},
+  sayur:  {nama:"Sayuran",                        kkal:25,  kh:5,  p:1,  l:0},
+  buah:   {nama:"Buah",                           kkal:50,  kh:12, p:0,  l:0},
+  minyak: {nama:"Minyak / lemak",                 kkal:50,  kh:0,  p:0,  l:5}
+};
+const URT = {
+  nasi:   "¾ gelas nasi (100 g) / 1 buah ubi jalar sedang (135 g) / 3 iris roti tawar (70 g)",
+  hewani: "1 potong sedang ikan segar (40 g) / 1 potong sedang ayam tanpa kulit (40 g)",
+  nabati: "2 potong sedang tempe (50 g) / 1 biji besar tahu (110 g)",
+  sayur:  "1 mangkok sayuran matang tanpa kuah (100 g)",
+  buah:   "1 potong besar pepaya (110 g) / 1 buah pisang ambon sedang (50 g) / 2 buah jeruk manis (110 g)",
+  minyak: "1 sendok teh minyak (5 g)"
+};
+
+/* ============================================================
+   UTILITAS
+   ============================================================ */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+function num(id){ const v = ($("#"+id).value||"").trim().replace(",", "."); if(v==="") return null; const n = Number(v); return isFinite(n) ? n : NaN; }
+function radio(name){ const r = document.querySelector('input[name="'+name+'"]:checked'); return r ? r.value : null; }
+function r1(x){ return Math.round(x*10)/10; }
+function r05(x){ return Math.round(x*2)/2; }
+function fmt(x,d=1){ return Number(x).toLocaleString("id-ID",{minimumFractionDigits:d,maximumFractionDigits:d}); }
+function fmt0(x){ return Math.round(x).toLocaleString("id-ID"); }
+function esc(s){ return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function half(x){ // 1.5 -> "1½"
+  const w = Math.floor(x+1e-9), f = x - w;
+  if(Math.abs(f) < 0.01) return String(w);
+  if(Math.abs(f-0.5) < 0.01) return (w? w : "") + "½";
+  return fmt(x,1);
+}
+function quarter(x){ // untuk gelas: 0.75 -> "¾"
+  const q = Math.round(x*4)/4, w = Math.floor(q+1e-9), f = q-w;
+  const fr = Math.abs(f-0.25)<0.01 ? "¼" : Math.abs(f-0.5)<0.01 ? "½" : Math.abs(f-0.75)<0.01 ? "¾" : "";
+  if(!fr) return String(w);
+  return (w ? w+" " : "") + fr;
+}
+function splitPortion(total, weights){
+  // bagi total porsi ke beberapa waktu makan, kelipatan 0,5, jumlah tetap = total
+  const raw = weights.map(w => total*w);
+  const parts = raw.map(x => Math.floor(x*2)/2);
+  let rem = Math.round((total - parts.reduce((a,b)=>a+b,0))*2);
+  const order = raw.map((x,i)=>({i, f:x-parts[i], w:weights[i]})).filter(o=>o.w>0).sort((a,b)=>b.f-a.f || b.w-a.w);
+  let k = 0;
+  while(rem > 0 && order.length){ parts[order[k % order.length].i] += 0.5; rem--; k++; }
+  return parts;
+}
+
+/* ============================================================
+   PERHITUNGAN
+   ============================================================ */
+function klasifikasiIMT(imt){
+  const v = r1(imt);
+  if(v < 17.0)  return {kode:"KB", label:"Kurus", ket:"Kekurangan berat badan tingkat berat", lamp:"bad"};
+  if(v < 18.5)  return {kode:"KR", label:"Kurus", ket:"Kekurangan berat badan tingkat ringan", lamp:"warn"};
+  if(v <= 25.0) return {kode:"N",  label:"Normal", ket:"Berat badan normal", lamp:"ok"};
+  if(v <= 27.0) return {kode:"G",  label:"Gemuk", ket:"Kelebihan berat badan tingkat ringan", lamp:"warn"};
+  return               {kode:"O",  label:"Obesitas", ket:"Kelebihan berat badan tingkat berat", lamp:"bad"};
+}
+
+function hitung(d){
+  const o = {d};
+  // Tinggi badan (opsional: estimasi Chumlea dari tinggi lutut)
+  o.tbEstimasi = false;
+  o.tb = d.tb;
+  if(d.pakaiTL && d.tl){
+    o.tb = d.jk === "L" ? 64.19 - 0.04*d.usia + 2.02*d.tl : 84.88 - 0.24*d.usia + 1.83*d.tl;
+    o.tb = r1(o.tb); o.tbEstimasi = true;
+  }
+  const m = o.tb/100;
+  o.imt = d.bb/(m*m);
+  o.kls = klasifikasiIMT(o.imt);
+  o.bbMin = 18.5*m*m;
+  o.bbMax = 25.0*m*m;
+  o.lebih = Math.max(0, d.bb - o.bbMax);
+  o.kurang = Math.max(0, o.bbMin - d.bb);
+  if(o.kls.kode === "N"){ o.lebih = 0; o.kurang = 0; }
+
+  // BB idaman (PERKENI 2021, Broca modifikasi)
+  const bawahTB = (d.jk === "L" && o.tb < 160) || (d.jk === "P" && o.tb < 150);
+  o.bbi = bawahTB ? (o.tb - 100) : 0.9*(o.tb - 100);
+  o.bbiRumus = bawahTB ? "TB − 100 (TB pendek)" : "90% × (TB − 100)";
+
+  // Lingkar perut
+  o.lpBatas = d.jk === "L" ? 90 : 80;
+  o.lpLebih = Math.max(0, d.lp - o.lpBatas);
+  o.lpSentral = d.lp > o.lpBatas;
+
+  // RLPP
+  if(d.lpg){
+    o.rlpp = d.lp / d.lpg;
+    o.rlppBatas = d.jk === "L" ? 0.90 : 0.85;
+    o.rlppRisiko = o.rlpp >= o.rlppBatas;
+  }
+
+  // Kebutuhan energi (PERKENI 2021)
+  const basalPerKg = d.jk === "L" ? 30 : 25;
+  o.basal = o.bbi * basalPerKg;
+  const fAkt = d.akt/100;
+  const fUsia = d.usia >= 70 ? -0.20 : d.usia >= 60 ? -0.10 : d.usia >= 40 ? -0.05 : 0;
+  const fBB = o.kls.kode === "O" ? -0.30 : o.kls.kode === "G" ? -0.20 : (o.kls.kode === "KB" || o.kls.kode === "KR") ? 0.20 : 0;
+  o.faktor = {akt:fAkt, usia:fUsia, bb:fBB};
+  o.energiHitung = o.basal * (1 + fAkt + fUsia + fBB);
+  o.energiMin = d.jk === "L" ? 1400 : 1200;
+  o.energiDibatasi = o.energiHitung < o.energiMin;
+  o.energi = Math.round(Math.max(o.energiHitung, o.energiMin)/50)*50;
+
+  // Target zat gizi makro: KH 60%, protein 15%, lemak 25%
+  o.makro = { kh: o.energi*0.60/4, p: o.energi*0.15/4, l: o.energi*0.25/9 };
+  o.natrium = (d.dx === "HT" || d.dx === "DMHT") ? "< 2.000 mg (± 1 sdt garam/hari)" : "< 2.300 mg (≤ 1 sdt garam/hari)";
+  o.serat = "20–35 g/hari";
+
+  // Susunan porsi penukar sehari
+  const E = o.energi;
+  const P = {};
+  P.sayur  = 3;
+  P.buah   = E < 1300 ? 2 : E < 2100 ? 3 : 4;
+  P.hewani = E < 1300 ? 2 : E < 2000 ? 3 : 4;
+  P.nabati = E < 1700 ? 2 : 3;
+  const lemakTarget = E*0.25/9;
+  P.minyak = Math.max(2, r05((lemakTarget - P.hewani*PENUKAR.hewani.l - P.nabati*PENUKAR.nabati.l)/PENUKAR.minyak.l));
+  const tanpaNasi = ["sayur","buah","hewani","nabati","minyak"].reduce((s,k)=>s + P[k]*PENUKAR[k].kkal, 0);
+  P.nasi = Math.max(2, r05((E - tanpaNasi)/PENUKAR.nasi.kkal));
+  o.porsi = P;
+  o.porsiTotal = Object.keys(P).reduce((t,k)=>{ t.kkal+=P[k]*PENUKAR[k].kkal; t.kh+=P[k]*PENUKAR[k].kh; t.p+=P[k]*PENUKAR[k].p; t.l+=P[k]*PENUKAR[k].l; return t; },{kkal:0,kh:0,p:0,l:0});
+
+  // Pembagian per waktu makan: Pagi, Siang, Malam, Selingan (pagi & sore)
+  const W = {
+    nasi:[0.3,0.4,0.3,0], hewani:[0.3,0.4,0.3,0], nabati:[0.3,0.4,0.3,0],
+    sayur:[0.3,0.4,0.3,0], buah:[0,0,0,1], minyak:[0.3,0.4,0.3,0]
+  };
+  o.jadwal = {};
+  for(const k in W) o.jadwal[k] = splitPortion(P[k], W[k]);
+
+  // Target bertahap
+  if(o.lebih > 0){
+    o.t3 = Math.max(0.5, r05(Math.min(0.05*d.bb, o.lebih)));
+    o.t6 = Math.max(0.5, r05(Math.min(0.10*d.bb, o.lebih)));
+    o.mingguLebih = Math.ceil(o.lebih/0.75);
+  }
+  if(o.kurang > 0){
+    o.tKurang = Math.max(0.5, Math.ceil(o.kurang*2)/2);
+    o.mingguKurang = Math.ceil(o.kurang/0.375);
+  }
+
+  // Klinis opsional
+  if(d.sis && d.dia){
+    const s = d.sis, di = d.dia;
+    o.td = s>=160||di>=100 ? {label:"Hipertensi derajat 2", lamp:"bad"}
+         : s>=140||di>=90  ? {label:"Hipertensi derajat 1", lamp:"bad"}
+         : s>=120||di>=80  ? {label:"Pra-hipertensi (terkendali < 140/90)", lamp:"warn"}
+         : {label:"Normal", lamp:"ok"};
+    o.tdTerkendali = s < 140 && di < 90;
+  }
+  if(d.gdp){
+    o.gdpStatus = d.gdp < 80 ? {label:"Di bawah target (waspada hipoglikemia)", lamp:"warn"}
+               : d.gdp <= 130 ? {label:"Sesuai target (80–130 mg/dL)", lamp:"ok"}
+               : {label:"Di atas target (80–130 mg/dL)", lamp:"bad"};
+  }
+  return o;
+}
+
+/* ============================================================
+   REKOMENDASI
+   ============================================================ */
+function rekomendasi(o, mode){
+  const d = o.d, dm = d.dx === "DM" || d.dx === "DMHT", ht = d.dx === "HT" || d.dx === "DMHT";
+  const pes = mode === "peserta";
+  const R = [];
+  const umum = [];
+  umum.push(pes ? "Isi piring setiap makan: ½ piring sayur dan buah, ¼ piring nasi atau pengganti, ¼ piring lauk."
+                : "Terapkan pola Isi Piringku: ½ piring sayur dan buah, ¼ makanan pokok, ¼ lauk pauk.");
+  umum.push(pes ? "Makan teratur 3 kali sehari ditambah 2 kali selingan (buah). Jangan melewatkan makan."
+                : "Makan teratur 3 kali makan utama dan 2 kali selingan, jarak makan 3 jam.");
+  umum.push("Batasi gula maksimal 4 sendok makan, garam maksimal 1 sendok teh, dan minyak maksimal 5 sendok makan per hari.");
+  umum.push(pes ? "Pilih lauk yang direbus, dikukus, dipanggang, atau dibakar. Kurangi gorengan dan santan kental."
+                : "Utamakan cara masak rebus, kukus, panggang, bakar, atau pepes; batasi gorengan dan santan kental.");
+  umum.push(pes ? "Bergerak aktif minimal 30 menit sehari, 5 hari seminggu. Ikut senam Prolanis secara rutin."
+                : "Aktivitas fisik minimal 150 menit per minggu (30 menit, 5 hari), termasuk senam Prolanis.");
+  R.push({judul:"Pola makan sehat", isi:umum});
+
+  if(dm){
+    const a = [];
+    a.push(pes ? "Ingat 3J: makan Jadwal yang teratur, Jumlah sesuai porsi, dan Jenis makanan yang tepat."
+               : "Prinsip 3J: tepat Jadwal, Jumlah, dan Jenis makanan.");
+    a.push(pes ? "Ganti sebagian nasi putih dengan nasi merah, jagung, atau ubi. Porsi tetap sesuai anjuran."
+               : "Pilih karbohidrat kompleks tinggi serat (nasi merah, jagung, ubi, roti gandum) dengan porsi sesuai penukar.");
+    a.push("Hindari minuman manis: teh manis, sirup, minuman kemasan, dan kue-kue manis.");
+    a.push("Makan buah utuh, bukan jus. Buah dimakan sebagai selingan.");
+    a.push(pes ? "Jangan telat makan jika minum obat diabetes. Jika gemetar, keringat dingin, atau pusing, segera minum teh manis atau makan permen, lalu lapor petugas."
+               : "Edukasi hipoglikemia: tidak melewatkan makan saat terapi OHO/insulin; kenali tanda gemetar, keringat dingin, lemas, dan cara penanganan awal.");
+    if(o.gdpStatus && o.gdpStatus.lamp === "bad") a.push("GDP masih di atas target: evaluasi jumlah porsi makanan pokok, minuman manis, dan jadwal makan bersama peserta.");
+    if(o.gdpStatus && o.gdpStatus.lamp === "warn" && !pes) a.push("GDP di bawah 80 mg/dL: periksa kecukupan dan keteraturan makan, koordinasikan dengan dokter.");
+    R.push({judul: pes ? "Khusus diabetes" : "Diabetes Melitus Tipe 2", isi:a});
+  }
+  if(ht){
+    const a = [];
+    a.push(pes ? "Garam paling banyak 1 sendok teh sehari, sudah termasuk garam dalam masakan."
+               : "Batasi natrium < 2.000 mg/hari (± 1 sdt garam), termasuk dari bumbu dan penyedap.");
+    a.push("Kurangi makanan asin dan olahan: ikan asin, ikan kering, mi instan, kerupuk, makanan kaleng, saus, kecap asin, dan penyedap rasa.");
+    a.push(pes ? "Coto, konro, dan pallubasa tinggi garam dan lemak. Makan sesekali saja, porsi kecil, tanpa jeroan."
+               : "Batasi coto, konro, pallubasa, dan olahan jeroan (tinggi natrium, lemak jenuh, dan kolesterol).");
+    a.push(pes ? "Perbanyak sayur dan buah setiap hari, seperti pisang, pepaya, bayam, dan kangkung."
+               : "Pola DASH: perbanyak sayur, buah, dan sumber kalium (pisang, pepaya, sayuran hijau) bila tidak ada gangguan ginjal.");
+    if(o.td && !o.tdTerkendali) a.push(pes ? "Tekanan darah masih tinggi. Perketat pembatasan garam dan minum obat sesuai anjuran dokter."
+                                            : "TD belum terkendali (≥ 140/90): perketat pembatasan natrium dan tekankan kepatuhan minum obat.");
+    R.push({judul: pes ? "Khusus darah tinggi" : "Hipertensi", isi:a});
+  }
+
+  const k = o.kls.kode;
+  if(k === "G" || k === "O" || o.lpSentral){
+    const a = [];
+    if(k === "G" || k === "O"){
+      a.push(pes ? "Kurangi porsi sedikit demi sedikit, terutama nasi, gorengan, dan camilan manis."
+                 : "Defisit energi bertahap sesuai kebutuhan energi di atas; target turun 0,5–1 kg per minggu.");
+      a.push(pes ? "Ganti camilan dengan buah atau sayur. Hindari makan larut malam."
+                 : "Ganti selingan tinggi energi dengan buah; hindari makan larut malam.");
+    }
+    if(o.lpSentral) a.push(pes ? "Lingkar perut yang besar menandakan lemak perut, yang memperberat diabetes dan darah tinggi. Kurangi makanan manis dan berlemak, perbanyak jalan kaki."
+                               : "Obesitas sentral meningkatkan risiko resistensi insulin dan penyakit kardiovaskular: batasi gula sederhana dan lemak jenuh, tingkatkan aktivitas aerobik.");
+    R.push({judul: pes ? "Menurunkan berat badan dan lingkar perut" : "Penurunan BB dan lingkar perut", isi:a});
+  }
+  if(k === "KB" || k === "KR"){
+    R.push({judul: pes ? "Menaikkan berat badan" : "Peningkatan BB", isi:[
+      pes ? "Makan sedikit tapi sering, 5–6 kali sehari." : "Makan porsi kecil tapi sering (5–6 kali/hari) dengan selingan padat gizi.",
+      pes ? "Tambah lauk di setiap makan, misalnya ikan, telur, tahu, atau tempe." : "Cukupi protein setiap kali makan (ikan, telur, ayam, tahu, tempe).",
+      pes ? "Pilih selingan bergizi seperti kacang-kacangan, roti gandum, atau susu rendah lemak tanpa gula." : "Selingan padat gizi: kacang-kacangan, roti gandum, susu rendah lemak tanpa gula (perhatikan GD pada peserta DM)."
+    ]});
+  }
+  if(d.usia >= 60){
+    R.push({judul: pes ? "Untuk usia lanjut" : "Lansia (≥ 60 tahun)", isi:[
+      pes ? "Pastikan ada lauk di setiap makan supaya otot tetap kuat." : "Pastikan asupan protein cukup di setiap makan untuk mencegah sarkopenia.",
+      pes ? "Minum air putih cukup, sekitar 8 gelas sehari, kecuali ada larangan dari dokter." : "Hidrasi cukup ± 8 gelas/hari bila tidak ada restriksi cairan.",
+      pes ? "Jika sulit mengunyah, pilih makanan yang lebih lunak seperti ikan, tahu, dan sayur yang dimasak lunak." : "Sesuaikan tekstur makanan bila ada gangguan mengunyah atau menelan."
+    ]});
+  }
+  return R;
+}
+
+/* ============================================================
+   TAMPILAN HASIL
+   ============================================================ */
+function plateSVG(size=86){
+  return `<svg width="${size}" height="${size}" viewBox="0 0 100 100" aria-hidden="true">
+    <circle cx="50" cy="50" r="48" fill="#fff" stroke="#D8E3E5" stroke-width="2"/>
+    <path d="M50 10 A40 40 0 0 0 50 90 Z" fill="#74D58C"/>
+    <path d="M50 10 A40 40 0 0 1 90 50 L50 50 Z" fill="#CDDC29"/>
+    <path d="M90 50 A40 40 0 0 1 50 90 L50 50 Z" fill="#60BFD0"/>
+    <path d="M50 10 V90 M50 50 H90" stroke="#fff" stroke-width="2"/>
+  </svg>`;
+}
+function lamp(cls, mark, title, body){
+  return `<div class="lamp ${cls}"><div class="dot" aria-hidden="true">${mark}</div><div><b class="t">${title}</b>${body}</div></div>`;
+}
+function markOf(c){ return c === "ok" ? "✓" : "!"; }
+function sapaan(d){ return d.jk === "L" ? "Bapak" : "Ibu"; }
+function tanggalID(s){
+  try{ const t = s ? new Date(s+"T00:00:00") : new Date(); return t.toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"}); }catch(e){ return s||""; }
+}
+function printHead(o, judul){
+  return `<div class="printhead"><img src="assets/logo-poltekkes.png" alt="Kemenkes Poltekkes Makassar">
+    <div><b>${judul}</b><br><span>e-GiziProlanis · ${tanggalID(o.d.tgl)}</span></div></div>`;
+}
+function printFoot(){
+  return `<div class="printfoot">Dicetak dari e-GiziProlanis v${APP_VERSION} · Dibuat oleh Manjilala – Poltekkes Kemenkes Makassar.
+    Hasil ini bersifat panduan dan tidak menggantikan konseling langsung dengan petugas gizi atau dokter.</div>`;
+}
+function dxLabel(dx){ return dx === "DM" ? "Diabetes Melitus Tipe 2" : dx === "HT" ? "Hipertensi" : "DM Tipe 2 dan Hipertensi"; }
+function aktLabel(a){ return {10:"Sangat ringan / istirahat",20:"Ringan",30:"Sedang",40:"Berat"}[a]; }
+function pct(x){ return (x>0?"+":x<0?"−":"") + Math.abs(Math.round(x*100)) + "%"; }
+
+function renderPeserta(o){
+  const d = o.d, s = sapaan(d), k = o.kls;
+  let h = printHead(o, "Kartu Hasil Status Gizi Prolanis");
+  h += `<div class="card"><h2>Hasil untuk ${d.nama ? esc(d.nama) : s}</h2>
+        <p class="muted">${dxLabel(d.dx)} · ${d.usia} tahun · ${d.jk==="L"?"Laki-laki":"Perempuan"}</p></div>`;
+
+  // Berat badan
+  let bodyBB = `<div>Berat badan ${s}: <span class="big">${fmt(d.bb)} kg</span></div>
+                <div>Berat badan sehat untuk tinggi ${fmt(o.tb,0)} cm: <b>${fmt(o.bbMin)}–${fmt(o.bbMax)} kg</b></div>`;
+  if(o.lebih > 0) bodyBB += `<div style="margin-top:6px">Berat badan <b>lebih ${fmt(o.lebih)} kg</b> dari batas sehat.</div>`;
+  else if(o.kurang > 0) bodyBB += `<div style="margin-top:6px">Berat badan <b>kurang ${fmt(o.kurang)} kg</b> dari batas sehat.</div>`;
+  else bodyBB += `<div style="margin-top:6px">Berat badan sudah <b>sehat</b>. Pertahankan!</div>`;
+  const ttlBB = k.kode === "N" ? "Berat badan: Sehat" : k.kode === "G" ? "Berat badan: Agak berlebih" : k.kode === "O" ? "Berat badan: Berlebih" : k.kode === "KR" ? "Berat badan: Agak kurang" : "Berat badan: Kurang";
+  h += lamp(k.lamp, markOf(k.lamp), ttlBB, bodyBB);
+
+  // Lingkar perut
+  const lpCls = o.lpSentral ? "bad" : "ok";
+  let bodyLP = `<div>Lingkar perut ${s}: <span class="big">${fmt(d.lp,0)} cm</span></div>
+                <div>Batas sehat: <b>${o.lpBatas} cm</b> atau kurang</div>`;
+  bodyLP += o.lpSentral ? `<div style="margin-top:6px">Lingkar perut <b>lebih ${fmt(o.lpLebih,0)} cm</b> dari batas sehat.</div>`
+                        : `<div style="margin-top:6px">Lingkar perut sudah <b>sehat</b>.</div>`;
+  h += lamp(lpCls, markOf(lpCls), o.lpSentral ? "Lingkar perut: Berlebih" : "Lingkar perut: Sehat", bodyLP);
+
+  // Target
+  if(o.lebih > 0){
+    h += `<div class="target"><b>🎯 Target ${s} 3 bulan ke depan</b>
+      <p>Turunkan berat badan <b>${half(o.t3)} kg</b>, menjadi sekitar <b>${fmt(d.bb - o.t3)} kg</b>.</p>
+      <p>Pelan-pelan saja, cukup <b>½ sampai 1 kg per minggu</b>. Turun ${half(o.t6)} kg dalam 6 bulan sudah sangat baik untuk gula darah dan tekanan darah.</p>
+      ${o.lpSentral ? `<p>Lingkar perut biasanya ikut mengecil saat berat badan turun. Ukur lagi setiap kegiatan Prolanis.</p>` : ``}
+    </div>`;
+  } else if(o.kurang > 0){
+    h += `<div class="target"><b>🎯 Target ${s}</b>
+      <p>Naikkan berat badan <b>${half(o.tKurang)} kg</b> secara bertahap, sekitar <b>¼ sampai ½ kg per minggu</b>.</p></div>`;
+  } else if(o.lpSentral){
+    h += `<div class="target"><b>🎯 Target ${s}</b>
+      <p>Berat badan sudah sehat, tinggal kecilkan lingkar perut <b>${fmt(o.lpLebih,0)} cm</b> lagi dengan banyak bergerak dan mengurangi makanan manis serta berlemak.</p></div>`;
+  }
+
+  // Porsi makan
+  const J = o.jadwal;
+  const gelas = x => x>0 ? `${quarter(x*0.75)} gelas nasi` : "";
+  const item = (k, x) => {
+    if(!x) return "";
+    if(k==="nasi") return `<li>Nasi: <b>${gelas(x)}</b> <span class="muted">(atau ubi/jagung pengganti)</span></li>`;
+    if(k==="hewani") return `<li>Ikan atau ayam tanpa kulit: <b>${half(x)} potong sedang</b></li>`;
+    if(k==="nabati") return `<li>Tempe: <b>${half(x*2)} potong sedang</b> <span class="muted">(atau tahu ${half(x)} biji besar)</span></li>`;
+    if(k==="sayur") return `<li>Sayur: <b>${half(x)} mangkok</b></li>`;
+    if(k==="buah") return `<li>Buah: <b>${half(x)} potong/buah</b> <span class="muted">(pepaya, pisang, jeruk)</span></li>`;
+    if(k==="minyak") return `<li>Minyak untuk memasak: <b>${half(x)} sendok teh</b></li>`;
+    return "";
+  };
+  const waktu = ["Makan pagi","Makan siang","Makan malam","Selingan (pagi dan sore)"];
+  h += `<div class="card"><h2>Porsi makan ${s} setiap hari</h2>
+        <div class="plate" style="margin-bottom:10px">${plateSVG(76)}<p class="muted" style="margin:0">Setengah piring sayur dan buah, seperempat nasi, seperempat lauk.</p></div>
+        <div class="meal">`;
+  waktu.forEach((w,i)=>{
+    const li = ["nasi","hewani","nabati","sayur","buah","minyak"].map(k=>item(k, J[k][i])).join("");
+    if(li) h += `<div class="m"><h4>${w}</h4><ul>${li}</ul></div>`;
+  });
+  h += `</div><p class="muted" style="font-size:.85rem;margin-top:8px">Satu gelas = gelas belimbing (± 200 ml). Satu mangkok = mangkok sayur ukuran sedang.</p></div>`;
+
+  // Pesan
+  h += `<div class="card"><h2>Pesan untuk ${s}</h2>`;
+  rekomendasi(o,"peserta").forEach(g => { h += `<h3>${g.judul}</h3><ul class="rec">${g.isi.map(x=>`<li>${x}</li>`).join("")}</ul>`; });
+  h += `<p class="disclaimer">Hasil ini untuk pemantauan mandiri. Tetap konsultasikan ke petugas gizi atau dokter, terutama tentang obat dan diet khusus.</p></div>`;
+  h += printFoot();
+  return h;
+}
+
+function renderPetugas(o){
+  const d = o.d, k = o.kls, P = o.porsi, T = o.porsiTotal;
+  let h = printHead(o, "Hasil Penilaian Status Gizi Peserta Prolanis");
+  h += `<div class="card"><h2>Identitas</h2><table class="kv"><tbody>
+    <tr><td>Nama peserta</td><td>${d.nama ? esc(d.nama) : "–"}</td></tr>
+    <tr><td>Tanggal pengukuran</td><td>${tanggalID(d.tgl)}</td></tr>
+    <tr><td>Jenis kelamin / usia</td><td>${d.jk==="L"?"Laki-laki":"Perempuan"} / ${d.usia} tahun</td></tr>
+    <tr><td>Diagnosis Prolanis</td><td>${dxLabel(d.dx)}</td></tr>
+    <tr><td>Tingkat aktivitas</td><td>${aktLabel(d.akt)}</td></tr>
+  </tbody></table></div>`;
+
+  // Antropometri
+  h += `<div class="card"><h2>Status Gizi (Antropometri)</h2><div class="tbl-scroll"><table class="kv"><tbody>
+    <tr><td>Berat badan</td><td>${fmt(d.bb)} kg</td></tr>
+    <tr><td>Tinggi badan</td><td>${fmt(o.tb)} cm${o.tbEstimasi ? ` <span class="badge warn">estimasi tinggi lutut ${fmt(d.tl)} cm</span>` : ""}</td></tr>
+    <tr><td>IMT</td><td>${fmt(o.imt)} kg/m² <span class="badge ${k.lamp}">${k.label}</span><br><span class="muted" style="font-weight:400">${k.ket}</span></td></tr>
+    <tr><td>Rentang BB normal (IMT 18,5–25,0)</td><td>${fmt(o.bbMin)} – ${fmt(o.bbMax)} kg</td></tr>
+    <tr><td>${o.lebih>0?"Kelebihan BB (terhadap batas atas normal)":o.kurang>0?"Kekurangan BB (terhadap batas bawah normal)":"Selisih BB"}</td>
+        <td>${o.lebih>0?`<span class="badge ${k.lamp}">+${fmt(o.lebih)} kg</span>`:o.kurang>0?`<span class="badge ${k.lamp}">−${fmt(o.kurang)} kg</span>`:"Dalam rentang normal"}</td></tr>
+    <tr><td>BB idaman (Broca modifikasi)</td><td>${fmt(o.bbi)} kg <span class="muted" style="font-weight:400">· ${o.bbiRumus}; rentang ± 10%: ${fmt(o.bbi*0.9)}–${fmt(o.bbi*1.1)} kg</span></td></tr>
+    <tr><td>Selisih terhadap BB idaman</td><td>${d.bb>=o.bbi?"+":"−"}${fmt(Math.abs(d.bb-o.bbi))} kg (${fmt0(d.bb/o.bbi*100)}% BBI)</td></tr>
+    <tr><td>Lingkar perut</td><td>${fmt(d.lp)} cm <span class="badge ${o.lpSentral?"bad":"ok"}">${o.lpSentral?"Obesitas sentral":"Normal"}</span><br>
+        <span class="muted" style="font-weight:400">Batas ${d.jk==="L"?"> 90":"> 80"} cm${o.lpSentral?` · kelebihan ${fmt(o.lpLebih)} cm`:""}</span></td></tr>
+    ${o.rlpp ? `<tr><td>RLPP (lingkar panggul ${fmt(d.lpg)} cm)</td><td>${fmt(o.rlpp,2)} <span class="badge ${o.rlppRisiko?"bad":"ok"}">${o.rlppRisiko?"Berisiko":"Tidak berisiko"}</span><br><span class="muted" style="font-weight:400">Batas ≥ ${fmt(o.rlppBatas,2)}</span></td></tr>` : ""}
+    ${o.td ? `<tr><td>Tekanan darah</td><td>${d.sis}/${d.dia} mmHg <span class="badge ${o.td.lamp}">${o.td.label}</span></td></tr>` : ""}
+    ${o.gdpStatus ? `<tr><td>Gula darah puasa</td><td>${d.gdp} mg/dL <span class="badge ${o.gdpStatus.lamp}">${o.gdpStatus.label}</span></td></tr>` : ""}
+  </tbody></table></div></div>`;
+
+  // Target
+  if(o.lebih > 0){
+    h += `<div class="target"><b>Target penurunan BB bertahap</b>
+      <p>3 bulan: turun <b>${half(o.t3)} kg</b> (± 5% BB) → ± ${fmt(d.bb-o.t3)} kg · 6 bulan: turun <b>${half(o.t6)} kg</b> (± 10% BB) → ± ${fmt(d.bb-o.t6)} kg.</p>
+      <p>Laju aman 0,5–1 kg/minggu; mencapai batas atas IMT normal memerlukan ± ${o.mingguLebih} minggu (laju 0,75 kg/minggu).${o.lpSentral?` Pantau LP setiap pertemuan Prolanis (target ≤ ${o.lpBatas} cm).`:""}</p></div>`;
+  } else if(o.kurang > 0){
+    h += `<div class="target"><b>Target peningkatan BB bertahap</b>
+      <p>Naik <b>${half(o.tKurang)} kg</b> untuk mencapai IMT 18,5, dengan laju 0,25–0,5 kg/minggu (± ${o.mingguKurang} minggu).</p></div>`;
+  } else if(o.lpSentral){
+    h += `<div class="target"><b>Target</b><p>BB dalam rentang normal; fokus menurunkan LP ${fmt(o.lpLebih)} cm hingga ≤ ${o.lpBatas} cm.</p></div>`;
+  }
+
+  // Energi
+  const f = o.faktor;
+  h += `<div class="card"><h2>Kebutuhan Energi dan Zat Gizi</h2>
+    <p class="muted" style="font-size:.9rem">Metode PERKENI 2021: kalori basal × BB idaman, dikoreksi aktivitas, usia, dan status gizi.</p>
+    <div class="tbl-scroll"><table><tbody>
+      <tr><td>Kalori basal (${d.jk==="L"?"30":"25"} kkal × ${fmt(o.bbi)} kg BBI)</td><td class="num">${fmt0(o.basal)} kkal</td></tr>
+      <tr><td>Koreksi aktivitas (${aktLabel(d.akt).toLowerCase()})</td><td class="num">${pct(f.akt)}</td></tr>
+      <tr><td>Koreksi usia (${d.usia} tahun)</td><td class="num">${f.usia ? pct(f.usia) : "0%"}</td></tr>
+      <tr><td>Koreksi status gizi (${k.label.toLowerCase()})</td><td class="num">${f.bb ? pct(f.bb) : "0%"}</td></tr>
+      <tr><td>Hasil hitung</td><td class="num">${fmt0(o.energiHitung)} kkal</td></tr>
+      <tr><th>Kebutuhan energi yang dianjurkan</th><th class="num">${fmt0(o.energi)} kkal/hari</th></tr>
+    </tbody></table></div>
+    ${o.energiDibatasi ? `<p class="note" style="margin-top:8px">Hasil hitung di bawah batas minimal, sehingga dipakai ${fmt0(o.energiMin)} kkal (batas minimal aplikasi untuk ${d.jk==="L"?"laki-laki":"perempuan"}, mengacu PERKENI: P 1.000–1.200, L 1.200–1.600 kkal).</p>` : ""}
+    <h3>Target zat gizi makro</h3>
+    <div class="tbl-scroll"><table><thead><tr><th>Zat gizi</th><th class="num">% energi</th><th class="num">Gram/hari</th></tr></thead><tbody>
+      <tr><td>Karbohidrat</td><td class="num">60%</td><td class="num">${fmt0(o.makro.kh)} g</td></tr>
+      <tr><td>Protein</td><td class="num">15%</td><td class="num">${fmt0(o.makro.p)} g</td></tr>
+      <tr><td>Lemak (lemak jenuh &lt; 7%)</td><td class="num">25%</td><td class="num">${fmt0(o.makro.l)} g</td></tr>
+      <tr><td>Natrium</td><td class="num" colspan="2">${o.natrium}</td></tr>
+      <tr><td>Serat</td><td class="num" colspan="2">${o.serat}</td></tr>
+    </tbody></table></div></div>`;
+
+  // Porsi penukar
+  const keys = ["nasi","hewani","nabati","sayur","buah","minyak"];
+  h += `<div class="card"><h2>Susunan Porsi Penukar Sehari</h2><div class="tbl-scroll"><table>
+    <thead><tr><th>Golongan</th><th class="num">Pagi</th><th class="num">Siang</th><th class="num">Malam</th><th class="num">Selingan</th><th class="num">Total</th></tr></thead><tbody>`;
+  keys.forEach(kk => {
+    const j = o.jadwal[kk];
+    h += `<tr><td>${PENUKAR[kk].nama}</td>${j.map(x=>`<td class="num">${x?half(x):"–"}</td>`).join("")}<td class="num"><b>${half(P[kk])} P</b></td></tr>`;
+  });
+  h += `</tbody></table></div>
+    <p class="muted" style="font-size:.88rem;margin-top:8px">Susunan porsi menghasilkan ± ${fmt0(T.kkal)} kkal · KH ${fmt0(T.kh)} g · protein ${fmt0(T.p)} g · lemak ${fmt0(T.l)} g. Selingan berupa buah (pagi dan sore).</p>
+    <h3>Ukuran rumah tangga (1 porsi)</h3><ul class="rec">${keys.map(kk=>`<li><b>${PENUKAR[kk].nama}:</b> ${URT[kk]}</li>`).join("")}</ul></div>`;
+
+  // Rekomendasi
+  h += `<div class="card"><h2>Rekomendasi Gizi dan Gaya Hidup</h2>`;
+  rekomendasi(o,"petugas").forEach(g => { h += `<h3>${g.judul}</h3><ul class="rec">${g.isi.map(x=>`<li>${x}</li>`).join("")}</ul>`; });
+  h += `<p class="disclaimer">Rekomendasi bersifat panduan umum dan perlu disesuaikan dengan kondisi klinis, terapi obat, dan kebiasaan makan peserta melalui konseling gizi.</p>
+    <div class="sign"><div>Petugas Gizi,<br><br><br><br>( ${d.petugas ? esc(d.petugas) : "...................................."} )</div></div></div>`;
+
+  h += `<details class="card noprint"><summary><b>Catatan metode dan referensi</b></summary><ul class="rec" style="font-size:.9rem">
+    <li>Klasifikasi IMT dewasa Kemenkes RI: &lt; 17,0 kurus berat; 17,0–18,4 kurus ringan; 18,5–25,0 normal; 25,1–27,0 gemuk; &gt; 27,0 obesitas.</li>
+    <li>Lingkar perut (Kemenkes RI): obesitas sentral bila L &gt; 90 cm, P &gt; 80 cm. RLPP (WHO): berisiko bila L ≥ 0,90, P ≥ 0,85.</li>
+    <li>BB idaman dan kebutuhan energi: PERKENI 2021 (Broca modifikasi; basal L 30, P 25 kkal/kg BBI; koreksi usia 40–59 th −5%, 60–69 th −10%, ≥ 70 th −20%; aktivitas +10% s.d. +40%; gemuk −20%, obesitas −30%, kurus +20%).</li>
+    <li>Estimasi TB dari tinggi lutut: Chumlea (L = 64,19 − 0,04×usia + 2,02×TL; P = 84,88 − 0,24×usia + 1,83×TL).</li>
+    <li>Porsi penukar: Daftar Bahan Makanan Penukar. Batas konsumsi gula, garam, lemak: Permenkes No. 30 Tahun 2013.</li>
+    <li>Target GDP 80–130 mg/dL (PERKENI). TD terkendali &lt; 140/90 mmHg.</li>
+  </ul></details>`;
+  h += printFoot();
+  return h;
+}
+
+/* ============================================================
+   ALUR APLIKASI
+   ============================================================ */
+let MODE = null;
+function setMode(m){
+  MODE = m;
+  document.body.classList.toggle("mode-peserta", m === "peserta");
+  document.body.classList.toggle("mode-petugas", m === "petugas");
+  $$(".only-petugas").forEach(e => e.classList.toggle("hidden", m !== "petugas"));
+  $$(".only-peserta").forEach(e => e.classList.toggle("hidden", m !== "peserta"));
+  $("#home").classList.add("hidden");
+  $("#formCard").classList.remove("hidden");
+  $("#result").classList.add("hidden");
+  $("#modeBtn").classList.remove("hidden");
+  $("#modeBtn").textContent = (m === "petugas" ? "Petugas" : "Peserta") + " ⇄";
+  $("#formTitle").textContent = m === "petugas" ? "Data Pengukuran Peserta" : "Data Pengukuran Saya";
+  try{ localStorage.setItem("egp-mode", m); }catch(e){}
+  window.scrollTo(0,0);
+}
+function goHome(){
+  $("#home").classList.remove("hidden");
+  $("#formCard").classList.add("hidden");
+  $("#result").classList.add("hidden");
+  $("#modeBtn").classList.add("hidden");
+  document.body.classList.remove("mode-peserta","mode-petugas");
+  try{ localStorage.removeItem("egp-mode"); }catch(e){}
+}
+$$(".choice").forEach(b => b.addEventListener("click", () => setMode(b.dataset.mode)));
+$("#modeBtn").addEventListener("click", goHome);
+
+function today(){ const t = new Date(); return t.getFullYear()+"-"+String(t.getMonth()+1).padStart(2,"0")+"-"+String(t.getDate()).padStart(2,"0"); }
+$("#tgl").value = today();
+
+function bacaForm(){
+  const d = {
+    nama: $("#nama").value.trim(), petugas: $("#petugas").value.trim(), tgl: $("#tgl").value || today(),
+    jk: radio("jk"), dx: radio("dx"), akt: Number(radio("akt")||20),
+    usia: num("usia"), bb: num("bb"), tb: num("tb"), lp: num("lp"),
+    lpg: MODE==="petugas" ? num("lpg") : null, tl: MODE==="petugas" ? num("tl") : null,
+    pakaiTL: MODE==="petugas" && $("#pakaiTL").checked,
+    sis: MODE==="petugas" ? num("sis") : null, dia: MODE==="petugas" ? num("dia") : null, gdp: MODE==="petugas" ? num("gdp") : null
+  };
+  const E = [];
+  if(!d.jk) E.push("Pilih jenis kelamin.");
+  if(!d.dx) E.push("Pilih penyakit yang diderita (DM, hipertensi, atau keduanya).");
+  const cek = (v, nama, min, max, wajib=true) => {
+    if(v === null){ if(wajib) E.push(`${nama} belum diisi.`); return; }
+    if(isNaN(v) || v < min || v > max) E.push(`${nama} harus antara ${min} dan ${max}.`);
+  };
+  cek(d.usia, "Usia", 18, 110);
+  cek(d.bb, "Berat badan", 25, 250);
+  if(d.pakaiTL){
+    cek(d.tl, "Tinggi lutut", 35, 70);
+    if(d.tl === null) E.push("Isi tinggi lutut atau hilangkan centang estimasi TB.");
+    if(d.tb !== null) cek(d.tb, "Tinggi badan", 120, 210, false);
+  } else cek(d.tb, "Tinggi badan", 120, 210);
+  cek(d.lp, "Lingkar perut", 40, 200);
+  cek(d.lpg, "Lingkar panggul", 50, 200, false);
+  if(!d.pakaiTL) cek(d.tl, "Tinggi lutut", 35, 70, false);
+  cek(d.sis, "TD sistolik", 60, 280, false);
+  cek(d.dia, "TD diastolik", 30, 180, false);
+  cek(d.gdp, "Gula darah puasa", 30, 700, false);
+  if((d.sis && !d.dia) || (!d.sis && d.dia)) E.push("Isi TD sistolik dan diastolik sekaligus.");
+  if(d.usia !== null && !isNaN(d.usia)) d.usia = Math.round(d.usia);
+  return {d, E};
+}
+
+$("#f").addEventListener("submit", ev => {
+  ev.preventDefault();
+  const {d, E} = bacaForm();
+  const err = $("#err");
+  if(E.length){ err.innerHTML = E.map(esc).join("<br>"); err.classList.remove("hidden"); err.scrollIntoView({behavior:"smooth",block:"center"}); return; }
+  err.classList.add("hidden");
+  const o = hitung(d);
+  const res = $("#result");
+  res.innerHTML = (MODE === "petugas" ? renderPetugas(o) : renderPeserta(o)) +
+    `<div class="actions noprint">
+       <button class="btn primary" type="button" id="printBtn">🖨️ Cetak / Simpan PDF</button>
+       <button class="btn ghost" type="button" id="editBtn">Ubah data</button>
+       <button class="btn ghost" type="button" id="newBtn">Peserta baru</button>
+     </div>`;
+  $("#formCard").classList.add("hidden");
+  res.classList.remove("hidden");
+  window.scrollTo(0,0);
+  $("#printBtn").addEventListener("click", () => window.print());
+  $("#editBtn").addEventListener("click", () => { res.classList.add("hidden"); $("#formCard").classList.remove("hidden"); window.scrollTo(0,0); });
+  $("#newBtn").addEventListener("click", () => { resetForm(); res.classList.add("hidden"); $("#formCard").classList.remove("hidden"); window.scrollTo(0,0); });
+});
+
+function resetForm(){
+  $("#f").reset(); $("#tgl").value = today();
+  $("#err").classList.add("hidden");
+}
+$("#resetBtn").addEventListener("click", resetForm);
+
+// Kembali ke mode terakhir
+try{ const m = localStorage.getItem("egp-mode"); if(m === "petugas" || m === "peserta") setMode(m); }catch(e){}
+
+/* ============================================================
+   PWA: offline & pemasangan
+   ============================================================ */
+function toast(msg, ms=3500){ const t = $("#toast"); t.textContent = msg; t.classList.remove("hidden"); clearTimeout(toast._t); toast._t = setTimeout(()=>t.classList.add("hidden"), ms); }
+if("serviceWorker" in navigator && location.protocol !== "file:"){
+  const hadController = !!navigator.serviceWorker.controller;
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").then(reg => {
+      if(reg.active) $("#netStatus").textContent = "Siap dipakai tanpa internet";
+      reg.addEventListener("updatefound", () => {
+        const nw = reg.installing;
+        nw && nw.addEventListener("statechange", () => {
+          if(nw.state === "activated"){
+            if(hadController) toast("Aplikasi diperbarui. Buka ulang untuk memakai versi terbaru.", 6000);
+            $("#netStatus").textContent = "Siap dipakai tanpa internet";
+          }
+        });
+      });
+    }).catch(()=>{});
+  });
+}
+let deferredPrompt = null;
+window.addEventListener("beforeinstallprompt", e => {
+  e.preventDefault(); deferredPrompt = e;
+  let skip = false; try{ skip = sessionStorage.getItem("egp-noinstall") === "1"; }catch(x){}
+  if(!skip) $("#installBar").classList.remove("hidden");
+});
+$("#installYes").addEventListener("click", async () => {
+  $("#installBar").classList.add("hidden");
+  if(deferredPrompt){ deferredPrompt.prompt(); try{ await deferredPrompt.userChoice; }catch(e){} deferredPrompt = null; }
+});
+$("#installNo").addEventListener("click", () => { $("#installBar").classList.add("hidden"); try{ sessionStorage.setItem("egp-noinstall","1"); }catch(e){} });
+window.addEventListener("appinstalled", () => { $("#installBar").classList.add("hidden"); toast("e-GiziProlanis sudah terpasang di HP."); });
+window.addEventListener("offline", () => toast("Sedang offline — aplikasi tetap bisa dipakai."));
+</script>
+</body>
+</html>
