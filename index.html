@@ -94,7 +94,23 @@ details.opt summary{cursor:pointer;font-weight:600;color:var(--teal)}
 .guide table.kv td:last-child{font-weight:400}
 .guide .dotc{flex:none;width:26px;height:26px;border-radius:50%;color:#fff;font-weight:800;display:grid;place-items:center;font-size:.85rem}
 .klinis{border-top:1px dashed var(--line);margin-top:16px}
-.refbtn{width:100%;margin-bottom:12px;padding:11px 14px}
+.toolrow{display:flex;gap:8px;margin-bottom:12px}
+.toolrow .btn{flex:1 1 0;padding:11px 8px;font-size:.9rem}
+#penSec .srch{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:10px;font:inherit}
+#penSec .chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+#penSec .chip{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:6px 11px;font:inherit;font-size:.82rem;font-weight:600;cursor:pointer;color:var(--ink)}
+#penSec .chip.on{background:var(--teal);border-color:var(--teal);color:#fff}
+#penSec .grp{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:10px;overflow:hidden}
+#penSec .gh{padding:10px 14px;background:var(--teal-soft)}
+#penSec .gh b{color:var(--teal);display:block}
+#penSec .gh span{font-size:.82rem;color:var(--muted)}
+#penSec .it{display:flex;gap:10px;padding:8px 14px;border-top:1px solid var(--line);align-items:flex-start}
+#penSec .it .nm{flex:1;min-width:0;font-weight:600}
+#penSec .it .ur{color:var(--muted);font-size:.86rem;font-weight:400}
+#penSec .it .gr{white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:700;color:var(--teal)}
+#penSec .tg{display:inline-block;font-size:.72rem;font-weight:700;border-radius:6px;padding:0 5px;margin:2px 3px 0 0}
+#penSec .tg.bad{background:var(--bad-bg);color:var(--bad)}#penSec .tg.warn{background:var(--warn-bg);color:var(--warn)}
+#penSec .tg.ok{background:var(--ok-bg);color:var(--ok)}#penSec .tg.neutral{background:#EEF2F3;color:var(--muted)}
 #refSec details{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
 #refSec summary{cursor:pointer;padding:14px 16px;font-weight:700;color:var(--teal);list-style:none;display:flex;justify-content:space-between;gap:10px}
 #refSec summary::-webkit-details-marker{display:none}
@@ -222,6 +238,7 @@ footer.bottom b{color:var(--teal)}
           <li>Ketuk <b>Hitung Status Gizi</b>. Hasil berisi status gizi, BBI, kebutuhan energi, susunan porsi penukar, target penurunan BB, dan rekomendasi gizi.</li>
           <li>Ketuk <b>Simpan Gambar</b> untuk menyimpan hasil 1 halaman, atau <b>Bagikan</b> untuk mengirim lewat WhatsApp.</li>
           <li>Rumus, ketentuan, dan sumber perhitungan dapat dilihat di menu <b>📖 Rumus &amp; Referensi</b>.</li>
+          <li>Untuk mencari URT dan berat bahan makanan penukar (mis. jagung, ikan, pisang), buka menu <b>🔎 Daftar Penukar</b>.</li>
         </ol></div>
       </details>
       <details>
@@ -258,7 +275,7 @@ footer.bottom b{color:var(--teal)}
 
   <!-- FORMULIR -->
   <section id="formCard" class="card hidden">
-    <button class="btn ghost only-petugas refbtn" type="button" data-ref="1">📖 Rumus &amp; Referensi</button>
+    <div class="toolrow only-petugas"><button class="btn ghost refbtn" type="button" data-ref="1">📖 Rumus &amp; Referensi</button><button class="btn ghost penbtn" type="button" data-ref="1">🔎 Daftar Penukar</button></div>
     <h2 id="formTitle">Data Pengukuran</h2>
     <p class="note only-peserta">Isi sesuai hasil pengukuran petugas saat kegiatan Prolanis (lihat kartu atau catatan dari petugas).</p>
     <form id="f" novalidate autocomplete="off">
@@ -380,6 +397,9 @@ footer.bottom b{color:var(--teal)}
   <!-- RUMUS & REFERENSI (mode petugas) -->
   <section id="refSec" class="hidden"></section>
 
+  <!-- DAFTAR BAHAN MAKANAN PENUKAR (mode petugas) -->
+  <section id="penSec" class="hidden"></section>
+
 </main>
 
 <footer class="bottom">
@@ -397,7 +417,7 @@ footer.bottom b{color:var(--teal)}
 <script src="assets/lib/html2canvas.min.js" defer></script>
 <script>
 "use strict";
-const APP_VERSION = "1.2.3";
+const APP_VERSION = "1.4.0";
 document.getElementById("ver").textContent = APP_VERSION;
 
 /* ============================================================
@@ -408,26 +428,186 @@ document.getElementById("ver").textContent = APP_VERSION;
    - BBI (Berat Badan Ideal) & kebutuhan energi: PERKENI 2024 (rumus Broca modifikasi)
    - Natrium hipertensi: PNPK Tata Laksana Hipertensi Dewasa (KMK HK.01.07/MENKES/303/2026)
    - Target penurunan BB non-DM: Pedoman Pengelolaan Obesitas di FKTP (Kemenkes 2021)
-   - Bahan makanan dianjurkan/tidak: Standar Makanan Rumah Sakit (Penuntun Diet & Terapi Gizi ed. 4)
+   - Bahan makanan dianjurkan/tidak, Standar Diet DM, Diet Rendah Natrium (DASH): Penuntun Diet & Terapi Gizi ed. 5 (PERSAGI & AsDI, 2024)
    - Nilai penukar: Daftar Bahan Makanan Penukar (Kemenkes/PERSAGI)
    - Estimasi TB dari tinggi lutut: Chumlea (1985)
    ============================================================ */
+/* Daftar Bahan Makanan Penukar — Departemen Kesehatan RI, Direktorat Bina Gizi Masyarakat, Subdit Bina Gizi Klinik (2006).
+   Diperbanyak Program Perbaikan Gizi Masyarakat Dinkes Prov. Sul-Sel, T.A. 2007.
+   Format item: [nama, URT, gram, ket]. URT nasi dikonversi: 1 centong = 50 g nasi. Sayuran: 1 penukar = 100 g ≈ 1 gelas = 1 mangkok. */
+const DBMP = [
+ {id:"g1", gol:"Golongan I", nama:"Sumber karbohidrat", nilai:"40 g KH · 4 g protein · 175 kkal", items:[
+  ["Bengkuang","2 bj bsr",320,"S++"],["Bihun","1/2 gls",50,""],["Biskuit","4 bh bsr",40,"Na+"],["Gadung","1 ptg",175,"S++"],
+  ["Ganyong","1 ptg",185,"S++"],["Gambili","1 ptg",185,"S++"],["Havermout","5 1/2 sdm",45,"S+"],["Jagung segar","3 bj sdg",125,"S++"],
+  ["Kentang","2 bh sdg",210,"K+"],["Kentang hitam","12 bj",125,"P-"],["Maizena","10 sdm",50,"P-"],["Makaroni","1/2 gls",50,"P-"],
+  ["Mi basah","2 gls",200,"Na+ P-"],["Mi kering","1 gls",50,"Na+"],
+  ["Nasi beras giling","2 centong (3/4 gls)",100,""],["Nasi beras ½ giling","2 centong (3/4 gls)",100,""],
+  ["Nasi ketan hitam","2 centong (3/4 gls)",100,""],["Nasi ketan putih","2 centong (3/4 gls)",100,""],
+  ["Roti putih","3 iris",70,"Na+"],["Roti warna coklat","3 iris",70,""],["Singkong","1 1/2 ptg",120,"K+ P- S+"],
+  ["Sukun","3 ptg sdg",150,"S++"],["Talas","1/2 bj sdg",125,"S+"],["Tape beras ketan","5 sdm",100,""],
+  ["Tape singkong","1 ptg sdg",100,"S++ P-"],["Tepung tapioka","8 sdm",50,"K+ P-"],["Tepung beras","8 sdm",50,""],
+  ["Tepung hunkwee","10 sdm",50,""],["Tepung sagu","8 sdm",50,"P-"],["Tepung singkong","5 sdm",50,""],["Tepung terigu","5 sdm",50,""],
+  ["Ubi jalar kuning","1 bj sdg",135,"S++ P-"],["Krupuk udang/ikan","3 bj sdg",30,""]
+ ]},
+ {id:"g2a", gol:"Golongan II", nama:"Protein hewani rendah lemak", nilai:"7 g protein · 2 g lemak · 50 kkal", items:[
+  ["Babat","1 ptg bsr",40,"Ko+ Pr+"],["Cumi-cumi","1 ekor kcl",45,""],["Daging asap","1 lembar",20,""],
+  ["Daging ayam tanpa kulit","1 ptg sdg",40,""],["Daging kerbau","1 ptg sdg",35,""],["Dendeng daging sapi","1 ptg sdg",15,""],
+  ["Dideh sapi","1 ptg sdg",35,""],["Gabus kering","1 ptg kcl",10,""],["Ikan asin kering","1 ptg sdg",15,"Na+"],
+  ["Ikan kakap","1/3 ekor bsr",35,""],["Ikan kembung","1/3 ekor sdg",30,""],["Ikan lele","1/2 ekor sdg",40,""],
+  ["Ikan mas","1/3 ekor sdg",45,""],["Ikan mujair","1/3 ekor kcl",30,""],["Ikan peda","1 ekor kcl",35,""],
+  ["Ikan pindang","1/2 ekor sdg",25,""],["Ikan segar","1 ptg sdg",40,""],["Kepiting","1/3 gls",50,""],
+  ["Kerang","1/2 gls",90,"Na+ Pr+"],["Lemuru","1 ptg",35,""],["Putih telur ayam","2 1/2 btr",65,""],
+  ["Rebon kering","2 sdm",10,""],["Rebon segar","2 sdm",45,""],["Selar kering","1 ekor",20,""],
+  ["Sepat kering","1 ptg sdg",20,""],["Teri kering","1 sdm",20,""],["Teri nasi","1/3 gls",20,""],["Udang segar","5 ekor sdg",35,"Ko+"]
+ ]},
+ {id:"g2b", gol:"Golongan II", nama:"Protein hewani lemak sedang", nilai:"7 g protein · 5 g lemak · 75 kkal", items:[
+  ["Bakso","10 bj sdg",170,""],["Daging anak sapi","1 ptg sdg",35,""],["Daging domba","1 ptg sdg",40,""],
+  ["Daging kambing","1 ptg sdg",40,""],["Daging sapi","1 ptg sdg",35,"Ko+"],["Ginjal sapi","1 ptg bsr",45,"Ko+ Pr+"],
+  ["Hati ayam","1 bh sdg",30,"Pr+"],["Hati babi","1 ptg sdg",35,"Ko+ Pr+"],["Hati sapi","1 ptg sdg",35,"Ko+ Pr+"],
+  ["Otak","1 ptg bsr",65,"Ko+ Pr+"],["Telur ayam","1 btr",55,"Ko+"],["Telur bebek asin","1 btr",50,""],
+  ["Telur penyu","2 btr",60,""],["Telur puyuh","5 btr",55,""],["Usus sapi","1 ptg bsr",50,"Ko+ Pr+"]
+ ]},
+ {id:"g2c", gol:"Golongan II", nama:"Protein hewani tinggi lemak", nilai:"7 g protein · 13 g lemak · 150 kkal", items:[
+  ["Bebek","1 ptg sdg",45,"Pr+"],["Belut","3 ekor kcl",45,""],["Corned beef","3 sdm",45,"Na+"],
+  ["Daging ayam dengan kulit","1 ptg sdg",40,"Ko+"],["Daging babi","1 ptg sdg",50,"Ko+"],["Ham","1 1/2 ptg kcl",40,"Na++ Ko+ Pr+"],
+  ["Sardencis","1/2 ptg sdg",35,"Pr+"],["Sosis","1/2 ptg",50,"Na++"],["Kuning telur ayam","4 btr",45,"Ko+"],
+  ["Telur bebek","1 btr",55,"Ko+"],["Telur ikan","1 ptg sdg",40,""]
+ ]},
+ {id:"g3", gol:"Golongan III", nama:"Sumber protein nabati", nilai:"7 g KH · 5 g protein · 3 g lemak · 75 kkal", items:[
+  ["Kacang hijau","2 sdm",20,"S++"],["Kacang kedele","2 1/2 sdm",25,"S+"],["Kacang merah","2 sdm",20,"S+"],
+  ["Kacang mente","1 1/2 sdm",15,"Tj+"],["Kacang tanah","2 sdm",15,"S+ Tj+"],["Kacang tanah kupas","2 sdm",15,"S+ Tj+"],
+  ["Kacang tolo","2 sdm",20,""],["Keju kacang tanah","1 sdm",15,"Tj+"],["Kembang tahu","1 lembar",20,""],
+  ["Oncom","2 ptg kcl",40,"S++"],["Pete segar","1/2 gls",55,""],["Tahu","1 bj bsr",110,""],
+  ["Tempe","2 ptg sdg",50,"S+"],["Sari dele bubuk","2 1/2 gls",185,""]
+ ]},
+ {id:"g4a", gol:"Golongan IV", nama:"Sayuran A (sekehendak)", nilai:"Kandungan energi sangat sedikit, boleh sekehendak", items:[
+  ["Baligo","sekehendak","",""],["Gambas (oyong)","sekehendak","","S+"],["Jamur kuping segar","sekehendak","","S++"],
+  ["Ketimun","sekehendak","","S+ K+"],["Labu air","sekehendak","",""],["Lettuce","sekehendak","","S+"],
+  ["Lobak","sekehendak","","S++"],["Selada","sekehendak","","S+ K+"],["Selada air","sekehendak","","S+"],["Tomat","sekehendak","",""]
+ ]},
+ {id:"g4b", gol:"Golongan IV", nama:"Sayuran B", nilai:"5 g KH · 1 g protein · 25 kkal per 100 g (± 1 mangkok)", items:[
+  "Cabe hijau besar|S++","Caisim|S++","Daun koro|S+","Pe-cay|S+ K+","Tomat|S++ K+","Jagung muda|S+","Kol|S+ K+",
+  "Bawang bombay|","Bayam|K+","Bit|K+","Brokoli|S+","Buncis|S++","Cabe merah besar|S++","Daun bawang|S+ K+",
+  "Daun bluntas|","Daun kacang panjang|S++","Daun kecipir|","Daun kemangi|","Daun lobak|","Daun lompong tales|",
+  "Daun pakis|S+","Daun pohpohan|S++","Sawi|S+","Seledri|S++","Taoge kacang hijau|S+ K+","Terong|S++","Genjer|",
+  "Kangkung|S+","Jantung pisang|S+","Kacang buncis|S++ K+","Kacang panjang|S+","Kapri muda|K+","Kecipir (buah muda)|",
+  "Kembang kol|S++ K+","Kucai|S+","Labu siam|","Labu waluh|K+","Leunca|","Pare|S++","Pepaya muda|S+","Rebung|S+ K+",
+  "Tebu terubuk|","Wortel|S+"
+ ].map(x => { const [n,k] = x.split("|"); return [n,"1 mangkok (± 1 gls)",100,k]; })},
+ {id:"g4c", gol:"Golongan IV", nama:"Sayuran C", nilai:"10 g KH · 3 g protein · 50 kkal per 100 g (± 1 mangkok)", items:[
+  "Bayam merah|S+ K+","Daun katuk|S","Daun labu siam|","Daun mangkokan|","Daun melinjo|S++","Daun pepaya|K+",
+  "Daun singkong|S+ K+","Daun tales|S+","Kacang kapri|S+","Kluwih|Ka+","Melinjo|","Nangka muda|S+","Taoge kacang kedele|"
+ ].map(x => { const [n,k] = x.split("|"); return [n,"1 mangkok (± 1 gls)",100,k]; })},
+ {id:"g5", gol:"Golongan V", nama:"Buah-buahan dan gula", nilai:"12 g KH · 50 kkal (berat bersih tanpa kulit dan biji)", items:[
+  ["Anggur","20 bh sdg",165,"S++ K+"],["Apel merah","1 bh kcl",85,""],["Apel malang","1 bh sdg",75,"S+"],["Arbei","6 bh sdg",135,"K+"],
+  ["Belimbing","1 bh bsr",140,"S++ K+"],["Blewah","1 ptg sdg",70,"S+"],["Cempedak","7 bj sdg",45,"S++"],["Duku","16 bh sdg",80,"K+"],
+  ["Durian","2 bj bsr",35,""],["Jambu air","2 bh bsr",110,"S+"],["Jambu biji","1 bh bsr",100,"K+"],["Jambu bol","1 bh kcl",90,"S+"],
+  ["Jambu monyet","1 bh bsr",80,""],["Jeruk bali","1 ptg",105,"S+ K+"],["Jeruk garut","1 bh sdg",115,"S+ K+"],
+  ["Jeruk manis","2 bh sdg",110,"K+"],["Jeruk nipis","1 1/4 gls",135,"K+"],["Kolang-kaling","5 bj sdg",25,"S++"],
+  ["Kedondong","2 bh sdg",120,"S++"],["Kemang","1 bh bsr",105,""],["Kesemek","1/2 bh",65,"S+"],["Kurma","3 bh",15,""],
+  ["Kiwi","1 1/2 bh",110,"S+"],["Lontar","16 bh",185,"S++"],["Leci (lychee)","10 bh",75,""],["Mangga","3/4 bh bsr",90,""],
+  ["Manggis","2 bh sdg",80,"S++"],["Markisa","3/4 bh sdg",35,"S++"],["Melon","1 ptg bsr",190,"S+"],["Menteng","4 bh sdg",75,""],
+  ["Nangka masak","3 bj sdg",45,"S++"],["Nenas","1/4 bh sdg",95,""],["Pala (daging)","4 bh sdg",120,"S++"],["Peach","1 bh kcl",115,"S++"],
+  ["Pear","1/2 bh sdg",85,"S++"],["Pepaya","1 ptg bsr",190,"S+ K+"],["Pisang ambon","1 bh kcl",50,"K+"],["Pisang kepok","1 bh",45,"K+"],
+  ["Pisang mas","2 bh",40,"S+ K+"],["Pisang raja sereh","2 bh kcl",40,"K+"],["Plum","2 1/2 bh",140,"S+"],["Rambutan","8 bh",75,""],
+  ["Sawo","1 bh sdg",55,""],["Salak","2 bh sdg",65,"S+"],["Semangka","2 ptg sdg",180,""],["Sirsak","1/2 gls",60,"S+"],
+  ["Srikaya","2 bh bsr",50,"S+"],["Strawberry","4 bh bsr",215,"S++"],["Gula","1 sdm",13,""],["Madu","1 sdm",15,""]
+ ]},
+ {id:"g6a", gol:"Golongan VI", nama:"Susu tanpa lemak", nilai:"10 g KH · 7 g protein · 75 kkal", items:[
+  ["Susu skim cair","1 gls",200,"K+"],["Tepung susu skim","4 sdm",20,"K+"],["Yogurt non fat","2/3 gls",120,"K+"]
+ ]},
+ {id:"g6b", gol:"Golongan VI", nama:"Susu rendah lemak", nilai:"10 g KH · 7 g protein · 6 g lemak · 125 kkal", items:[
+  ["Keju","1 ptg kcl",35,"Na++ Ko+"],["Susu kambing","3/4 gls",165,"K+"],["Susu kental tidak manis","1/2 gls",100,"K+"],
+  ["Susu sapi","1 gls",200,"K+"],["Tepung susu asam","7 sdm",35,"K+"],["Yogurt susu penuh","1 gls",200,"K+"]
+ ]},
+ {id:"g6c", gol:"Golongan VI", nama:"Susu tinggi lemak", nilai:"10 g KH · 7 g protein · 10 g lemak · 150 kkal", items:[
+  ["Susu kerbau","1/2 gls",100,"K+"],["Tepung susu penuh","6 sdm",30,"K+ Ko+"]
+ ]},
+ {id:"g7a", gol:"Golongan VII", nama:"Minyak/lemak tidak jenuh", nilai:"5 g lemak · 50 kkal", items:[
+  ["Alpukat","1/2 bh bsr",60,"S+ Tj+ K+"],["Biji labu merah","2 bj",10,""],["Kacang almond","7 bj",25,"S+"],["Margarin jagung","1/4 sdt",5,""],
+  ["Mayonnaise","2 sdm",20,""],["Minyak biji kapas","1 sdt",5,""],["Minyak bunga matahari","1 sdt",5,""],["Minyak jagung","1 sdt",5,""],
+  ["Minyak kacang kedele","1 sdt",5,"Tj+"],["Minyak kacang tanah","1 sdt",5,"Tj+"],["Minyak safflower","1 sdt",5,""],["Minyak zaitun","1 sdt",5,"Tj+"]
+ ]},
+ {id:"g7b", gol:"Golongan VII", nama:"Minyak/lemak jenuh", nilai:"5 g lemak · 50 kkal", items:[
+  ["Lemak babi","1 ptg kcl",5,""],["Mentega","1 sdm",15,""],["Santan (peras dengan air)","1/3 gls",40,"K+"],["Kelapa","1 ptg kcl",15,"K+"],
+  ["Keju krim","1 ptg kcl",15,""],["Minyak kelapa","1 sdt",5,""],["Minyak inti kelapa sawit","1 sdt",5,""]
+ ]},
+ {id:"g8", gol:"Golongan VIII", nama:"Makanan tanpa kalori", nilai:"< 5 g KH dan < 20 kkal per penukar. Yang ber-URT maksimal 3 penukar sehari, tidak sekaligus; tanpa URT lebih bebas.", items:[
+  ["Agar-agar","bebas","",""],["Air kaldu","bebas","","Na++ Pr+"],["Air mineral","bebas","",""],["Cuka","bebas","",""],["Gelatin","bebas","",""],
+  ["Gula alternatif (aspartam, sakarin)","bebas","",""],["Kecap","bebas","","Na++"],["Kopi","bebas","",""],["Minuman ringan tanpa gula","bebas","",""],
+  ["Minuman tonik tanpa gula","bebas","",""],["Tauco","bebas","","Na++"],["Teh","bebas","","K+"],
+  ["Jam/sele rendah gula","2 sdt","",""],["Krim non dairy, cair","1 sdm","",""],["Krim non dairy, bubuk","1 sdm","",""],
+  ["Margarin non fat","1 sdt","",""],["Mayonaise","1 sdm","",""],["Permen tanpa gula","2 sdm","",""],["Sirup tanpa gula","2 sdm","",""],["Wijen","2 sdm","",""]
+ ]}
+];
+const KET_DBMP = {
+  "Na+":["Na 200–400 mg","bad"], "Na++":["Na > 400 mg","bad"], "Ko+":["Tinggi kolesterol","bad"], "Pr+":["Tinggi purin","warn"],
+  "S+":["Serat 3–6 g","ok"], "S++":["Serat > 6 g","ok"], "S":["Sumber serat","ok"], "K+":["Tinggi kalium","ok"], "P-":["Rendah protein","neutral"],
+  "Tj+":["Lemak tak jenuh tunggal","ok"], "Ka+":["Sayuran > 50 kkal","warn"]
+};
+
 const PENUKAR = {
-  nasi:   {nama:"Makanan pokok (nasi)",          kkal:175, kh:40, p:4,  l:0},
-  hewani: {nama:"Lauk hewani rendah lemak",      kkal:50,  kh:0,  p:7,  l:2},
-  nabati: {nama:"Lauk nabati (tempe/tahu)",      kkal:75,  kh:7,  p:5,  l:3},
-  sayur:  {nama:"Sayuran",                        kkal:25,  kh:5,  p:1,  l:0},
-  buah:   {nama:"Buah",                           kkal:50,  kh:12, p:0,  l:0},
-  minyak: {nama:"Minyak / lemak",                 kkal:50,  kh:0,  p:0,  l:5}
+  nasi:   {nama:"Makanan pokok (karbohidrat)",      kkal:175, kh:40, p:4,  l:0},
+  hls:    {nama:"Lauk hewani lemak sedang",         kkal:75,  kh:0,  p:7,  l:5},
+  hrl:    {nama:"Lauk hewani rendah lemak",         kkal:50,  kh:0,  p:7,  l:2},
+  nabati: {nama:"Lauk nabati (tempe/tahu)",         kkal:75,  kh:7,  p:5,  l:3},
+  sayA:   {nama:"Sayuran A",                         kkal:0,   kh:0,  p:0,  l:0},
+  sayB:   {nama:"Sayuran B",                         kkal:25,  kh:5,  p:1,  l:0},
+  buah:   {nama:"Buah",                              kkal:50,  kh:12, p:0,  l:0},
+  susu:   {nama:"Susu tanpa lemak",                  kkal:75,  kh:10, p:7,  l:0},
+  minyak: {nama:"Minyak / lemak",                    kkal:50,  kh:0,  p:0,  l:5}
 };
 const URT = {
-  nasi:   "2 sendok nasi (centong) peres, ± 100 g / 1 buah ubi jalar sedang (135 g) / 3 iris roti tawar (70 g)",
-  hewani: "1 potong sedang ikan segar (40 g) / 1 potong sedang ayam tanpa kulit (40 g)",
-  nabati: "2 potong sedang tempe (50 g) / 1 biji besar tahu (110 g)",
-  sayur:  "1 mangkok sayuran matang tanpa kuah (100 g)",
-  buah:   "1 potong besar pepaya (110 g) / 1 buah pisang ambon sedang (50 g) / 2 buah jeruk manis (110 g)",
-  minyak: "1 sendok teh minyak (5 g)"
+  nasi:   "nasi 2 centong (100 g; 1 centong = 50 g) / ubi jalar kuning 1 biji sedang (135 g) / roti putih 3 iris (70 g) / jagung segar 3 biji sedang (125 g)",
+  hls:    "daging sapi 1 potong sedang (35 g) / telur ayam 1 butir (55 g) / daging kambing 1 potong sedang (40 g)",
+  hrl:    "ikan segar 1 potong sedang (40 g) / daging ayam tanpa kulit 1 potong sedang (40 g) / ikan kembung 1/3 ekor sedang (30 g)",
+  nabati: "tempe 2 potong sedang (50 g) / tahu 1 biji besar (110 g) / kacang hijau 2 sdm (20 g)",
+  sayA:   "sekehendak (sayuran golongan A, kandungan energi sangat rendah)",
+  sayB:   "1 mangkok (± 1 gelas) sayuran campur, dimasak dan ditiriskan (100 g)",
+  buah:   "pisang ambon 1 buah kecil (50 g) / jeruk manis 2 buah sedang (110 g) / apel malang 1 buah sedang (75 g)",
+  susu:   "susu skim cair 1 gelas (200 ml) / tepung susu skim 4 sdm (20 g) / yogurt non fat 2/3 gelas (120 g)",
+  minyak: "minyak 1 sdt (5 g) / alpukat 1/2 buah besar (60 g) / santan 1/3 gelas (40 g)"
 };
+/* Standar Diet Diabetes Melitus dalam satuan penukar — Penuntun Diet & Terapi Gizi ed. 5, hlm. 130–131.
+   Waktu makan: [pagi, selingan pagi, siang, selingan sore, malam]; "s" = sekehendak. */
+const STD_DM = {
+  level: [1100,1300,1500,1700,1900,2100,2300],
+  baris: {
+    nasi:   [[.5,0,1,0,.5],[1,0,1,0,1],[1,0,2,0,1],[1,0,2,0,2],[2,0,2,0,2],[1.5,0,2,1,2],[2,.5,2,1,2]],
+    hls:    [[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0]],
+    hrl:    [[0,0,1,0,1],[0,0,1,0,1],[0,0,1,0,1],[0,0,1,0,1],[0,0,1,0,1],[0,0,1,0,1],[0,0,1,0,1]],
+    nabati: [[0,0,1,0,1],[0,0,1,0,1],[.5,0,1,0,1],[.5,0,1,0,1],[.5,0,1,0,1],[1,0,1,0,1],[1,0,1,0,1]],
+    sayA:   [["s",0,0,0,0],["s",0,0,0,0],["s",0,0,0,0],["s",0,0,0,0],["s",0,0,0,0],["s",0,0,0,0],["s",0,0,0,0]],
+    sayB:   [[0,0,1,0,1],[0,0,1,0,1],[0,0,1,0,1],[0,0,1,0,1],[0,0,1,0,1],[0,0,1,0,1],[0,0,"s",0,1]],
+    buah:   [[0,1,1,1,1],[0,1,1,1,1],[0,1,1,1,1],[0,1,1,1,1],[0,1,1,1,1],[0,1,1,1,1],[0,1,1,1,2]],
+    susu:   [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,1,0,0,0]],
+    minyak: [[0,0,1,0,2],[1,0,2,0,1],[1,0,2,0,1],[1,0,2,0,1],[2,0,2,0,2],[2,0,2,1,2],[2,0,2,1,2]]
+  },
+  // Nilai gizi sesuai buku (KH 1500 kkal tercetak "25" g — kemungkinan salah cetak)
+  gizi: { e:[1042,1263,1476,1652,1918,2089,2300], p:[41,45,51,55,59,64,75], l:[30,35,36,36,46,53,63], kh:[152,192,null,275,315,339,379] }
+};
+/* Contoh bahan makanan sehari Diet Rendah Natrium (DASH) 2.000 kkal — Penuntun Diet ed. 5, hlm. 124–125 */
+const DASH_2000 = [
+  ["Beras","150 g","2,5 gelas nasi (± 6½ centong)"],["Daging sapi tanpa lemak","50 g","1 potong sedang"],["Ikan","150 g","1 ekor"],
+  ["Telur","60 g","1 butir"],["Sayuran","400 g","4 gelas (4 mangkok)"],["Buah","400 g","2 buah apel"],["Minyak","20 g","2 sdm"],
+  ["Gula pasir","20 g","1,5 sdm"],["Kacang hijau","25 g","2 sdm"],["Oat/sereal gandum utuh","50 g","3 sdm"],
+  ["Susu rendah lemak","400 g","2 gelas"],["Tahu/tempe","100 g","2 potong sedang"]
+];
+const DM_KEYS = ["nasi","hls","hrl","nabati","sayA","sayB","buah","susu","minyak"];
+const WAKTU5 = ["Pagi","Sel. pagi","Siang","Sel. sore","Malam"];
+function pilihStandarDM(E){
+  const L = STD_DM.level;
+  if(E >= L[L.length-1]) return {idx:L.length-1, kkal:L[L.length-1], diatas: E > L[L.length-1]};
+  if(E <= L[0]) return {idx:0, kkal:L[0], diatas:false};
+  let idx = 0, best = Infinity;
+  L.forEach((v,i) => { const dd = Math.abs(E - v); if(dd < best || (dd === best && v > L[idx])){ best = dd; idx = i; } });
+  return {idx, kkal:L[idx], diatas:false};
+}
+function selPorsi(v){ return v === "s" ? "s" : (v ? half(v) : "–"); }
+function totalPorsi(arr){
+  const adaS = arr.some(v => v === "s"), jml = arr.reduce((t,v)=> t + (v === "s" ? 0 : v), 0);
+  return jml ? half(jml) + " P" + (adaS ? " + s" : "") : (adaS ? "s" : "–");
+}
 
 /* ============================================================
    UTILITAS
@@ -531,33 +711,14 @@ function hitung(d){
   o.lemakJenuhMax = Math.floor(o.energi*0.10/9);
   o.persenBBI = d.bb / o.bbi * 100;
 
-  // Susunan porsi penukar sehari
-  const E = o.energi;
-  const P = {};
-  P.sayur  = 3;
-  P.buah   = E < 1300 ? 2 : E < 2100 ? 3 : 4;
-  P.hewani = E < 1300 ? 2 : E < 2000 ? 3 : 4;
-  P.nabati = E < 1700 ? 2 : 3;
-  const lemakTarget = E*0.25/9;
-  P.minyak = Math.max(2, r05((lemakTarget - P.hewani*PENUKAR.hewani.l - P.nabati*PENUKAR.nabati.l)/PENUKAR.minyak.l));
-  const tanpaNasi = ["sayur","buah","hewani","nabati","minyak"].reduce((s,k)=>s + P[k]*PENUKAR[k].kkal, 0);
-  P.nasi = Math.max(2, r05((E - tanpaNasi)/PENUKAR.nasi.kkal));
-  o.porsi = P;
-  o.porsiTotal = Object.keys(P).reduce((t,k)=>{ t.kkal+=P[k]*PENUKAR[k].kkal; t.kh+=P[k]*PENUKAR[k].kh; t.p+=P[k]*PENUKAR[k].p; t.l+=P[k]*PENUKAR[k].l; return t; },{kkal:0,kh:0,p:0,l:0});
-
-  // Pembagian per waktu makan (PERKENI 2024): pagi 20%, siang 30%, malam 25%, selingan 2x (sisanya)
-  const SHARE = [0.20, 0.30, 0.25, 0.25];
-  const W = { hewani:[0.27,0.40,0.33,0], nabati:[0.27,0.40,0.33,0], sayur:[1/3,1/3,1/3,0], buah:[0,0,0,1], minyak:[0.25,0.4,0.35,0] };
-  o.jadwal = {};
-  for(const k in W) o.jadwal[k] = splitPortion(P[k], W[k]);
-  const sisa = SHARE.map((sh,i) => Math.max(0, sh*o.porsiTotal.kkal - ["hewani","nabati","sayur","buah","minyak"].reduce((t,k)=>t + o.jadwal[k][i]*PENUKAR[k].kkal, 0)));
-  const tot = sisa.reduce((a,b)=>a+b,0) || 1;
-  o.jadwal.nasi = splitPortion(P.nasi, sisa.map(x => x/tot));
-  { // urutkan nasi makan utama mengikuti proporsi PERKENI: pagi ≤ malam ≤ siang
-    const u = o.jadwal.nasi.slice(0,3).sort((x,y)=>x-y);
-    o.jadwal.nasi = [u[0], u[2], u[1], o.jadwal.nasi[3]];
+  // Susunan porsi penukar: hanya peserta DM, memakai Standar Diet DM (Penuntun Diet ed. 5)
+  if(o.dm){
+    o.std = pilihStandarDM(o.energi);
+    const i = o.std.idx;
+    o.stdPorsi = {};
+    DM_KEYS.forEach(k => { o.stdPorsi[k] = STD_DM.baris[k][i]; });
+    o.stdGizi = {e:STD_DM.gizi.e[i], p:STD_DM.gizi.p[i], l:STD_DM.gizi.l[i], kh:STD_DM.gizi.kh[i]};
   }
-  o.jadwalKkal = [0,1,2,3].map(i => Object.keys(o.jadwal).reduce((t,k)=>t + o.jadwal[k][i]*PENUKAR[k].kkal, 0));
 
   // Target bertahap
   if(o.lebih > 0){
@@ -673,7 +834,7 @@ function rekomendasi(o, mode){
     a.push(pes ? "Telur paling banyak 1 butir sehari. Hindari ati, ampela, dan daging berlemak."
                : "Protein hewani: ikan, unggas tanpa kulit, telur maksimal 1 butir/hari; batasi daging merah berlemak, ati, ampela.");
     if(!pes) a.push("Target TD < 140/90 mmHg; bila dapat ditoleransi ≤ 130/80 mmHg (PNPK Hipertensi 2026).");
-    if(!pes && o.persenBBI >= 115) a.push(`BB ${fmt0(o.persenBBI)}% BBI (≥ 115%): dianjurkan diet rendah kalori dan olahraga (Standar Makanan RS).`);
+    if(!pes && o.persenBBI >= 115) a.push(`BB ${fmt0(o.persenBBI)}% BBI (≥ 115%): dianjurkan diet rendah kalori dan olahraga (Penuntun Diet ed. 5).`);
     if(o.td && !o.tdTerkendali) a.push(pes ? "Minum obat darah tinggi sesuai anjuran dokter dan periksa tekanan darah secara rutin."
                                             : "TD belum terkendali (≥ 140/90): tekankan kepatuhan minum obat dan pemantauan TD rutin.");
     R.push({judul: pes ? "Khusus darah tinggi" : "Hipertensi", isi:a});
@@ -846,7 +1007,7 @@ function renderPeserta(o){
 }
 
 function renderPetugas(o){
-  const d = o.d, k = o.kls, P = o.porsi, T = o.porsiTotal;
+  const d = o.d, k = o.kls;
   let h = printHead(o, "Hasil Penilaian Status Gizi Peserta Prolanis");
   h += `<div class="card"><h2>Identitas</h2><table class="kv"><tbody>
     <tr><td>Nama peserta</td><td>${d.nama ? esc(d.nama) : "–"}</td></tr>
@@ -900,6 +1061,7 @@ function renderPetugas(o){
       <tr><td>Koreksi status gizi (${k.label.toLowerCase()})</td><td class="num">${f.bb ? pct(f.bb) : "0%"}</td></tr>
       <tr><td>Hasil hitung</td><td class="num">${fmt0(o.energiHitung)} kkal</td></tr>
       <tr><th>Kebutuhan energi yang dianjurkan</th><th class="num">${fmt0(o.energi)} kkal/hari</th></tr>
+      ${o.std ? `<tr><th>Standar diet (Penuntun Diet ed. 5)</th><th class="num">Diet DM ${fmt0(o.std.kkal)} kkal</th></tr>` : ""}
     </tbody></table></div>
     ${o.energiDibatasi ? `<p class="note" style="margin-top:8px">Hasil hitung di bawah batas minimal, sehingga dipakai ${fmt0(o.energiMin)} kkal. PERKENI 2024: paling sedikit P 1.000–1.200 dan L 1.200–1.600 kkal; asupan &lt; 1.200 kkal mendekati diet kalori sangat rendah yang memerlukan pengawasan ketat.</p>` : ""}
     <h3>Anjuran zat gizi</h3>
@@ -912,17 +1074,8 @@ function renderPetugas(o){
       <tr><td>Ikan</td><td class="num">≥ 2 kali/minggu</td></tr>
     </tbody></table></div></div>`;
 
-  // Porsi penukar
-  const keys = ["nasi","hewani","nabati","sayur","buah","minyak"];
-  h += `<div class="card"><h2>Susunan Porsi Penukar Sehari</h2><div class="tbl-scroll"><table>
-    <thead><tr><th>Golongan</th><th class="num">Pagi</th><th class="num">Siang</th><th class="num">Malam</th><th class="num">Selingan</th><th class="num">Total</th></tr></thead><tbody>`;
-  keys.forEach(kk => {
-    const j = o.jadwal[kk];
-    h += `<tr><td>${PENUKAR[kk].nama}</td>${j.map(x=>`<td class="num">${x?half(x):"–"}</td>`).join("")}<td class="num"><b>${half(P[kk])} P</b></td></tr>`;
-  });
-  h += `</tbody></table></div>
-    <p class="muted" style="font-size:.88rem;margin-top:8px">Susunan porsi menghasilkan ± ${fmt0(T.kkal)} kkal (pagi ${fmt0(o.jadwalKkal[0]/T.kkal*100)}% · siang ${fmt0(o.jadwalKkal[1]/T.kkal*100)}% · malam ${fmt0(o.jadwalKkal[2]/T.kkal*100)}% · selingan ${fmt0(o.jadwalKkal[3]/T.kkal*100)}%) · KH ${fmt0(T.kh)} g · protein ${fmt0(T.p)} g · lemak ${fmt0(T.l)} g. Selingan 2 kali (pagi dan sore): buah, ditambah ubi/jagung/roti bila ada porsi makanan pokok.</p>
-    <h3>Ukuran rumah tangga (1 porsi)</h3><ul class="rec">${keys.map(kk=>`<li><b>${PENUKAR[kk].nama}:</b> ${URT[kk]}</li>`).join("")}</ul></div>`;
+  // Porsi penukar (DM) / pola DASH (HT) / Isi Piringku (lainnya)
+  h += pembagianMakanHTML(o, false);
 
   // Rekomendasi
   h += `<div class="card"><h2>Rekomendasi Gizi dan Gaya Hidup</h2>`;
@@ -1022,7 +1175,7 @@ function pdfPeserta(o){
   return h + pdfFoot();
 }
 function pdfPetugas(o){
-  const d = o.d, k = o.kls, P = o.porsi, T = o.porsiTotal, f = o.faktor;
+  const d = o.d, k = o.kls, f = o.faktor;
   let h = pdfHead(o, "Hasil Penilaian Status Gizi Peserta Prolanis");
   h += `<p class="id"><b>${d.nama ? esc(d.nama) : "Peserta"}</b> · ${d.jk==="L"?"Laki-laki":"Perempuan"}, ${d.usia} tahun · ${dxLabel(d.dx)} · Aktivitas ${aktLabel(d.akt).toLowerCase()}</p>`;
   const antro = `<table class="kv"><tbody>
@@ -1041,6 +1194,7 @@ function pdfPetugas(o){
     <tr><td>Basal (${d.jk==="L"?"30":"25"} × ${fmt(o.bbi)} kg BBI)</td><td class="n">${fmt0(o.basal)} kkal</td></tr>
     <tr><td>Koreksi aktivitas / usia / status gizi</td><td class="n">${pct(f.akt)} / ${f.usia?pct(f.usia):"0%"} / ${f.bb?pct(f.bb):"0%"}</td></tr>
     <tr><th>Kebutuhan energi${o.energiDibatasi?" (batas minimal)":""}</th><th class="n">${fmt0(o.energi)} kkal</th></tr>
+    ${o.std ? `<tr><td>Standar diet (Penuntun Diet ed. 5)</td><td class="n"><b>Diet DM ${fmt0(o.std.kkal)} kkal</b></td></tr>` : ""}
     <tr><td>Serat / lemak jenuh</td><td class="n">≥ ${o.seratMin} g / &lt; ${o.lemakJenuhMax} g</td></tr>
     <tr><td>Natrium</td><td class="n">${o.natrium}</td></tr>
   </tbody></table>`;
@@ -1048,14 +1202,41 @@ function pdfPetugas(o){
   if(o.lebih > 0) h += `<div class="tg"><b>Target:</b> ${o.dm ? "minimal 7–10% BB (PERKENI 2024)" : "5–10% BB dalam 3–6 bulan (Pedoman Obesitas FKTP 2021)"}: turun ${half(o.tA)}–${half(o.tB)} kg · laju 0,5–1 kg/minggu${o.dm?" · defisit 500–750 kkal/hari":""}.${o.lpSentral?` Pantau LP (target ≤ ${o.lpBatas} cm).`:""}</div>`;
   else if(o.kurang > 0) h += `<div class="tg"><b>Target:</b> naik ${half(o.tKurang)} kg hingga IMT 18,5, laju 0,25–0,5 kg/minggu.</div>`;
   else if(o.lpSentral) h += `<div class="tg"><b>Target:</b> turunkan LP ${fmt(o.lpLebih)} cm hingga ≤ ${o.lpBatas} cm.</div>`;
-  const keys = ["nasi","hewani","nabati","sayur","buah","minyak"];
-  const urtS = {nasi:"2 sdk nasi/centong (100 g)", hewani:"1 ptg sdg ikan/ayam (40 g)", nabati:"2 ptg tempe / 1 tahu bsr", sayur:"1 mangkok (100 g)", buah:"1 ptg pepaya / 1 pisang", minyak:"1 sdt (5 g)"};
-  h += `<h2>Susunan porsi penukar sehari (± ${fmt0(T.kkal)} kkal)</h2><table><thead><tr><th>Golongan</th><th class="n">Pagi</th><th class="n">Siang</th><th class="n">Malam</th><th class="n">Selingan</th><th class="n">Total</th><th>1 porsi =</th></tr></thead><tbody>`
-    + keys.map(kk => `<tr><td>${PENUKAR[kk].nama}</td>${o.jadwal[kk].map(x=>`<td class="n">${x?half(x):"–"}</td>`).join("")}<td class="n"><b>${half(P[kk])} P</b></td><td class="muted">${urtS[kk]}</td></tr>`).join("")
-    + `</tbody></table>`;
+  h += pembagianMakanHTML(o, true);
   h += `<h2>Rekomendasi gizi dan gaya hidup</h2>` + duaKolom(rekomendasi(o,"petugas"));
   h += `<div class="sg">Petugas Gizi,<br><br><br>( ${d.petugas ? esc(d.petugas) : "............................................"} )</div>`;
   return h + pdfFoot();
+}
+
+function pembagianMakanHTML(o, ringkas){
+  const d = o.d;
+  const T = ringkas ? {card:"", h:"h2", end:"", num:"n"} : {card:'<div class="card">', h:"h2", end:"</div>", num:"num"};
+  if(o.dm){
+    const P = o.stdPorsi, keys = DM_KEYS.filter(k => STD_DM.baris[k][o.std.idx].some(v => v));
+    const urtS = {nasi:"2 centong nasi (100 g)", hls:"1 ptg daging (35 g)/1 telur", hrl:"1 ptg ikan/ayam (40 g)", nabati:"2 ptg tempe/1 tahu bsr", sayA:"sekehendak", sayB:"1 mangkok (100 g)", buah:"1 pisang ambon kcl/2 jeruk", susu:"1 gls skim (200 ml)", minyak:"1 sdt (5 g)"};
+    let h = `${T.card}<${T.h}>Standar Diet DM ${fmt0(o.std.kkal)} kkal (satuan penukar)</${T.h}>
+      ${ringkas ? "" : `<p class="muted" style="font-size:.88rem;margin-top:0">Kebutuhan energi ${fmt0(o.energi)} kkal dibulatkan ke standar diet terdekat. Sumber: Penuntun Diet &amp; Terapi Gizi ed. 5 (PERSAGI &amp; AsDI, 2024).</p>`}
+      <div class="tbl-scroll"><table><thead><tr><th>Golongan</th>${WAKTU5.map(w=>`<th class="${T.num}">${w}</th>`).join("")}<th class="${T.num}">Total</th>${ringkas?"<th>1 porsi =</th>":""}</tr></thead><tbody>`;
+    keys.forEach(k => {
+      const t = totalPorsi(P[k]);
+      h += `<tr><td>${PENUKAR[k].nama}</td>${P[k].map(v=>`<td class="${T.num}">${selPorsi(v)}</td>`).join("")}<td class="${T.num}"><b>${t}</b></td>${ringkas?`<td class="muted">${urtS[k]}</td>`:""}</tr>`;
+    });
+    const g = o.stdGizi;
+    h += `</tbody></table></div>
+      <p class="muted" style="font-size:${ringkas?"10.5px":".88rem"};margin-top:6px">s = sekehendak. Nilai gizi standar (buku): energi ${fmt0(g.e)} kkal · protein ${g.p} g · lemak ${g.l} g · KH ${g.kh === null ? "– (tercetak 25 g, kemungkinan salah cetak)" : g.kh + " g"}.${o.std.diatas ? ` Kebutuhan energi ${fmt0(o.energi)} kkal melebihi standar tertinggi; dipakai standar 2.300 kkal, sesuaikan porsi saat konseling.` : ""}</p>`;
+    if(!ringkas) h += `<h3>Ukuran rumah tangga (1 porsi)</h3><ul class="rec">${keys.map(k=>`<li><b>${PENUKAR[k].nama}:</b> ${URT[k]}</li>`).join("")}</ul>`;
+    return h + T.end;
+  }
+  if(o.ht){
+    const half2 = Math.ceil(DASH_2000.length/2);
+    const tb = rows => `<table><thead><tr><th>Bahan makanan</th><th class="${T.num}">Berat</th><th>URT</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td class="${T.num}">${r[1]}</td><td>${r[2]}</td></tr>`).join("")}</tbody></table>`;
+    return `${T.card}<${T.h}>Pola makan DASH — contoh bahan makanan sehari 2.000 kkal</${T.h}>
+      <p class="muted" style="font-size:${ringkas?"10.5px":".88rem"};margin-top:0">Contoh dari Penuntun Diet &amp; Terapi Gizi ed. 5 (Diet Rendah Natrium). Kebutuhan energi peserta ± ${fmt0(o.energi)} kkal; sesuaikan jumlah bahan saat konseling.</p>
+      ${ringkas ? `<div class="row"><div>${tb(DASH_2000.slice(0,half2))}</div><div>${tb(DASH_2000.slice(half2))}</div></div>` : `<div class="tbl-scroll">${tb(DASH_2000)}</div>`}
+      ${T.end}`;
+  }
+  return `${T.card}<${T.h}>Pola makan</${T.h}>
+    <p style="margin-top:0;${ringkas?"font-size:11.5px":""}">Susunan porsi penukar ditampilkan khusus untuk peserta DM (Standar Diet DM). Untuk peserta ini, susun menu mengikuti <b>Isi Piringku</b> (½ piring sayur dan buah, ¼ makanan pokok, ¼ lauk pauk) dengan perkiraan kebutuhan energi ± ${fmt0(o.energi)} kkal, serta batasi gula ≤ 4 sdm, garam ≤ 1 sdt, dan minyak ≤ 5 sdm per hari.</p>${T.end}`;
 }
 function namaFile(o){
   const n = (o.d.nama || "peserta").replace(/[^A-Za-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,30) || "peserta";
@@ -1153,8 +1334,8 @@ function refHTML(){
     <p>Untuk <b>pria TB &lt; 160 cm</b> dan <b>wanita TB &lt; 150 cm</b>:</p>
     <div class="rumus">BBI = TB cm − 100</div>
     <p>Status menurut BBI: normal = BBI ± 10%; kurus &lt; BBI − 10%; gemuk &gt; BBI + 10%. <b>%BBI</b> = BB ÷ BBI × 100%.</p>
-    <p>Pada hipertensi, BB ≥ 115% BBI → dianjurkan diet rendah kalori dan olahraga (Standar Makanan RS).</p>
-    <div class="src">PERKENI (2024); PERSAGI &amp; AsDI (2019).</div>`);
+    <p>Pada hipertensi, BB ≥ 115% BBI → dianjurkan diet rendah kalori dan olahraga (Penuntun Diet ed. 5, Diet Rendah Natrium).</p>
+    <div class="src">PERKENI (2024); PERSAGI &amp; AsDI (2024), Lampiran 6.2.</div>`);
 
   h += blk("4. Estimasi TB dari tinggi lutut (Chumlea)", `
     <div class="rumus">Laki-laki: TB = 64,19 − (0,04 × usia) + (2,02 × TL)<br>Perempuan: TB = 84,88 − (0,24 × usia) + (1,83 × TL)</div>
@@ -1179,7 +1360,8 @@ function refHTML(){
     <h3 style="margin:12px 0 4px">Contoh perhitungan ${pakaiPeserta ? `(data peserta ${o.d.nama ? esc(o.d.nama) : "yang baru dihitung"})` : "(contoh)"}</h3>
     ${langkahEnergi(o)}
     ${pakaiPeserta ? "" : `<p class="muted" style="font-size:.85rem">Setelah menghitung data peserta, contoh ini otomatis memakai data peserta tersebut.</p>`}
-    <div class="src">PERKENI (2024), Tabel 17.</div>`, pakaiPeserta);
+    <p>Cara yang sama tercantum di Penuntun Diet ed. 5, Lampiran 6.2 (Cara Praktis Perhitungan Kebutuhan Energi Orang Dewasa).</p>
+    <div class="src">PERKENI (2024), Tabel 17; PERSAGI &amp; AsDI (2024), Lampiran 6.2.</div>`, pakaiPeserta);
 
   h += blk("6. Anjuran zat gizi dan pembagian makan", `
     <ul class="rec">
@@ -1192,14 +1374,18 @@ function refHTML(){
     </ul>
     <div class="src">PERKENI (2024).</div>`);
 
-  h += blk("7. Porsi penukar dan ukuran rumah tangga", `
+  h += blk("7. Standar Diet DM dan porsi penukar", `
+    <p>Susunan porsi penukar <b>khusus peserta DM</b> memakai <b>Standar Diet Diabetes Melitus dalam satuan penukar</b> (Penuntun Diet ed. 5, hlm. 130–131): standar 1.100, 1.300, 1.500, 1.700, 1.900, 2.100, dan 2.300 kkal, dibagi pagi, selingan pagi, siang, selingan sore, dan malam.</p>
+    <p><span class="app">Ketentuan aplikasi</span> Kebutuhan energi (PERKENI 2024) dibulatkan ke standar terdekat; bila tepat di tengah dibulatkan ke atas (mis. 1.600 → Diet DM 1.700 kkal). Energi &gt; 2.300 kkal memakai standar 2.300 kkal.</p>
+    <p>Hewani pagi = lemak sedang; hewani siang dan malam = rendah lemak. Sayuran A = sekehendak.</p>
+    <p>Peserta <b>hipertensi saja</b>: ditampilkan contoh bahan makanan sehari Diet Rendah Natrium (DASH) 2.000 kkal (Penuntun Diet ed. 5, hlm. 124). Peserta <b>tanpa DM/hipertensi</b>: mengikuti Isi Piringku dan batas gula-garam-lemak (Permenkes 30/2013).</p>
     <table><thead><tr><th>Golongan (1 porsi)</th><th class="num">kkal</th><th class="num">KH</th><th class="num">P</th><th class="num">L</th></tr></thead><tbody>
-      ${["nasi","hewani","nabati","sayur","buah","minyak"].map(k=>`<tr><td>${PENUKAR[k].nama}</td><td class="num">${PENUKAR[k].kkal}</td><td class="num">${PENUKAR[k].kh}</td><td class="num">${PENUKAR[k].p}</td><td class="num">${PENUKAR[k].l}</td></tr>`).join("")}
+      ${DM_KEYS.filter(k=>k!=="sayA").map(k=>`<tr><td>${PENUKAR[k].nama}</td><td class="num">${PENUKAR[k].kkal}</td><td class="num">${PENUKAR[k].kh}</td><td class="num">${PENUKAR[k].p}</td><td class="num">${PENUKAR[k].l}</td></tr>`).join("")}
     </tbody></table>
-    <ul class="rec">${["nasi","hewani","nabati","sayur","buah","minyak"].map(k=>`<li><b>${PENUKAR[k].nama}:</b> ${URT[k]}</li>`).join("")}</ul>
-    <p><span class="app">Ketentuan aplikasi</span> Jumlah porsi disusun otomatis: sayur 3 P; buah 2–4 P dan lauk hewani 2–4 P menurut tingkat energi; lauk nabati 2–3 P; minyak dari target lemak ± 25% energi; makanan pokok mengisi sisa energi. Porsi lalu dibagi ke waktu makan mendekati proporsi PERKENI. Susunan ini titik awal konseling dan dapat disesuaikan petugas.</p>
-    <p><span class="app">Ketentuan aplikasi</span> 1 sendok nasi (centong) peres ± 50 g, sehingga 1 porsi nasi (100 g) = 2 sendok nasi.</p>
-    <div class="src">PERSAGI &amp; AsDI (2019), Daftar Bahan Makanan Penukar.</div>`);
+    <ul class="rec">${DM_KEYS.map(k=>`<li><b>${PENUKAR[k].nama}:</b> ${URT[k]}</li>`).join("")}</ul>
+    <p><span class="app">Ketentuan aplikasi</span> 1 centong nasi = 50 g, sehingga 1 porsi nasi (100 g; ¾ gelas) = 2 centong. Sayuran: 1 penukar = 100 g ≈ 1 gelas = 1 mangkok. Pada contoh DASH, "2,5 gelas nasi" ditulis bersama padanannya (± 6½ centong).</p>
+    <p>Nilai penukar dan URT bahan makanan mengacu pada Daftar Bahan Makanan Penukar (Depkes RI, 2006); daftar lengkapnya ada di menu <b>🔎 Daftar Penukar</b>.</p>
+    <div class="src">PERSAGI &amp; AsDI (2024), Diet Diabetes Melitus; Departemen Kesehatan RI (2006), Bahan Makanan Penukar.</div>`);
 
   h += blk("8. Target penurunan berat badan", `
     <ul class="rec">
@@ -1228,16 +1414,23 @@ function refHTML(){
       <li>Pola DASH: sayur dan buah 4–5 porsi/hari, susu rendah lemak, biji-bijian utuh, kacang-kacangan; kalium ± 4.700 mg/hari (bila fungsi ginjal baik), kalsium &gt; 800 mg/hari, magnesium cukup; telur maksimal 1 butir/hari.</li>
       <li>Dihindari: ikan asin/kering/asap, ikan kaleng, kornet, sosis, ati-ampela, nasi uduk, asinan, manisan, vetsin, kecap, saus, bumbu instan, margarin/mentega bergaram.</li>
     </ul>
-    <div class="src">Kemenkes (2026); PERSAGI &amp; AsDI (2019), Diet Rendah Natrium.</div>`);
+    <p><b>Takaran praktis garam (Cara Pemesanan Diet Rendah Natrium, Penuntun Diet ed. 5):</b></p>
+    <table><thead><tr><th>Macam diet</th><th>Tambahan garam dapur</th></tr></thead><tbody>
+      <tr><td>Diet rendah natrium 1.500 mg Na</td><td>3 saset × 0,8 g garam (NaCl) = 2,4 g/hari</td></tr>
+      <tr><td>Diet rendah natrium 2.300 mg Na</td><td>5 saset × 0,8 g garam (NaCl) = 4 g/hari</td></tr>
+    </tbody></table>
+    <p class="muted" style="font-size:.85rem">Takaran disesuaikan dengan kondisi dan kebutuhan pasien. Batas natrium di aplikasi mengikuti PNPK 2026 (≤ 2.000 mg/hari; ≤ 1.500 mg bila TD belum terkendali).</p>
+    <div class="src">Kemenkes (2026); PERSAGI &amp; AsDI (2024), Diet Rendah Natrium (DASH).</div>`);
 
   h += blk("11. Daftar pustaka (APA 7)", `<div class="pus">
     <p>Chumlea, W. C., Roche, A. F., &amp; Steinbaugh, M. L. (1985). Estimating stature from knee height for persons 60 to 90 years of age. <i>Journal of the American Geriatrics Society, 33</i>(2), 116–120.</p>
+    <p>Departemen Kesehatan Republik Indonesia. (2006). <i>Bahan makanan penukar</i> [Leaflet]. Direktorat Bina Gizi Masyarakat, Subdit Bina Gizi Klinik. (Diperbanyak oleh Program Perbaikan Gizi Masyarakat, Dinas Kesehatan Provinsi Sulawesi Selatan, 2007).</p>
     <p>Kementerian Kesehatan Republik Indonesia. (2013). <i>Peraturan Menteri Kesehatan Nomor 30 Tahun 2013 tentang pencantuman informasi kandungan gula, garam, dan lemak serta pesan kesehatan untuk pangan olahan dan pangan siap saji</i>.</p>
     <p>Kementerian Kesehatan Republik Indonesia. (2021). <i>Pedoman pengelolaan dan pencegahan obesitas bagi tenaga kesehatan di fasilitas kesehatan tingkat pertama</i>.</p>
     <p>Kementerian Kesehatan Republik Indonesia. (2026). <i>Keputusan Menteri Kesehatan Nomor HK.01.07/MENKES/303/2026 tentang pedoman nasional pelayanan klinis tata laksana hipertensi dewasa</i>.</p>
     <p>National Cholesterol Education Program Expert Panel. (2002). Third report of the National Cholesterol Education Program (NCEP) Expert Panel on Detection, Evaluation, and Treatment of High Blood Cholesterol in Adults (Adult Treatment Panel III) final report. <i>Circulation, 106</i>(25), 3143–3421.</p>
     <p>Perkumpulan Endokrinologi Indonesia. (2024). <i>Pedoman pengelolaan dan pencegahan diabetes melitus tipe 2 dewasa di Indonesia 2024</i>. PB PERKENI.</p>
-    <p>Persatuan Ahli Gizi Indonesia, &amp; Asosiasi Dietisien Indonesia. (2019). <i>Penuntun diet dan terapi gizi</i> (Suharyati, S. A. B. Hartati, T. Kresnawan, Sunarti, F. Hudayani, &amp; F. Darmarini, Eds.; Ed. ke-4). Penerbit Buku Kedokteran EGC.</p>
+    <p>Persatuan Ahli Gizi Indonesia, &amp; Asosiasi Dietisien Indonesia. (2024). <i>Penuntun diet dan terapi gizi</i> (Suharyati, T. Kresnawan, F. Hudayani, Sunarti, &amp; Rodlia, Eds.; Ed. ke-5). Penerbit Buku Kedokteran EGC.</p>
     <p>World Health Organization. (2011). <i>Waist circumference and waist–hip ratio: Report of a WHO expert consultation, Geneva, 8–11 December 2008</i>.</p>
     <p>World Health Organization Regional Office for the Western Pacific, International Association for the Study of Obesity, &amp; International Obesity Task Force. (2000). <i>The Asia-Pacific perspective: Redefining obesity and its treatment</i>. Health Communications Australia.</p>
   </div>`);
@@ -1249,7 +1442,7 @@ function bukaRef(dari){
   REF_FROM = dari;
   const sec = $("#refSec");
   sec.innerHTML = refHTML();
-  $("#formCard").classList.add("hidden"); $("#result").classList.add("hidden");
+  $("#formCard").classList.add("hidden"); $("#result").classList.add("hidden"); $("#penSec").classList.add("hidden");
   sec.classList.remove("hidden");
   $("#refBack").addEventListener("click", tutupRef);
   window.scrollTo(0,0);
@@ -1260,6 +1453,62 @@ function tutupRef(){
   window.scrollTo(0,0);
 }
 document.addEventListener("click", e => { const b = e.target.closest && e.target.closest(".refbtn"); if(b) bukaRef(b.dataset.ref === "2" ? "result" : "form"); });
+
+
+/* ============================================================
+   DAFTAR BAHAN MAKANAN PENUKAR (mode petugas)
+   ============================================================ */
+let PEN_FROM = "form", PEN_FILTER = "all", PEN_Q = "";
+const PEN_GOL = [["all","Semua"],["g1","Karbohidrat"],["g2","Lauk hewani"],["g3","Lauk nabati"],["g4","Sayuran"],["g5","Buah & gula"],["g6","Susu"],["g7","Minyak/lemak"],["g8","Tanpa kalori"]];
+function tagHTML(k){
+  if(!k) return "";
+  return k.split(" ").filter(Boolean).map(t => { const m = KET_DBMP[t] || [t,"neutral"]; return `<span class="tg ${m[1]}">${m[0]}</span>`; }).join("");
+}
+function penList(){
+  const q = PEN_Q.trim().toLowerCase();
+  let h = "", n = 0;
+  DBMP.forEach(g => {
+    if(PEN_FILTER !== "all" && !g.id.startsWith(PEN_FILTER)) return;
+    const items = g.items.filter(it => !q || it[0].toLowerCase().includes(q));
+    if(!items.length) return;
+    n += items.length;
+    h += `<div class="grp"><div class="gh"><b>${g.gol} · ${g.nama}</b><span>1 penukar = ${g.nilai}</span></div>` +
+      items.map(it => `<div class="it"><div class="nm">${esc(it[0])}<div class="ur">${esc(it[1])}</div><div>${tagHTML(it[3])}</div></div><div class="gr">${it[2] !== "" ? it[2] + " g" : ""}</div></div>`).join("") + `</div>`;
+  });
+  return (n ? `<p class="muted" style="font-size:.85rem;margin:0 0 8px">${n} bahan makanan</p>` + h : `<p class="note">Bahan makanan "${esc(PEN_Q)}" tidak ditemukan. Coba kata lain, misalnya "ikan", "jagung", atau "pisang".</p>`);
+}
+function penHTML(){
+  return `<div class="card" style="margin-bottom:12px"><h2 style="margin-bottom:4px">🔎 Daftar Bahan Makanan Penukar</h2>
+    <p class="muted" style="margin:0 0 10px;font-size:.9rem">Berat bersih untuk 1 satuan penukar. Nasi: 1 centong = 50 g. Sayuran: 1 penukar = 100 g ≈ 1 gelas = 1 mangkok (dimasak dan ditiriskan).</p>
+    <input class="srch" id="penQ" type="search" placeholder="Cari bahan makanan, mis. jagung, ikan, pisang" value="${esc(PEN_Q)}" autocomplete="off">
+    <div class="chips">${PEN_GOL.map(([id,lb]) => `<button type="button" class="chip${PEN_FILTER===id?" on":""}" data-g="${id}">${lb}</button>`).join("")}</div>
+    <details style="font-size:.85rem"><summary style="cursor:pointer;color:var(--teal);font-weight:600">Arti tanda</summary>
+      <div style="margin-top:6px">${Object.keys(KET_DBMP).map(k => tagHTML(k) + ` <span class="muted">(${k})</span>`).join("<br>")}</div>
+      <p class="muted" style="margin:6px 0 0">Peserta hipertensi: hindari bahan bertanda natrium. Peserta kolesterol tinggi: batasi bahan tinggi kolesterol.</p></details>
+    </div>
+    <div id="penList">${penList()}</div>
+    <p class="muted" style="font-size:.82rem">Sumber: Departemen Kesehatan RI (2006), <i>Bahan Makanan Penukar</i>, Direktorat Bina Gizi Masyarakat; diperbanyak Dinas Kesehatan Provinsi Sulawesi Selatan (2007). Konversi nasi ke centong dan sayuran ke mangkok: ketentuan aplikasi.</p>
+    <div class="actions"><button class="btn primary" type="button" id="penBack">← Kembali</button></div>`;
+}
+function bukaPen(dari){
+  PEN_FROM = dari;
+  const sec = $("#penSec");
+  sec.innerHTML = penHTML();
+  ["#formCard","#result","#refSec"].forEach(x => $(x).classList.add("hidden"));
+  sec.classList.remove("hidden");
+  $("#penQ").addEventListener("input", e => { PEN_Q = e.target.value; $("#penList").innerHTML = penList(); });
+  sec.querySelectorAll(".chip").forEach(c => c.addEventListener("click", () => {
+    PEN_FILTER = c.dataset.g; sec.querySelectorAll(".chip").forEach(x => x.classList.toggle("on", x === c)); $("#penList").innerHTML = penList();
+  }));
+  $("#penBack").addEventListener("click", tutupPen);
+  window.scrollTo(0,0);
+}
+function tutupPen(){
+  $("#penSec").classList.add("hidden");
+  (PEN_FROM === "result" ? $("#result") : $("#formCard")).classList.remove("hidden");
+  window.scrollTo(0,0);
+}
+document.addEventListener("click", e => { const b = e.target.closest && e.target.closest(".penbtn"); if(b) bukaPen(b.dataset.ref === "2" ? "result" : "form"); });
 
 /* ============================================================
    ALUR APLIKASI
@@ -1275,6 +1524,7 @@ function setMode(m){
   $("#formCard").classList.remove("hidden");
   $("#result").classList.add("hidden");
   $("#refSec").classList.add("hidden");
+  $("#penSec").classList.add("hidden");
   $("#modeBtn").classList.remove("hidden");
   $("#modeBtn").textContent = (m === "petugas" ? "Petugas" : "Peserta") + " ⇄";
   $("#formTitle").textContent = m === "petugas" ? "Data Pengukuran Peserta" : "Data Pengukuran Saya";
@@ -1286,6 +1536,7 @@ function goHome(){
   $("#formCard").classList.add("hidden");
   $("#result").classList.add("hidden");
   $("#refSec").classList.add("hidden");
+  $("#penSec").classList.add("hidden");
   $("#modeBtn").classList.add("hidden");
   document.body.classList.remove("mode-peserta","mode-petugas");
   try{ localStorage.removeItem("egp-mode"); }catch(e){}
@@ -1346,7 +1597,7 @@ $("#f").addEventListener("submit", ev => {
        <button class="btn ghost hidden" type="button" id="shareBtn">📤 Bagikan</button>
        <button class="btn ghost" type="button" id="editBtn">Ubah data</button>
        <button class="btn ghost" type="button" id="newBtn">Peserta baru</button>
-     </div>` + (MODE === "petugas" ? `<button class="btn ghost refbtn noprint" type="button" data-ref="2" style="margin-top:10px">📖 Rumus &amp; Referensi</button>` : "");
+     </div>` + (MODE === "petugas" ? `<div class="toolrow noprint" style="margin-top:10px"><button class="btn ghost refbtn" type="button" data-ref="2">📖 Rumus &amp; Referensi</button><button class="btn ghost penbtn" type="button" data-ref="2">🔎 Daftar Penukar</button></div>` : "");
   $("#formCard").classList.add("hidden");
   res.classList.remove("hidden");
   window.scrollTo(0,0);
