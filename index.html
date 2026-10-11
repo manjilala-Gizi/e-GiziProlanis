@@ -164,6 +164,7 @@ ul.rec li{margin:.25em 0}
 
 footer.bottom{text-align:center;color:var(--muted);font-size:.82rem;padding:8px 16px 28px}
 footer.bottom b{color:var(--teal)}
+footer.bottom .credit{line-height:1.5;margin-bottom:6px}
 #installBar{position:fixed;left:12px;right:12px;bottom:12px;background:var(--ink);color:#fff;border-radius:14px;padding:12px 14px;display:flex;gap:10px;align-items:center;z-index:20;box-shadow:0 8px 24px rgba(0,0,0,.25)}
 #installBar p{flex:1;margin:0;font-size:.9rem}
 #installBar button{border:0;border-radius:10px;padding:9px 12px;font:inherit;font-weight:700;cursor:pointer}
@@ -403,7 +404,9 @@ footer.bottom b{color:var(--teal)}
 </main>
 
 <footer class="bottom">
-  <div>Dibuat oleh <b>Manjilala</b> – Poltekkes Kemenkes Makassar</div>
+  <div class="credit">Aplikasi dikembangkan oleh: <b>Ainun Thahirah H., Aminah Razaq, dan Andi Marhamatul Ginayah</b><br>
+    Mahasiswa Prodi Gizi dan Dietetika Poltekkes Kemenkes Makassar<br>
+    Dibimbing oleh <b>Manjilala, S.Gz, M.Gizi</b> dan <b>Dr. Nadimin, SKM, M.Kes</b></div>
   <div>e-GiziProlanis v<span id="ver"></span> · <span id="netStatus">Bisa dipakai tanpa internet setelah dipasang</span></div>
 </footer>
 
@@ -417,7 +420,7 @@ footer.bottom b{color:var(--teal)}
 <script src="assets/lib/html2canvas.min.js" defer></script>
 <script>
 "use strict";
-const APP_VERSION = "1.4.0";
+const APP_VERSION = "1.4.1";
 document.getElementById("ver").textContent = APP_VERSION;
 
 /* ============================================================
@@ -923,7 +926,7 @@ function printHead(o, judul){
     <div><b>${judul}</b><br><span>e-GiziProlanis · ${tanggalID(o.d.tgl)}</span></div></div>`;
 }
 function printFoot(){
-  return `<div class="printfoot">Dicetak dari e-GiziProlanis v${APP_VERSION} · Dibuat oleh Manjilala – Poltekkes Kemenkes Makassar.
+  return `<div class="printfoot">Dicetak dari e-GiziProlanis v${APP_VERSION} · Dikembangkan oleh Ainun Thahirah H., Aminah Razaq, dan Andi Marhamatul Ginayah (Prodi Gizi dan Dietetika Poltekkes Kemenkes Makassar), dibimbing oleh Manjilala, S.Gz, M.Gizi dan Dr. Nadimin, SKM, M.Kes.
     Hasil ini bersifat panduan dan tidak menggantikan konseling langsung dengan petugas gizi atau dokter.</div>`;
 }
 function dxLabel(dx){ return dx === "DM" ? "Diabetes Melitus Tipe 2" : dx === "HT" ? "Hipertensi" : dx === "NONE" ? "Tidak ada DM/hipertensi" : "DM Tipe 2 dan Hipertensi"; }
@@ -1138,7 +1141,7 @@ function pdfHead(o, judul){
   return `<div class="ph"><img src="assets/logo-poltekkes.png"><div class="tt"><b>${judul}</b><span>e-GiziProlanis · ${tanggalID(o.d.tgl)}</span></div></div>`;
 }
 function pdfFoot(){
-  return `<div class="ft"><span>Dibuat oleh Manjilala – Poltekkes Kemenkes Makassar · e-GiziProlanis v${APP_VERSION}</span><span>Panduan, bukan pengganti konseling gizi/dokter.</span></div>`;
+  return `<div class="ft"><span>e-GiziProlanis v${APP_VERSION} · Dikembangkan oleh Ainun Thahirah H., Aminah Razaq, dan Andi Marhamatul Ginayah (Prodi Gizi dan Dietetika Poltekkes Kemenkes Makassar)<br>Dibimbing oleh Manjilala, S.Gz, M.Gizi dan Dr. Nadimin, SKM, M.Kes</span><span>Panduan, bukan pengganti konseling gizi/dokter.</span></div>`;
 }
 function duaKolom(groups){
   // bagi kelompok rekomendasi ke 2 kolom seimbang

@@ -2,7 +2,9 @@
 
 Kalkulator status gizi peserta **Prolanis** (Diabetes Melitus Tipe 2 dan Hipertensi) untuk petugas gizi Puskesmas dan peserta Prolanis. Aplikasi berbentuk PWA: bisa dipasang di HP dan dipakai **tanpa internet**.
 
-Dibuat oleh **Manjilala** – Poltekkes Kemenkes Makassar.
+Aplikasi dikembangkan oleh: **Ainun Thahirah H., Aminah Razaq, dan Andi Marhamatul Ginayah**  
+Mahasiswa Prodi Gizi dan Dietetika Poltekkes Kemenkes Makassar  
+Dibimbing oleh **Manjilala, S.Gz, M.Gizi** dan **Dr. Nadimin, SKM, M.Kes**
 
 ## Fitur
 
