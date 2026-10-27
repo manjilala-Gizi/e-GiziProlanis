@@ -20,6 +20,7 @@ Dibimbing oleh **Manjilala, S.Gz, M.Gizi** dan **Dr. Nadimin, SKM, M.Kes**
 - Target penurunan BB: DM minimal 7–10%, non-DM 5–10% dalam 3–6 bulan
 - Rekomendasi gizi spesifik DM, hipertensi (DASH), kolesterol, obesitas sentral, dan lansia
 - Menu **Rumus & Referensi** berisi semua rumus, ketentuan, contoh perhitungan, dan daftar pustaka APA 7
+- **Cek Pola Makan** (opsional): 12 pertanyaan kebiasaan makan seminggu terakhir yang dibacakan petugas (± 3 menit); hasil berupa status tiap kebiasaan dan maksimal 3 prioritas perbaikan sesuai kondisi peserta (DM, hipertensi, kolesterol, BB lebih). Bukan food recall dan tidak menghitung asupan zat gizi; perubahan kebiasaan ikut tampil di riwayat
 - Menu **Daftar Penukar**: 267 bahan makanan penukar (Depkes RI 2006) dengan pencarian, filter golongan, URT, berat, dan tanda natrium/kolesterol/purin/serat/kalium
 
 **Mode Peserta**
@@ -29,10 +30,14 @@ Dibimbing oleh **Manjilala, S.Gz, M.Gizi** dan **Dr. Nadimin, SKM, M.Kes**
 - Pesan gizi sesuai penyakit; jumlah porsi dikonsultasikan dengan petugas gizi
 
 **Kedua mode**
+- **Kebutuhan energi** (PERKENI 2024) juga ditampilkan di mode peserta dalam bahasa sederhana
+- **Riwayat pemantauan**: simpan hasil tiap kunjungan, grafik BB, lingkar perut, tekanan darah, gula darah, kolesterol, ringkasan perubahan terhadap target, dan tombol *Ukur lagi* (isi identitas otomatis)
+- **Ekspor/impor** riwayat (file JSON) untuk pindah HP
+- **Privasi**: persetujuan saat pertama dipakai, halaman Kebijakan Privasi (selaras UU No. 27/2022 tentang PDP), konfirmasi persetujuan peserta sebelum petugas menyimpan riwayat, hapus per kunjungan/per peserta/semua data
 - Isian opsional tekanan darah, gula darah (puasa / 2 jam setelah makan), dan kolesterol total
 - Hasil disimpan sebagai **gambar JPG 1 halaman** (rasio A4) atau dibagikan langsung, misalnya ke WhatsApp
 
-Semua perhitungan berjalan di HP pengguna. **Tidak ada data yang dikirim atau disimpan** di server.
+Semua perhitungan berjalan di HP pengguna. **Tidak ada data yang dikirim atau disimpan** di server; riwayat hanya tersimpan di memori browser HP (local storage) bila pengguna memilih menyimpannya.
 
 ## Alamat aplikasi
 

@@ -162,6 +162,57 @@ ul.rec li{margin:.25em 0}
 .disclaimer{font-size:.85rem;color:var(--muted);border-top:1px dashed var(--line);padding-top:10px;margin-top:6px}
 .printhead,.printfoot{display:none}
 
+/* Riwayat, privasi, persetujuan (v1.5) */
+.homelinks{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.homelinks .btn{padding:12px 8px;font-size:.92rem}
+@media (max-width:360px){.homelinks{grid-template-columns:1fr}}
+.plist{display:grid;gap:8px}
+.pitem{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:11px 14px;font:inherit;color:var(--ink);cursor:pointer}
+.pitem.on{border-color:var(--teal);background:var(--teal-soft)}
+.pitem b{display:block}
+.pitem span{color:var(--muted);font-size:.85rem}
+.pitem i{font-style:normal;color:var(--teal);font-weight:700;white-space:nowrap;font-size:.85rem}
+.charts{display:grid;gap:12px}
+@media (min-width:640px){.charts{grid-template-columns:1fr 1fr}}
+.chart{border:1px solid var(--line);border-radius:12px;padding:10px 10px 4px;background:#fff}
+.chart h4{margin:0 0 2px;font-size:.95rem;color:var(--ink)}
+.chart .sub{font-size:.8rem;color:var(--muted);margin:0 0 4px}
+.chart svg{width:100%;height:auto;display:block}
+.chart .lg{display:flex;gap:12px;font-size:.78rem;color:var(--muted);margin:0 0 4px}
+.chart .lg span::before{content:"";display:inline-block;width:10px;height:3px;border-radius:2px;background:currentColor;margin-right:5px;vertical-align:middle}
+.prog{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:10px 0}
+.prog div{border-radius:12px;padding:10px 12px;background:var(--teal-soft)}
+.prog div.ok{background:var(--ok-bg)}.prog div.bad{background:var(--bad-bg)}.prog div.warn{background:var(--warn-bg)}
+.prog small{display:block;color:var(--muted);font-size:.8rem}
+.prog b{font-size:1.15rem}
+.xbtn{border:0;background:transparent;color:var(--bad);font:inherit;font-weight:700;cursor:pointer;padding:2px 6px}
+.btn.danger{background:#fff;color:var(--bad);border:1.5px solid var(--bad)}
+.priv h3{color:var(--teal);margin-top:1.1em}
+.priv ul{padding-left:1.2em;margin:.3em 0}
+.priv li{margin:.3em 0}
+.pills{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.pills div{background:var(--ok-bg);border-radius:12px;padding:10px 12px;font-size:.9rem}
+.pills b{display:block;color:var(--ok)}
+@media (max-width:380px){.pills{grid-template-columns:1fr}}
+#consent{position:fixed;inset:0;background:rgba(29,42,46,.55);z-index:40;display:flex;align-items:flex-end;justify-content:center;padding:12px}
+#consent .box{background:#fff;border-radius:18px;max-width:520px;width:100%;padding:20px;max-height:90vh;overflow:auto;font-size:16px}
+#consent h2{margin:0 0 8px}
+#consent ul{padding-left:1.2em;margin:.4em 0 .8em}
+#consent li{margin:.35em 0}
+@media (min-width:600px){#consent{align-items:center}}
+footer.bottom a{color:var(--teal);font-weight:600}
+/* Cek Pola Makan (v1.6) */
+#optPola summary small{font-weight:400;color:var(--muted)}
+.pq{margin:14px 0 4px}
+.pq>p{font-weight:600;margin:0 0 6px;font-size:.95rem}
+.pq .seg span{font-weight:500;font-size:.92rem;padding:10px 12px}
+.pkel{margin:18px 0 0;color:var(--teal);font-size:.95rem;border-bottom:1px solid var(--line);padding-bottom:4px}
+.polabar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px;font-size:.88rem;color:var(--muted)}
+.pd{display:inline-grid;place-items:center;min-width:28px;height:28px;padding:0 4px;border-radius:14px;color:#fff;font-weight:800;font-size:.78rem}
+.pd.ok{background:var(--ok)}.pd.warn{background:#B98500}.pd.bad{background:var(--bad)}
+table.pm td,table.pm th{text-align:center}
+table.pm td:first-child,table.pm th:first-child{text-align:left}
+
 footer.bottom{text-align:center;color:var(--muted);font-size:.82rem;padding:8px 16px 28px}
 footer.bottom b{color:var(--teal)}
 footer.bottom .credit{line-height:1.5;margin-bottom:6px}
@@ -217,8 +268,12 @@ footer.bottom .credit{line-height:1.5;margin-bottom:6px}
       </button>
       <button class="choice" type="button" data-mode="peserta">
         <span class="ic" aria-hidden="true">🙂</span>
-        <div><b>Saya Peserta Prolanis</b><span>Hasil sederhana dan mudah dipahami, lengkap dengan target dan pesan gizi.</span></div>
+        <div><b>Saya Peserta Prolanis</b><span>Hasil sederhana dan mudah dipahami: status gizi, kebutuhan energi, target, pesan gizi, dan grafik perkembangan.</span></div>
       </button>
+    </div>
+    <div class="homelinks">
+      <button class="btn ghost rwybtn" type="button">📈 Riwayat Pemantauan</button>
+      <button class="btn ghost privbtn" type="button">🔒 Privasi &amp; Keamanan Data</button>
     </div>
     <div class="guide noprint">
       <h2>📘 Panduan Penggunaan</h2>
@@ -236,6 +291,7 @@ footer.bottom .credit{line-height:1.5;margin-bottom:6px}
           <li>Pilih <b>Saya Petugas</b>.</li>
           <li>Isi data pengukuran: jenis kelamin, usia, berat badan, tinggi badan, lingkar perut, penyakit, dan aktivitas sehari-hari.</li>
           <li>Bila perlu, isi data opsional: lingkar panggul (untuk RLPP), tinggi lutut (untuk lansia yang sulit berdiri tegak), serta tekanan darah, gula darah, dan kolesterol total.</li>
+          <li>Bila waktu memungkinkan, buka <b>🍽️ Cek Pola Makan</b> (12 pertanyaan, ± 3 menit) dan bacakan pertanyaannya kepada peserta. Hasilnya berupa 3 kebiasaan yang paling perlu diperbaiki.</li>
           <li>Ketuk <b>Hitung Status Gizi</b>. Hasil berisi status gizi, BBI, kebutuhan energi, susunan porsi penukar, target penurunan BB, dan rekomendasi gizi.</li>
           <li>Ketuk <b>Simpan Gambar</b> untuk menyimpan hasil 1 halaman, atau <b>Bagikan</b> untuk mengirim lewat WhatsApp.</li>
           <li>Rumus, ketentuan, dan sumber perhitungan dapat dilihat di menu <b>📖 Rumus &amp; Referensi</b>.</li>
@@ -271,12 +327,22 @@ footer.bottom .credit{line-height:1.5;margin-bottom:6px}
           </tbody></table>
         </div>
       </details>
+      <details>
+        <summary>5. Riwayat pemantauan dan keamanan data</summary>
+        <div class="gb"><ol>
+          <li>Setelah menghitung, ketuk <b>💾 Simpan ke Riwayat</b> agar hasil kunjungan tersimpan di HP ini.</li>
+          <li>Buka <b>📈 Riwayat Pemantauan</b> untuk melihat grafik berat badan, lingkar perut, tekanan darah, dan gula darah dari kunjungan ke kunjungan.</li>
+          <li>Pada kunjungan berikutnya, ketuk <b>Ukur lagi</b> agar nama, jenis kelamin, usia, tinggi badan, dan penyakit terisi otomatis.</li>
+          <li>Semua data hanya tersimpan di HP ini, <b>tidak dikirim ke server mana pun</b>. Data bisa dihapus kapan saja lewat menu <b>🔒 Privasi &amp; Keamanan Data</b>.</li>
+          <li>Petugas dapat <b>mengekspor</b> riwayat menjadi file cadangan dan <b>mengimpornya</b> kembali bila berganti HP.</li>
+        </ol></div>
+      </details>
     </div>
   </section>
 
   <!-- FORMULIR -->
   <section id="formCard" class="card hidden">
-    <div class="toolrow only-petugas"><button class="btn ghost refbtn" type="button" data-ref="1">📖 Rumus &amp; Referensi</button><button class="btn ghost penbtn" type="button" data-ref="1">🔎 Daftar Penukar</button></div>
+    <div class="toolrow"><button class="btn ghost refbtn only-petugas" type="button" data-ref="1">📖 Rumus</button><button class="btn ghost penbtn only-petugas" type="button" data-ref="1">🔎 Penukar</button><button class="btn ghost rwybtn" type="button">📈 Riwayat</button></div>
     <h2 id="formTitle">Data Pengukuran</h2>
     <p class="note only-peserta">Isi sesuai hasil pengukuran petugas saat kegiatan Prolanis (lihat kartu atau catatan dari petugas).</p>
     <form id="f" novalidate autocomplete="off">
@@ -285,7 +351,7 @@ footer.bottom .credit{line-height:1.5;margin-bottom:6px}
           <label class="f" for="nama">Nama peserta <em>(boleh dikosongkan)</em></label>
           <input type="text" id="nama" maxlength="60">
         </div>
-        <div class="only-petugas">
+        <div>
           <label class="f" for="tgl">Tanggal pengukuran</label>
           <input type="date" id="tgl">
         </div>
@@ -384,6 +450,13 @@ footer.bottom .credit{line-height:1.5;margin-bottom:6px}
         </div>
       </div>
 
+      <details class="opt only-petugas" id="optPola">
+        <summary>🍽️ Cek Pola Makan <small>(opsional, 12 pertanyaan, ± 3 menit)</small></summary>
+        <p class="note" style="margin-top:10px">Bacakan pertanyaan kepada peserta dan pilih jawabannya. Tanyakan <b>kebiasaan dalam seminggu terakhir</b>, bukan menu kemarin. Butir yang tidak sempat ditanyakan boleh dilewati.</p>
+        <div id="polaQ"></div>
+        <div class="polabar"><span id="polaN">0 dari 12 terjawab</span><button class="btn ghost" type="button" id="polaReset" style="padding:8px 12px;font-size:.85rem">Hapus jawaban</button></div>
+      </details>
+
       <div id="err" class="err hidden" role="alert"></div>
       <div class="actions">
         <button class="btn primary" type="submit">Hitung Status Gizi</button>
@@ -401,6 +474,12 @@ footer.bottom .credit{line-height:1.5;margin-bottom:6px}
   <!-- DAFTAR BAHAN MAKANAN PENUKAR (mode petugas) -->
   <section id="penSec" class="hidden"></section>
 
+  <!-- RIWAYAT PEMANTAUAN (kedua mode, tersimpan di HP) -->
+  <section id="rwySec" class="hidden"></section>
+
+  <!-- KEBIJAKAN PRIVASI -->
+  <section id="privSec" class="hidden"></section>
+
 </main>
 
 <footer class="bottom">
@@ -408,7 +487,26 @@ footer.bottom .credit{line-height:1.5;margin-bottom:6px}
     Mahasiswa Prodi Gizi dan Dietetika Poltekkes Kemenkes Makassar<br>
     Dibimbing oleh <b>Manjilala, S.Gz, M.Gizi</b> dan <b>Dr. Nadimin, SKM, M.Kes</b></div>
   <div>e-GiziProlanis v<span id="ver"></span> · <span id="netStatus">Bisa dipakai tanpa internet setelah dipasang</span></div>
+  <div style="margin-top:4px">🔒 Data hanya tersimpan di HP Anda · <a href="#" class="privbtn">Kebijakan Privasi</a></div>
 </footer>
+
+<div id="consent" class="hidden" role="dialog" aria-modal="true" aria-labelledby="consentTitle">
+  <div class="box">
+    <h2 id="consentTitle">🔒 Sebelum mulai</h2>
+    <p>e-GiziProlanis mengolah data kesehatan (berat badan, tinggi badan, lingkar perut, tekanan darah, gula darah). Karena itu kami menjaganya seperti ini:</p>
+    <ul>
+      <li><b>Dihitung di HP ini.</b> Data tidak dikirim ke server, tidak perlu akun, tanpa iklan dan tanpa pelacak.</li>
+      <li><b>Riwayat hanya disimpan bila Anda memilih</b> tombol <i>Simpan ke Riwayat</i>, dan tetap berada di HP ini.</li>
+      <li><b>Anda bisa menghapus</b> semua data kapan saja lewat menu Privasi.</li>
+      <li><b>Petugas:</b> mintalah persetujuan peserta sebelum menyimpan datanya, dan kunci layar HP.</li>
+      <li>Hasil aplikasi adalah panduan, <b>bukan diagnosis</b>.</li>
+    </ul>
+    <div class="actions" style="margin-top:8px">
+      <button class="btn primary" type="button" id="consentYes">Saya mengerti dan setuju</button>
+      <button class="btn ghost privbtn" type="button">Baca selengkapnya</button>
+    </div>
+  </div>
+</div>
 
 <div id="installBar" class="hidden">
   <p>Pasang e-GiziProlanis di HP agar bisa dipakai tanpa internet.</p>
@@ -420,7 +518,7 @@ footer.bottom .credit{line-height:1.5;margin-bottom:6px}
 <script src="assets/lib/html2canvas.min.js" defer></script>
 <script>
 "use strict";
-const APP_VERSION = "1.4.1";
+const APP_VERSION = "1.6.0";
 document.getElementById("ver").textContent = APP_VERSION;
 
 /* ============================================================
@@ -596,6 +694,128 @@ const DASH_2000 = [
   ["Gula pasir","20 g","1,5 sdm"],["Kacang hijau","25 g","2 sdm"],["Oat/sereal gandum utuh","50 g","3 sdm"],
   ["Susu rendah lemak","400 g","2 gelas"],["Tahu/tempe","100 g","2 potong sedang"]
 ];
+/* CEK POLA MAKAN — skrining kebiasaan makan 1 minggu terakhir (mode petugas).
+   Pilihan jawaban: indeks 0 = sesuai anjuran, 1 = perlu perhatian, 2 = perlu diperbaiki.
+   rel = relevansi untuk menentukan prioritas: dm, ht, kol (kolesterol ≥ 200), bb (BB lebih/obesitas sentral);
+   bobot bawaan dm/ht/kol 3, bb 2; "ht:1" = bobot khusus (relevan tetapi bukan sasaran utama). */
+const POLA = [
+ {id:"q1", kel:"Jadwal dan jumlah makan", lb:"Jadwal makan", rel:["dm"],
+  t:"Berapa kali Bapak/Ibu makan besar (nasi dan lauk) dalam sehari?",
+  op:["3 kali, teratur","3 kali, tetapi jamnya sering tidak tentu","2 kali atau kurang, atau sering melewatkan makan"],
+  saran:"Atur 3 kali makan utama dan 2–3 kali selingan dengan jarak ± 3 jam. Jangan melewatkan makan, terutama bila minum obat DM atau memakai insulin (risiko hipoglikemia).",
+  sp:"makan 3 kali + selingan, jangan melewatkan makan",
+  dasar:"Prinsip 3J; 3 kali makan utama dan 2–3 kali selingan; tidak melewatkan makan saat terapi OHO/insulin (PERKENI, 2024)."},
+ {id:"q2", kel:"Jadwal dan jumlah makan", lb:"Porsi nasi", rel:["dm","bb"],
+  t:"Sekali makan, berapa banyak nasi (atau pengganti nasi) yang diambil?",
+  op:["Sekitar ¼ piring","Sekitar ½ piring","Lebih dari ½ piring, atau sering tambah"],
+  saran:"Kurangi nasi atau penggantinya menjadi ± ¼ piring setiap makan dan tidak tambah. Isi kekosongan piring dengan sayur. Porsi tepat mengikuti anjuran petugas gizi.",
+  sp:"nasi ± ¼ piring, tidak tambah",
+  dasar:"Metode piring yang dipakai aplikasi: ¼ piring makanan pokok; jumlah tepat mengikuti Standar Diet DM (PERSAGI & AsDI, 2024)."},
+ {id:"q3", kel:"Sayur dan buah", lb:"Sayur", rel:["ht:1","dm:1","kol:1"],
+  t:"Berapa kali sehari Bapak/Ibu makan sayur?",
+  op:["Setiap kali makan (2–3 kali)","1 kali","Jarang atau tidak setiap hari"],
+  saran:"Sediakan sayur di setiap kali makan, sekitar ½ piring bersama buah. Sayur tinggi serat membantu kendali gula darah dan tekanan darah.",
+  sp:"sayur setiap kali makan",
+  dasar:"Sayur 3–4 porsi/hari (Kemenkes, 2014); serat ≥ 14 g/1.000 kkal (PERKENI, 2024); pola DASH (Kemenkes, 2026)."},
+ {id:"q4", kel:"Sayur dan buah", lb:"Buah utuh", rel:["ht:1","dm:1"],
+  t:"Berapa kali sehari Bapak/Ibu makan buah utuh (bukan jus)?",
+  op:["2 kali atau lebih","1 kali","Jarang atau tidak setiap hari"],
+  saran:"Makan buah utuh 2–3 kali sehari sebagai selingan, satu porsi setiap kali. Buah dimakan utuh, bukan dijus.",
+  sp:"buah utuh 2–3 kali/hari",
+  dasar:"Buah 2–3 porsi/hari (Kemenkes, 2014); buah dikonsumsi utuh, bukan jus (PERKENI, 2024)."},
+ {id:"q5", kel:"Gula", lb:"Minuman manis", rel:["dm","bb"],
+  t:"Berapa gelas sehari Bapak/Ibu minum minuman manis (teh/kopi bergula, sirup, jus, minuman kemasan, susu kental manis)?",
+  op:["Tidak pernah, atau tanpa gula","1 gelas","2 gelas atau lebih"],
+  saran:"Kurangi gula di teh atau kopi sedikit demi sedikit sampai tanpa gula. Ganti sirup, jus, dan minuman kemasan dengan air putih; bila perlu pakai pemanis tanpa kalori.",
+  sp:"kurangi gula, ganti air putih",
+  dasar:"Gula ≤ 50 g (4 sdm)/hari (Kemenkes, 2013); minuman manis termasuk jus diganti air (PERKENI, 2024)."},
+ {id:"q6", kel:"Gula", lb:"Kue/camilan manis", rel:["dm","bb"],
+  t:"Seberapa sering Bapak/Ibu makan kue atau camilan manis (kue tradisional, roti manis, biskuit, dodol)?",
+  op:["Paling banyak 2 kali seminggu","3–6 kali seminggu","Setiap hari"],
+  saran:"Batasi kue dan camilan manis paling banyak 1–2 kali seminggu, porsi kecil. Ganti selingan dengan buah utuh atau kacang rebus.",
+  sp:"kue manis ≤ 1–2×/minggu, ganti buah",
+  dasar:"Hindari karbohidrat sederhana: kue manis, dodol, selai (PERKENI, 2024; PERSAGI & AsDI, 2024)."},
+ {id:"q7", kel:"Lemak", lb:"Gorengan/santan", rel:["kol","bb","dm:1"],
+  t:"Seberapa sering Bapak/Ibu makan gorengan atau masakan bersantan kental?",
+  op:["Paling banyak 2 kali seminggu","3–6 kali seminggu","Setiap hari"],
+  saran:"Batasi gorengan dan santan kental paling banyak 2 kali seminggu. Utamakan lauk direbus, dikukus, dipanggang, dibakar, atau dipepes.",
+  sp:"gorengan/santan ≤ 2×/minggu",
+  dasar:"Minyak ≤ 5 sdm/hari (Kemenkes, 2013); lemak jenuh < 10% energi (PERKENI, 2024)."},
+ {id:"q8", kel:"Garam", lb:"Makanan asin/olahan", rel:["ht"],
+  t:"Seberapa sering Bapak/Ibu makan makanan asin atau olahan (ikan asin/kering, mi instan, kerupuk, sosis, kornet, ikan kaleng)?",
+  op:["Paling banyak 1 kali seminggu","2–4 kali seminggu","Hampir setiap hari"],
+  saran:"Kurangi ikan asin atau kering, mi instan, kerupuk, sosis, kornet, dan ikan kaleng karena tinggi natrium. Pilih ikan, ayam, tahu, dan tempe segar.",
+  sp:"kurangi makanan asin/olahan",
+  dasar:"Natrium ≤ 2.000 mg/hari (Kemenkes, 2026); bahan tinggi natrium dihindari (PERSAGI & AsDI, 2024)."},
+ {id:"q9", kel:"Garam", lb:"Coto/konro/pallubasa", rel:["ht","kol"],
+  t:"Seberapa sering Bapak/Ibu makan coto, konro, pallubasa, atau sop saudara?",
+  op:["Paling banyak 1 kali seminggu","2–3 kali seminggu","4 kali seminggu atau lebih"],
+  saran:"Batasi coto, konro, pallubasa, dan sop saudara paling banyak 1 kali seminggu: porsi kecil, pilih daging tanpa jeroan, dan kuahnya tidak dihabiskan.",
+  sp:"coto/konro ≤ 1×/minggu, tanpa jeroan",
+  dasar:"Penyesuaian lokal aplikasi: kuliner berkuah tinggi natrium, lemak jenuh, dan kolesterol (Kemenkes, 2026; NCEP, 2002)."},
+ {id:"q10", kel:"Garam", lb:"Tambah garam/penyedap", rel:["ht"],
+  t:"Apakah Bapak/Ibu sering menambahkan garam, kecap, vetsin, atau bumbu instan saat memasak atau makan?",
+  op:["Tidak pernah atau jarang","Kadang-kadang","Hampir selalu"],
+  saran:"Kurangi garam secara bertahap dan jangan menambah garam, kecap, atau vetsin di meja makan. Ganti dengan bumbu segar: bawang, jahe, serai, daun salam, jeruk nipis.",
+  sp:"tanpa tambahan garam/kecap/vetsin",
+  dasar:"Garam ≤ 1 sdt (5 g)/hari termasuk dalam masakan (Kemenkes, 2013); hindari vetsin, kecap, bumbu instan (PERSAGI & AsDI, 2024)."},
+ {id:"q11", kel:"Lauk", lb:"Ikan", rel:["dm:1","kol:2"],
+  t:"Seberapa sering Bapak/Ibu makan ikan?",
+  op:["2 kali seminggu atau lebih","1 kali seminggu","Jarang"],
+  saran:"Jadikan ikan lauk utama minimal 2 kali seminggu, dimasak dengan cara direbus, dibakar, atau dipepes.",
+  sp:"ikan ≥ 2×/minggu",
+  dasar:"Konsumsi ikan minimal 2 kali/minggu (PERKENI, 2024)."},
+ {id:"q12", kel:"Lauk", lb:"Jeroan/lemak daging", rel:["kol","ht:1"],
+  t:"Seberapa sering Bapak/Ibu makan jeroan, kulit ayam, atau daging berlemak?",
+  op:["Paling banyak 1 kali seminggu","2–3 kali seminggu","4 kali seminggu atau lebih"],
+  saran:"Batasi jeroan (babat, usus, hati, paru), kulit ayam, dan daging berlemak. Pilih ikan, ayam tanpa kulit, tahu, dan tempe.",
+  sp:"batasi jeroan, kulit, lemak daging",
+  dasar:"Kolesterol makanan < 200 mg/hari dan lemak jenuh dibatasi (NCEP, 2002; PERSAGI & AsDI, 2024)."}
+];
+const POLA_ST = [{lb:"Sesuai anjuran", c:"ok", m:"✓"}, {lb:"Perlu perhatian", c:"warn", m:"!"}, {lb:"Perlu diperbaiki", c:"bad", m:"!!"}];
+function analisisPola(o){
+  const d = o.d;
+  if(!d.pola) return null;
+  const ctx = {dm:o.dm, ht:o.ht, kol: !!(o.kol && o.kol.kode !== "ok"), bb: o.lebih > 0 || o.lpSentral};
+  const bobot = {dm:3, ht:3, kol:3, bb:2};
+  const items = POLA.map((q,i) => ({q, i, v:d.pola[q.id]})).filter(x => x.v === 0 || x.v === 1 || x.v === 2);
+  const prio = items.filter(x => x.v > 0)
+    .map(x => Object.assign(x, {sc: x.v*100 + x.q.rel.reduce((t,r) => { const [k,w] = r.split(":"); return t + (ctx[k] ? (w ? Number(w) : bobot[k]) : 0); }, 0) - x.i/100}))
+    .sort((a,b) => b.sc - a.sc).slice(0,3);
+  return {items, prio, n:items.length, nOk:items.filter(x=>x.v===0).length, nWarn:items.filter(x=>x.v===1).length, nBad:items.filter(x=>x.v===2).length};
+}
+function polaHTML(o, ringkas){
+  const A = analisisPola(o);
+  if(!A || !A.n) return "";
+  if(ringkas){
+    return `<div class="tg"><b>Cek pola makan</b> (${A.n} butir): ${A.nOk} sesuai · ${A.nWarn} perlu perhatian · ${A.nBad} perlu diperbaiki.` +
+      (A.prio.length ? ` <b>Prioritas:</b> ${A.prio.map((x,k) => `${k+1}) ${x.q.sp}`).join("; ")}.` : " Semua kebiasaan sesuai anjuran.") + `</div>`;
+  }
+  let h = `<div class="card"><h2>Cek Pola Makan</h2>
+    <p class="muted" style="font-size:.9rem;margin-top:0">Kebiasaan makan seminggu terakhir (${A.n} dari ${POLA.length} butir terjawab). Alat skrining untuk konseling, bukan penilaian asupan zat gizi.</p>
+    <div class="prog"><div class="ok"><small>Sesuai anjuran</small><b>${A.nOk}</b></div><div class="warn"><small>Perlu perhatian</small><b>${A.nWarn}</b></div><div class="bad"><small>Perlu diperbaiki</small><b>${A.nBad}</b></div></div>`;
+  h += A.prio.length
+    ? `<h3>Prioritas perbaikan (bahas saat konseling)</h3><ol class="rec">${A.prio.map(x => `<li><b>${x.q.lb}</b> <span class="badge ${POLA_ST[x.v].c}">${esc(x.q.op[x.v])}</span><br>${x.q.saran}</li>`).join("")}</ol>`
+    : `<p class="note">Semua kebiasaan yang ditanyakan sudah sesuai anjuran. Beri pujian dan dorong peserta untuk mempertahankannya.</p>`;
+  h += `<h3>Rincian jawaban</h3><div class="tbl-scroll"><table><thead><tr><th style="width:42%">Kebiasaan</th><th>Jawaban</th></tr></thead><tbody>` +
+    A.items.map(x => `<tr><td>${x.q.lb}</td><td><span class="badge ${POLA_ST[x.v].c}" style="white-space:normal">${POLA_ST[x.v].m} ${esc(x.q.op[x.v])}</span></td></tr>`).join("") +
+    `</tbody></table></div><p class="muted" style="font-size:.82rem">✓ sesuai anjuran · ! perlu perhatian · !! perlu diperbaiki</p></div>`;
+  return h;
+}
+function polaFormHTML(){
+  let h = "", kel = "";
+  POLA.forEach((q,i) => {
+    if(q.kel !== kel){ kel = q.kel; h += `<h4 class="pkel">${kel}</h4>`; }
+    h += `<div class="pq"><p>${i+1}. ${q.t}</p><div class="seg stack" role="radiogroup" aria-label="${esc(q.lb)}">` +
+      q.op.map((t,v) => `<label><input type="radio" name="p${q.id}" value="${v}"><span>${t}</span></label>`).join("") + `</div></div>`;
+  });
+  return h;
+}
+function updatePolaN(){
+  const el = document.getElementById("polaN"); if(!el) return;
+  const n = POLA.filter(q => document.querySelector(`input[name="p${q.id}"]:checked`)).length;
+  el.textContent = `${n} dari ${POLA.length} terjawab`;
+}
 const DM_KEYS = ["nasi","hls","hrl","nabati","sayA","sayB","buah","susu","minyak"];
 const WAKTU5 = ["Pagi","Sel. pagi","Siang","Sel. sore","Malam"];
 function pilihStandarDM(E){
@@ -996,6 +1216,13 @@ function renderPeserta(o){
     h += `<p class="muted" style="font-size:.85rem;margin:0">Hasil ini bukan diagnosis. Jangan mengubah dosis obat sendiri, konsultasikan ke dokter.</p></div>`;
   }
 
+  // Kebutuhan energi (PERKENI 2024) dalam bahasa sederhana
+  h += `<div class="card"><h2>Kebutuhan energi ${s}</h2>
+        <p style="margin:0">Sekitar <span class="big">${fmt0(o.energi)} kkal</span> per hari.</p>
+        <p class="muted" style="font-size:.9rem">Dihitung khusus untuk ${s} dari tinggi badan, jenis kelamin, usia, aktivitas, dan berat badan (cara PERKENI 2024).
+        ${o.lebih > 0 ? "Angka ini sudah dikurangi supaya berat badan turun pelan-pelan." : o.kurang > 0 ? "Angka ini sudah ditambah supaya berat badan naik pelan-pelan." : "Angka ini untuk mempertahankan berat badan yang sudah sehat."}</p>
+        ${o.dm ? `<p class="note" style="margin-top:8px">Petugas gizi akan membantu membagi ${fmt0(o.energi)} kkal ini menjadi porsi makan pagi, siang, malam, dan selingan.</p>` : ""}</div>`;
+
   // Isi Piringku (porsi angka hanya di mode petugas)
   h += `<div class="card"><h2>Isi piring ${s} setiap makan</h2>
         <div class="plate">${plateSVG(84)}<div><p style="margin:0"><b>½ piring</b> sayur dan buah<br><b>¼ piring</b> nasi atau pengganti (ubi, jagung)<br><b>¼ piring</b> lauk (ikan, ayam tanpa kulit, tempe, tahu)</p></div></div>
@@ -1079,6 +1306,9 @@ function renderPetugas(o){
 
   // Porsi penukar (DM) / pola DASH (HT) / Isi Piringku (lainnya)
   h += pembagianMakanHTML(o, false);
+
+  // Cek pola makan
+  h += polaHTML(o, false);
 
   // Rekomendasi
   h += `<div class="card"><h2>Rekomendasi Gizi dan Gaya Hidup</h2>`;
@@ -1172,6 +1402,7 @@ function pdfPeserta(o){
     : `<div class="tg"><b>Target 3–6 bulan:</b> turunkan berat badan <b>${half(o.tA)}${o.tB>o.tA?`–${half(o.tB)}`:""} kg</b>, pelan-pelan ½–1 kg per minggu.${o.lpSentral?" Lingkar perut biasanya ikut mengecil.":""}</div>`;
   else if(o.kurang > 0) h += `<div class="tg"><b>Target:</b> naikkan berat badan <b>${half(o.tKurang)} kg</b> secara bertahap, ¼–½ kg per minggu.</div>`;
   else if(o.lpSentral) h += `<div class="tg"><b>Target:</b> kecilkan lingkar perut <b>${fmt(o.lpLebih,0)} cm</b> dengan banyak bergerak dan mengurangi makanan manis serta berlemak.</div>`;
+  h += `<div class="tg"><b>Kebutuhan energi ${s}:</b> sekitar <b>${fmt0(o.energi)} kkal per hari</b> (dihitung cara PERKENI 2024 dari tinggi badan, usia, aktivitas, dan berat badan).</div>`;
   h += `<div class="plt"><img src="assets/piring.png"><div><b>Isi piring setiap makan:</b> ½ piring sayur dan buah · ¼ piring nasi atau pengganti (ubi, jagung) · ¼ piring lauk (ikan, ayam tanpa kulit, tempe, tahu).<br><span class="muted">Untuk jumlah porsi yang tepat, konsultasikan dengan petugas gizi saat kegiatan Prolanis.</span></div></div>`;
   h += `<h2>Pesan untuk ${s}</h2>` + duaKolom(rekomendasi(o,"peserta"));
   h += `<p class="note">Hasil ini bukan diagnosis. Jangan mengubah dosis obat sendiri; konsultasikan ke petugas gizi atau dokter.</p>`;
@@ -1206,6 +1437,7 @@ function pdfPetugas(o){
   else if(o.kurang > 0) h += `<div class="tg"><b>Target:</b> naik ${half(o.tKurang)} kg hingga IMT 18,5, laju 0,25–0,5 kg/minggu.</div>`;
   else if(o.lpSentral) h += `<div class="tg"><b>Target:</b> turunkan LP ${fmt(o.lpLebih)} cm hingga ≤ ${o.lpBatas} cm.</div>`;
   h += pembagianMakanHTML(o, true);
+  h += polaHTML(o, true);
   h += `<h2>Rekomendasi gizi dan gaya hidup</h2>` + duaKolom(rekomendasi(o,"petugas"));
   h += `<div class="sg">Petugas Gizi,<br><br><br>( ${d.petugas ? esc(d.petugas) : "............................................"} )</div>`;
   return h + pdfFoot();
@@ -1425,9 +1657,21 @@ function refHTML(){
     <p class="muted" style="font-size:.85rem">Takaran disesuaikan dengan kondisi dan kebutuhan pasien. Batas natrium di aplikasi mengikuti PNPK 2026 (≤ 2.000 mg/hari; ≤ 1.500 mg bila TD belum terkendali).</p>
     <div class="src">Kemenkes (2026); PERSAGI &amp; AsDI (2024), Diet Rendah Natrium (DASH).</div>`);
 
-  h += blk("11. Daftar pustaka (APA 7)", `<div class="pus">
+  h += blk("11. Cek Pola Makan (skrining kebiasaan makan)", `
+    <p>Menggali kebiasaan makan <b>seminggu terakhir</b> secara singkat (12 butir, ± 3 menit) sebagai bahan konseling. Hanya di mode petugas: petugas membacakan pertanyaan dan memilih jawaban peserta.</p>
+    <p><b>Mengapa bukan food recall 24 jam?</b> Recall yang baik memerlukan wawancara 20–30 menit per peserta, satu hari asupan belum menggambarkan kebiasaan, dan ketepatannya menurun pada sebagian peserta lansia. Pertanyaan kebiasaan lebih cepat dan langsung terhubung dengan pesan konseling.</p>
+    <table><thead><tr><th>Butir</th><th>Dasar anjuran</th></tr></thead><tbody>
+      ${POLA.map((q,i) => `<tr><td>${i+1}. ${q.lb}</td><td>${q.dasar}</td></tr>`).join("")}
+    </tbody></table>
+    <p><b>Penilaian:</b> setiap jawaban diberi status sesuai anjuran (hijau), perlu perhatian (kuning), atau perlu diperbaiki (merah). <span class="app">ketentuan aplikasi</span> Batas frekuensi diturunkan dari pedoman di atas.</p>
+    <p><b>Prioritas:</b> paling banyak 3 butir agar konseling terfokus. Merah didahulukan dari kuning; di antaranya diutamakan butir yang relevan dengan kondisi peserta: DM (jadwal, porsi nasi, gula, ikan), hipertensi (garam, makanan olahan, coto/konro, sayur-buah), kolesterol ≥ 200 mg/dL (gorengan/santan, jeroan, ikan), serta BB lebih atau obesitas sentral (porsi nasi, gula, gorengan).</p>
+    <p><b>Batasan:</b> tidak menghitung asupan energi dan zat gizi, dan belum divalidasi sebagai instrumen penelitian. Tidak ada skor total.</p>
+    <div class="src">PERKENI (2024); Kemenkes (2013, 2014, 2026); PERSAGI &amp; AsDI (2024); NCEP (2002).</div>`);
+
+  h += blk("12. Daftar pustaka (APA 7)", `<div class="pus">
     <p>Chumlea, W. C., Roche, A. F., &amp; Steinbaugh, M. L. (1985). Estimating stature from knee height for persons 60 to 90 years of age. <i>Journal of the American Geriatrics Society, 33</i>(2), 116–120.</p>
     <p>Departemen Kesehatan Republik Indonesia. (2006). <i>Bahan makanan penukar</i> [Leaflet]. Direktorat Bina Gizi Masyarakat, Subdit Bina Gizi Klinik. (Diperbanyak oleh Program Perbaikan Gizi Masyarakat, Dinas Kesehatan Provinsi Sulawesi Selatan, 2007).</p>
+    <p>Kementerian Kesehatan Republik Indonesia. (2014). <i>Peraturan Menteri Kesehatan Nomor 41 Tahun 2014 tentang pedoman gizi seimbang</i>.</p>
     <p>Kementerian Kesehatan Republik Indonesia. (2013). <i>Peraturan Menteri Kesehatan Nomor 30 Tahun 2013 tentang pencantuman informasi kandungan gula, garam, dan lemak serta pesan kesehatan untuk pangan olahan dan pangan siap saji</i>.</p>
     <p>Kementerian Kesehatan Republik Indonesia. (2021). <i>Pedoman pengelolaan dan pencegahan obesitas bagi tenaga kesehatan di fasilitas kesehatan tingkat pertama</i>.</p>
     <p>Kementerian Kesehatan Republik Indonesia. (2026). <i>Keputusan Menteri Kesehatan Nomor HK.01.07/MENKES/303/2026 tentang pedoman nasional pelayanan klinis tata laksana hipertensi dewasa</i>.</p>
@@ -1528,6 +1772,8 @@ function setMode(m){
   $("#result").classList.add("hidden");
   $("#refSec").classList.add("hidden");
   $("#penSec").classList.add("hidden");
+  $("#rwySec").classList.add("hidden");
+  $("#privSec").classList.add("hidden");
   $("#modeBtn").classList.remove("hidden");
   $("#modeBtn").textContent = (m === "petugas" ? "Petugas" : "Peserta") + " ⇄";
   $("#formTitle").textContent = m === "petugas" ? "Data Pengukuran Peserta" : "Data Pengukuran Saya";
@@ -1540,6 +1786,8 @@ function goHome(){
   $("#result").classList.add("hidden");
   $("#refSec").classList.add("hidden");
   $("#penSec").classList.add("hidden");
+  $("#rwySec").classList.add("hidden");
+  $("#privSec").classList.add("hidden");
   $("#modeBtn").classList.add("hidden");
   document.body.classList.remove("mode-peserta","mode-petugas");
   try{ localStorage.removeItem("egp-mode"); }catch(e){}
@@ -1549,6 +1797,9 @@ $("#modeBtn").addEventListener("click", goHome);
 
 function today(){ const t = new Date(); return t.getFullYear()+"-"+String(t.getMonth()+1).padStart(2,"0")+"-"+String(t.getDate()).padStart(2,"0"); }
 $("#tgl").value = today();
+$("#polaQ").innerHTML = polaFormHTML();
+$("#polaQ").addEventListener("change", updatePolaN);
+$("#polaReset").addEventListener("click", () => { POLA.forEach(q => { const e = document.querySelector(`input[name="p${q.id}"]:checked`); if(e) e.checked = false; }); updatePolaN(); });
 
 function bacaForm(){
   const d = {
@@ -1557,8 +1808,13 @@ function bacaForm(){
     usia: num("usia"), bb: num("bb"), tb: num("tb"), lp: num("lp"),
     lpg: MODE==="petugas" ? num("lpg") : null, tl: MODE==="petugas" ? num("tl") : null,
     pakaiTL: MODE==="petugas" && $("#pakaiTL").checked,
-    sis: num("sis"), dia: num("dia"), gdp: num("gdp"), gdj: radio("gdj") || "P", kol: num("kol")
+    sis: num("sis"), dia: num("dia"), gdp: num("gdp"), gdj: radio("gdj") || "P", kol: num("kol"), pola: null
   };
+  if(MODE === "petugas"){
+    const p = {};
+    POLA.forEach(q => { const v = radio("p"+q.id); if(v !== null) p[q.id] = Number(v); });
+    if(Object.keys(p).length) d.pola = p;
+  }
   const E = [];
   if(!d.jk) E.push("Pilih jenis kelamin.");
   if(!d.dx) E.push("Pilih penyakit yang diderita (DM, hipertensi, keduanya, atau tidak ada).");
@@ -1596,15 +1852,18 @@ $("#f").addEventListener("submit", ev => {
   const res = $("#result");
   res.innerHTML = (MODE === "petugas" ? renderPetugas(o) : renderPeserta(o)) +
     `<div class="actions noprint">
+       <button class="btn primary" type="button" id="saveRwyBtn">💾 Simpan ke Riwayat</button>
        <button class="btn primary" type="button" id="printBtn">🖼️ Simpan Gambar</button>
        <button class="btn ghost hidden" type="button" id="shareBtn">📤 Bagikan</button>
        <button class="btn ghost" type="button" id="editBtn">Ubah data</button>
-       <button class="btn ghost" type="button" id="newBtn">Peserta baru</button>
-     </div>` + (MODE === "petugas" ? `<div class="toolrow noprint" style="margin-top:10px"><button class="btn ghost refbtn" type="button" data-ref="2">📖 Rumus &amp; Referensi</button><button class="btn ghost penbtn" type="button" data-ref="2">🔎 Daftar Penukar</button></div>` : "");
+       <button class="btn ghost" type="button" id="newBtn">${MODE === "petugas" ? "Peserta baru" : "Hitung ulang"}</button>
+     </div>
+     <div class="toolrow noprint" style="margin-top:10px">${MODE === "petugas" ? `<button class="btn ghost refbtn" type="button" data-ref="2">📖 Rumus</button><button class="btn ghost penbtn" type="button" data-ref="2">🔎 Penukar</button>` : ""}<button class="btn ghost rwybtn" type="button">📈 Riwayat</button></div>`;
   $("#formCard").classList.add("hidden");
   res.classList.remove("hidden");
   window.scrollTo(0,0);
   $("#printBtn").addEventListener("click", () => simpanGambar(o, MODE, false));
+  $("#saveRwyBtn").addEventListener("click", () => simpanRiwayat(o));
   try{ if(navigator.canShare && navigator.canShare({files:[new File([""], "x.jpg", {type:"image/jpeg"})]})) $("#shareBtn").classList.remove("hidden"); }catch(e){}
   $("#shareBtn").addEventListener("click", () => simpanGambar(o, MODE, true));
   $("#editBtn").addEventListener("click", () => { res.classList.add("hidden"); $("#formCard").classList.remove("hidden"); window.scrollTo(0,0); });
@@ -1612,13 +1871,384 @@ $("#f").addEventListener("submit", ev => {
 });
 
 function resetForm(){
-  $("#f").reset(); $("#tgl").value = today();
+  $("#f").reset(); $("#tgl").value = today(); updatePolaN();
   $("#err").classList.add("hidden");
 }
 $("#resetBtn").addEventListener("click", resetForm);
 
+/* ============================================================
+   NAVIGASI ANTARBAGIAN
+   ============================================================ */
+const SEKSI = ["#home","#formCard","#result","#refSec","#penSec","#rwySec","#privSec"];
+function seksiAktif(){ return SEKSI.find(x => !$(x).classList.contains("hidden")) || "#home"; }
+function tampilkan(sel){
+  if(sel === "#home"){ goHome(); window.scrollTo(0,0); return; }
+  SEKSI.forEach(x => $(x).classList.toggle("hidden", x !== sel));
+  window.scrollTo(0,0);
+}
+function setRadio(name, val){ const e = document.querySelector(`input[name="${name}"][value="${val}"]`); if(e) e.checked = true; }
+
+/* ============================================================
+   RIWAYAT PEMANTAUAN — disimpan HANYA di HP (localStorage)
+   ============================================================ */
+const RWY_KEY = "egp-riwayat";
+let RWY_SEL = null, RWY_RET = "#home";
+function rwyLoad(){ try{ const a = JSON.parse(localStorage.getItem(RWY_KEY) || "[]"); return Array.isArray(a) ? a : []; }catch(e){ return []; } }
+function rwySave(a){ try{ localStorage.setItem(RWY_KEY, JSON.stringify(a)); return true; }catch(e){ return false; } }
+function kunci(n){ return String(n || "").trim().toLowerCase().replace(/\s+/g, " "); }
+function urutTgl(a, b){ return a.tgl < b.tgl ? -1 : a.tgl > b.tgl ? 1 : 0; }
+
+function simpanRiwayat(o){
+  const d = o.d;
+  let nama = d.nama;
+  if(!nama){
+    if(MODE === "petugas"){ toast("Isi nama peserta dulu (ketuk Ubah data), supaya riwayatnya bisa dikelompokkan.", 5000); return; }
+    nama = "Saya";
+  }
+  if(MODE === "petugas"){
+    let izin = false; try{ izin = sessionStorage.getItem("egp-izin") === "1"; }catch(e){}
+    if(!izin){
+      if(!confirm("Apakah peserta sudah setuju datanya disimpan di HP ini?\n\nData hanya tersimpan di HP ini, tidak dikirim ke mana pun, dan bisa dihapus kapan saja.")) return;
+      try{ sessionStorage.setItem("egp-izin", "1"); }catch(e){}
+    }
+  }
+  const rec = {
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    nama, tgl: d.tgl || today(), jk: d.jk, usia: d.usia, dx: d.dx, akt: d.akt,
+    bb: d.bb, tb: r1(o.tb), lp: d.lp, sis: d.sis, dia: d.dia, gdp: d.gdp, gdj: d.gdj, kol: d.kol,
+    imt: r1(o.imt), energi: o.energi, sumber: MODE, pola: d.pola || null
+  };
+  const a = rwyLoad();
+  const i = a.findIndex(r => kunci(r.nama) === kunci(nama) && r.tgl === rec.tgl);
+  if(i >= 0) a[i] = Object.assign(rec, {id: a[i].id}); else a.push(rec);
+  if(!rwySave(a)){ toast("Gagal menyimpan. Penyimpanan browser mungkin penuh atau diblokir."); return; }
+  RWY_SEL = kunci(nama);
+  const n = a.filter(r => kunci(r.nama) === RWY_SEL).length;
+  toast(i >= 0 ? "Data tanggal ini sudah diperbarui di riwayat." : `Tersimpan di HP ini. ${n} kunjungan tercatat untuk ${nama}.`);
+  const b = $("#saveRwyBtn"); if(b) b.textContent = "✓ Tersimpan · Lihat Riwayat";
+  if(b) b.onclick = () => bukaRiwayat();
+}
+
+function grupRiwayat(){
+  const g = {};
+  rwyLoad().forEach(r => { const k = kunci(r.nama); (g[k] = g[k] || {list: []}).list.push(r); });
+  Object.values(g).forEach(x => { x.list.sort(urutTgl); x.nama = x.list[x.list.length - 1].nama; });
+  return g;
+}
+function tglPendek(s){ const p = String(s).split("-"); return p.length === 3 ? `${p[2]}/${p[1]}` : s; }
+
+/* Grafik garis sederhana (SVG), tanpa pustaka luar */
+function lineChart({judul, sub, labels, series, refs = [], band = null, desimal = 1}){
+  const W = 340, H = 170, pl = 38, pr = 14, pt = 14, pb = 26;
+  const vals = series.flatMap(s => s.vals.filter(v => v !== null && v !== undefined));
+  if(!vals.length) return "";
+  const all = vals.concat(refs.map(r => r.y)).concat(band || []);
+  let lo = Math.min(...all), hi = Math.max(...all);
+  if(hi - lo < 2){ hi += 1; lo -= 1; }
+  const pad = (hi - lo) * 0.12; lo -= pad; hi += pad;
+  const n = labels.length;
+  const x = i => n === 1 ? pl + (W - pl - pr) / 2 : pl + i * (W - pl - pr) / (n - 1);
+  const y = v => pt + (hi - v) * (H - pt - pb) / (hi - lo);
+  const f = v => desimal ? fmt(v, desimal) : fmt0(v);
+  let g = "";
+  // grid & sumbu Y
+  for(let t = 0; t <= 3; t++){
+    const v = lo + (hi - lo) * t / 3, yy = y(v);
+    g += `<line x1="${pl}" x2="${W - pr}" y1="${yy}" y2="${yy}" stroke="#E8EEEF" stroke-width="1"/>`;
+    g += `<text x="${pl - 5}" y="${yy + 3.5}" text-anchor="end" font-size="9.5" fill="#5B6B70">${fmt0(v)}</text>`;
+  }
+  if(band) g += `<rect x="${pl}" y="${y(band[1])}" width="${W - pl - pr}" height="${Math.max(0, y(band[0]) - y(band[1]))}" fill="#E5F5EC"/>
+     <text x="${W - pr - 3}" y="${y(band[1]) + 11}" text-anchor="end" font-size="9" fill="#1E8E4E">rentang sehat</text>`;
+  refs.forEach(r => {
+    const yy = y(r.y);
+    g += `<line x1="${pl}" x2="${W - pr}" y1="${yy}" y2="${yy}" stroke="${r.warna || "#C23A3A"}" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <text x="${pl + 4}" y="${yy - 4}" text-anchor="start" font-size="9" fill="${r.warna || "#C23A3A"}">${r.label}</text>`;
+  });
+  // label sumbu X
+  const step = Math.ceil(n / 6);
+  labels.forEach((lb, i) => { if(i % step === 0 || i === n - 1) g += `<text x="${x(i)}" y="${H - 8}" text-anchor="middle" font-size="9.5" fill="#5B6B70">${lb}</text>`; });
+  // seri data
+  series.forEach(s => {
+    let d = "", pen = false;
+    s.vals.forEach((v, i) => { if(v === null || v === undefined){ pen = false; return; } d += (pen ? " L" : " M") + x(i).toFixed(1) + " " + y(v).toFixed(1); pen = true; });
+    g += `<path d="${d}" fill="none" stroke="${s.warna}" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>`;
+    s.vals.forEach((v, i) => { if(v !== null && v !== undefined) g += `<circle cx="${x(i)}" cy="${y(v)}" r="3.6" fill="#fff" stroke="${s.warna}" stroke-width="2"/>`; });
+    let li = -1; s.vals.forEach((v, i) => { if(v !== null && v !== undefined) li = i; });
+    if(li >= 0) g += `<text x="${Math.min(x(li), W - pr - 8)}" y="${y(s.vals[li]) - 8}" text-anchor="middle" font-size="10.5" font-weight="700" fill="${s.warna}">${f(s.vals[li])}</text>`;
+  });
+  const lg = series.length > 1 ? `<div class="lg">${series.map(s => `<span style="color:${s.warna}"><b style="color:#5B6B70;font-weight:500">${s.nama}</b></span>`).join("")}</div>` : "";
+  return `<div class="chart"><h4>${judul}</h4>${sub ? `<p class="sub">${sub}</p>` : ""}${lg}
+    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Grafik ${judul}">${g}</svg></div>`;
+}
+
+function progresHTML(L){
+  const a = L[0], z = L[L.length - 1], dm = z.dx === "DM" || z.dx === "DMHT";
+  const out = [];
+  // Berat badan
+  const dBB = z.bb - a.bb, pBB = dBB / a.bb * 100;
+  const lebihAwal = a.imt >= 23, kurangAwal = a.imt < 18.5, target = dm ? 7 : 5;
+  let cBB = "ok", ket = "";
+  if(lebihAwal){
+    cBB = dBB < 0 ? (-pBB >= target ? "ok" : "warn") : "bad";
+    ket = `target turun ≥ ${target}%` + (dBB < 0 && -pBB >= target ? " · tercapai" : "");
+  } else if(kurangAwal){
+    cBB = dBB > 0 ? "ok" : "warn"; ket = "target naik bertahap";
+  } else {
+    cBB = Math.abs(pBB) <= 3 ? "ok" : "warn"; ket = "pertahankan";
+  }
+  out.push(`<div class="${cBB}"><small>Berat badan</small><b>${dBB > 0 ? "+" : dBB < 0 ? "−" : ""}${fmt(Math.abs(dBB))} kg</b> <span class="muted">(${pBB > 0 ? "+" : pBB < 0 ? "−" : ""}${fmt(Math.abs(pBB))}%)</span><small>${ket}</small></div>`);
+  // Lingkar perut
+  const batas = z.jk === "L" ? 90 : 80, dLP = z.lp - a.lp;
+  const cLP = z.lp <= batas ? "ok" : dLP < 0 ? "warn" : "bad";
+  out.push(`<div class="${cLP}"><small>Lingkar perut</small><b>${dLP > 0 ? "+" : dLP < 0 ? "−" : ""}${fmt(Math.abs(dLP))} cm</b><small>sekarang ${fmt(z.lp, 0)} cm · batas ≤ ${batas}</small></div>`);
+  // TD & GD terakhir yang tersedia
+  const tdL = [...L].reverse().find(r => r.sis && r.dia);
+  if(tdL){ const ok = tdL.sis < 140 && tdL.dia < 90;
+    out.push(`<div class="${ok ? "ok" : "bad"}"><small>Tekanan darah terakhir</small><b>${tdL.sis}/${tdL.dia}</b><small>${ok ? "sesuai target" : "belum sesuai"} (&lt; 140/90)</small></div>`); }
+  const gdL = [...L].reverse().find(r => r.gdp);
+  if(gdL){ const puasa = gdL.gdj !== "PP", ok = puasa ? (gdL.gdp >= 80 && gdL.gdp <= 130) : (gdL.gdp >= 70 && gdL.gdp < 180);
+    out.push(`<div class="${ok ? "ok" : "bad"}"><small>Gula darah ${puasa ? "puasa" : "2 jam PP"} terakhir</small><b>${gdL.gdp}</b><small>${ok ? "sesuai target" : "belum sesuai"} (${puasa ? "80–130" : "&lt; 180"})</small></div>`); }
+  const P = L.filter(r => r.pola && Object.keys(r.pola).length);
+  if(P.length >= 2){
+    const merah = r => Object.values(r.pola).filter(v => v === 2).length;
+    const m0 = merah(P[0]), m1 = merah(P[P.length-1]);
+    const c = m1 === 0 || m1 < m0 ? "ok" : m1 > m0 ? "bad" : "warn";
+    out.push(`<div class="${c}"><small>Kebiasaan makan perlu diperbaiki</small><b>${m0} → ${m1}</b><small>butir merah, ${tglPendek(P[0].tgl)} → ${tglPendek(P[P.length-1].tgl)}</small></div>`);
+  }
+  return `<div class="prog">${out.join("")}</div>`;
+}
+
+function detailHTML(grp){
+  const L = grp.list, a = L[0], z = L[L.length - 1], n = L.length;
+  let h = `<div class="card"><h2>${esc(grp.nama)}</h2>
+    <p class="muted" style="margin-top:0">${dxLabel(z.dx)} · ${z.jk === "L" ? "Laki-laki" : "Perempuan"} · ${n} kunjungan${n > 1 ? ` (${tanggalID(a.tgl)} – ${tanggalID(z.tgl)})` : ` (${tanggalID(z.tgl)})`}</p>`;
+  if(n >= 2){
+    h += `<h3 style="margin-top:4px">Perubahan sejak kunjungan pertama</h3>` + progresHTML(L);
+    const lab = L.map(r => tglPendek(r.tgl)), m = z.tb / 100;
+    let c = lineChart({judul: "Berat badan (kg)", sub: `Rentang sehat ${fmt(18.5 * m * m)}–${fmt(22.9 * m * m)} kg (TB ${fmt(z.tb, 0)} cm)`, labels: lab,
+      series: [{nama: "BB", warna: "#00756E", vals: L.map(r => r.bb)}], band: [18.5 * m * m, 22.9 * m * m]});
+    const bLP = z.jk === "L" ? 90 : 80;
+    c += lineChart({judul: "Lingkar perut (cm)", sub: `Batas sehat ≤ ${bLP} cm`, labels: lab, desimal: 0,
+      series: [{nama: "LP", warna: "#0E7C9A", vals: L.map(r => r.lp)}], refs: [{y: bLP, label: `batas ${bLP} cm`}]});
+    if(L.filter(r => r.sis && r.dia).length >= 2)
+      c += lineChart({judul: "Tekanan darah (mmHg)", sub: "Target < 140/90 mmHg", labels: lab, desimal: 0,
+        series: [{nama: "Sistolik", warna: "#C23A3A", vals: L.map(r => r.sis || null)}, {nama: "Diastolik", warna: "#E0A100", vals: L.map(r => r.dia || null)}],
+        refs: [{y: 140, label: "140", warna: "#C23A3A"}, {y: 90, label: "90", warna: "#B37F00"}]});
+    if(L.filter(r => r.gdp).length >= 2){
+      const pp = (([...L].reverse().find(r => r.gdp) || {}).gdj) === "PP";
+      c += lineChart({judul: "Gula darah (mg/dL)", sub: "Titik: hasil puasa dan/atau 2 jam setelah makan", labels: lab, desimal: 0,
+        series: [{nama: "GD", warna: "#7A4FB3", vals: L.map(r => r.gdp || null)}],
+        refs: [pp ? {y: 180, label: "target 2 jam PP < 180"} : {y: 130, label: "target puasa ≤ 130"}]});
+    }
+    if(L.filter(r => r.kol).length >= 2)
+      c += lineChart({judul: "Kolesterol total (mg/dL)", sub: "Diinginkan < 200 mg/dL", labels: lab, desimal: 0,
+        series: [{nama: "Kolesterol", warna: "#A86E00", vals: L.map(r => r.kol || null)}], refs: [{y: 200, label: "200"}]});
+    h += `<div class="charts">${c}</div>`;
+  } else {
+    h += `<p class="note">Grafik perkembangan muncul setelah ada <b>minimal 2 kunjungan</b>. Pada kegiatan Prolanis berikutnya, ketuk <b>Ukur lagi</b>, isi hasil pengukuran baru, lalu simpan ke riwayat.</p>`;
+  }
+  const LP = L.filter(r => r.pola && Object.keys(r.pola).length).slice(-6);
+  if(LP.length){
+    const baris = POLA.filter(q => LP.some(r => r.pola[q.id] !== undefined));
+    h += `<h3>Kebiasaan makan (Cek Pola Makan)</h3><div class="tbl-scroll"><table class="pm"><thead><tr><th>Kebiasaan</th>${LP.map(r => `<th>${tglPendek(r.tgl)}</th>`).join("")}</tr></thead><tbody>` +
+      baris.map(q => `<tr><td>${q.lb}</td>${LP.map(r => { const v = r.pola[q.id]; return `<td>${v === undefined ? "–" : `<span class="pd ${POLA_ST[v].c}" title="${esc(q.op[v])}">${POLA_ST[v].m}</span>`}</td>`; }).join("")}</tr>`).join("") +
+      `</tbody></table></div><p class="muted" style="font-size:.82rem">✓ sesuai anjuran · ! perlu perhatian · !! perlu diperbaiki · – tidak ditanyakan. Ketuk lingkaran untuk melihat jawaban.</p>`;
+  }
+  h += `<h3>Catatan kunjungan</h3><div class="tbl-scroll"><table><thead><tr><th>Tanggal</th><th class="num">BB</th><th class="num">IMT</th><th class="num">LP</th><th class="num">TD</th><th class="num">GD</th><th class="num">Energi</th><th></th></tr></thead><tbody>`;
+  [...L].reverse().forEach(r => {
+    h += `<tr><td>${tglPendek(r.tgl)}/${String(r.tgl).slice(2, 4)}</td><td class="num">${fmt(r.bb)}</td><td class="num">${fmt(r.imt)}</td><td class="num">${fmt(r.lp, 0)}</td>
+      <td class="num">${r.sis && r.dia ? r.sis + "/" + r.dia : "–"}</td><td class="num">${r.gdp ? r.gdp + (r.gdj === "PP" ? "<sup>pp</sup>" : "") : "–"}</td>
+      <td class="num">${r.energi ? fmt0(r.energi) : "–"}</td><td class="num"><button class="xbtn" type="button" data-hapus="${esc(r.id)}" aria-label="Hapus kunjungan ${esc(r.tgl)}">✕</button></td></tr>`;
+  });
+  h += `</tbody></table></div>
+    <p class="muted" style="font-size:.82rem">BB dalam kg, LP dalam cm, TD dalam mmHg, GD dalam mg/dL (pp = 2 jam setelah makan), energi dalam kkal/hari.</p>
+    <div class="actions"><button class="btn primary" type="button" id="ukurLagi">➕ Ukur lagi (isi otomatis)</button>
+      <button class="btn danger" type="button" id="hapusPeserta">🗑️ Hapus riwayat ${esc(grp.nama)}</button></div></div>`;
+  return h;
+}
+
+function rwyHTML(){
+  const g = grupRiwayat();
+  const keys = Object.keys(g).sort((p, q) => g[q].list[g[q].list.length - 1].tgl.localeCompare(g[p].list[g[p].list.length - 1].tgl));
+  if(RWY_SEL && !g[RWY_SEL]) RWY_SEL = null;
+  if(!RWY_SEL && keys.length === 1) RWY_SEL = keys[0];
+  let h = `<div class="card"><h2 style="margin-bottom:4px">📈 Riwayat Pemantauan</h2>
+    <p class="muted" style="margin:0 0 12px;font-size:.9rem">🔒 Riwayat hanya tersimpan di HP ini, tidak dikirim ke server mana pun.</p>`;
+  if(!keys.length){
+    h += `<p class="note">Belum ada riwayat. Hitung status gizi, lalu ketuk <b>💾 Simpan ke Riwayat</b>. Grafik perkembangan muncul setelah ada minimal 2 kunjungan.</p>`;
+  } else {
+    if(keys.length > 5) h += `<input class="srch" id="rwyQ" type="search" placeholder="Cari nama peserta" autocomplete="off" style="width:100%;padding:12px;border:1.5px solid var(--line);border-radius:10px;font:inherit;margin-bottom:10px">`;
+    h += `<div class="plist">` + keys.map(k => { const x = g[k], z = x.list[x.list.length - 1];
+      return `<button class="pitem${k === RWY_SEL ? " on" : ""}" type="button" data-k="${esc(k)}"><div><b>${esc(x.nama)}</b><span>${x.list.length} kunjungan · terakhir ${tanggalID(z.tgl)}</span></div><i>${k === RWY_SEL ? "Dipilih" : "Lihat ›"}</i></button>`; }).join("") + `</div>`;
+  }
+  h += `</div>`;
+  if(RWY_SEL) h += detailHTML(g[RWY_SEL]);
+  h += `<div class="card"><h2 style="font-size:1rem">Cadangan data</h2>
+    <p class="muted" style="font-size:.88rem;margin-top:0">Untuk pindah HP: ekspor riwayat menjadi file, lalu impor di HP baru. File berisi data kesehatan, simpan di tempat yang aman dan jangan dibagikan ke grup.</p>
+    <div class="toolrow" style="margin:0"><button class="btn ghost" type="button" id="rwyEkspor">⬇️ Ekspor</button><button class="btn ghost" type="button" id="rwyImpor">⬆️ Impor</button><button class="btn ghost privbtn" type="button">🔒 Privasi</button></div>
+    <input type="file" id="rwyFile" accept=".json,application/json" class="hidden"></div>
+    <div class="actions"><button class="btn primary" type="button" id="rwyBack">← Kembali</button></div>`;
+  return h;
+}
+
+function renderRiwayat(){
+  const sec = $("#rwySec");
+  sec.innerHTML = rwyHTML();
+  sec.querySelectorAll(".pitem").forEach(b => b.addEventListener("click", () => { RWY_SEL = b.dataset.k; renderRiwayat(); }));
+  const q = $("#rwyQ");
+  if(q) q.addEventListener("input", () => { const t = kunci(q.value); sec.querySelectorAll(".pitem").forEach(b => b.classList.toggle("hidden", !b.dataset.k.includes(t))); });
+  sec.querySelectorAll("[data-hapus]").forEach(b => b.addEventListener("click", () => {
+    if(!confirm("Hapus catatan kunjungan ini dari HP?")) return;
+    rwySave(rwyLoad().filter(r => r.id !== b.dataset.hapus)); toast("Catatan kunjungan dihapus."); renderRiwayat();
+  }));
+  const g = grupRiwayat();
+  if($("#ukurLagi")) $("#ukurLagi").addEventListener("click", () => ukurLagi(g[RWY_SEL]));
+  if($("#hapusPeserta")) $("#hapusPeserta").addEventListener("click", () => {
+    const nm = g[RWY_SEL].nama;
+    if(!confirm(`Hapus SEMUA riwayat ${nm} dari HP ini? Tindakan ini tidak bisa dibatalkan.`)) return;
+    rwySave(rwyLoad().filter(r => kunci(r.nama) !== RWY_SEL)); RWY_SEL = null; toast(`Riwayat ${nm} dihapus.`); renderRiwayat();
+  });
+  $("#rwyEkspor").addEventListener("click", eksporRiwayat);
+  $("#rwyImpor").addEventListener("click", () => $("#rwyFile").click());
+  $("#rwyFile").addEventListener("change", imporRiwayat);
+  $("#rwyBack").addEventListener("click", () => tampilkan(RWY_RET));
+}
+function bukaRiwayat(){
+  const now = seksiAktif();
+  if(now !== "#rwySec" && now !== "#privSec") RWY_RET = now;
+  renderRiwayat(); tampilkan("#rwySec");
+}
+function ukurLagi(grp){
+  const r = grp.list[grp.list.length - 1];
+  setMode(MODE || r.sumber || "petugas");
+  resetForm();
+  $("#nama").value = (r.nama === "Saya" && MODE === "peserta") ? "" : r.nama;
+  setRadio("jk", r.jk); setRadio("dx", r.dx); setRadio("akt", r.akt || 20);
+  $("#usia").value = r.usia || ""; $("#tb").value = String(r.tb).replace(".", ",");
+  toast("Identitas terisi otomatis. Masukkan hasil pengukuran hari ini.", 4500);
+  setTimeout(() => $("#bb").focus(), 300);
+}
+function eksporRiwayat(){
+  const a = rwyLoad();
+  if(!a.length){ toast("Belum ada riwayat untuk diekspor."); return; }
+  const blob = new Blob([JSON.stringify({aplikasi: "e-GiziProlanis", versi: APP_VERSION, dibuat: new Date().toISOString(), data: a}, null, 1)], {type: "application/json"});
+  const url = URL.createObjectURL(blob), el = document.createElement("a");
+  el.href = url; el.download = `e-GiziProlanis_riwayat_${today()}.json`;
+  document.body.appendChild(el); el.click(); el.remove(); setTimeout(() => URL.revokeObjectURL(url), 4000);
+  toast("File cadangan tersimpan. Simpan di tempat aman karena berisi data kesehatan.", 5000);
+}
+function imporRiwayat(ev){
+  const file = ev.target.files && ev.target.files[0]; if(!file) return;
+  const rd = new FileReader();
+  rd.onload = () => {
+    try{
+      const j = JSON.parse(rd.result), masuk = Array.isArray(j) ? j : j.data;
+      if(!Array.isArray(masuk)) throw new Error("format");
+      const sah = masuk.filter(r => r && typeof r.nama === "string" && /^\d{4}-\d{2}-\d{2}$/.test(r.tgl) && isFinite(r.bb) && isFinite(r.tb) && isFinite(r.lp));
+      if(!sah.length) throw new Error("kosong");
+      const a = rwyLoad(); let baru = 0;
+      sah.forEach(r => {
+        const i = a.findIndex(x => kunci(x.nama) === kunci(r.nama) && x.tgl === r.tgl);
+        const bersih = {id: String(r.id || (Date.now().toString(36) + Math.random().toString(36).slice(2, 6))), nama: r.nama.slice(0, 60), tgl: r.tgl,
+          jk: r.jk === "L" ? "L" : "P", usia: Number(r.usia) || null, dx: ["DM","HT","DMHT","NONE"].includes(r.dx) ? r.dx : "NONE", akt: Number(r.akt) || 20,
+          bb: Number(r.bb), tb: Number(r.tb), lp: Number(r.lp), sis: Number(r.sis) || null, dia: Number(r.dia) || null, gdp: Number(r.gdp) || null,
+          gdj: r.gdj === "PP" ? "PP" : "P", kol: Number(r.kol) || null, imt: Number(r.imt) || r1(Number(r.bb) / Math.pow(Number(r.tb) / 100, 2)),
+          energi: Number(r.energi) || null, sumber: r.sumber === "peserta" ? "peserta" : "petugas", pola: null};
+        if(r.pola && typeof r.pola === "object"){
+          const pl = {}; POLA.forEach(q => { const v = Number(r.pola[q.id]); if(v === 0 || v === 1 || v === 2) pl[q.id] = v; });
+          if(Object.keys(pl).length) bersih.pola = pl;
+        }
+        if(i >= 0) a[i] = bersih; else { a.push(bersih); baru++; }
+      });
+      if(!rwySave(a)) throw new Error("simpan");
+      toast(`Impor berhasil: ${sah.length} catatan (${baru} baru).`); renderRiwayat();
+    }catch(e){ toast("File tidak dapat dibaca. Pastikan file berasal dari ekspor e-GiziProlanis."); }
+    ev.target.value = "";
+  };
+  rd.readAsText(file);
+}
+document.addEventListener("click", e => { const b = e.target.closest && e.target.closest(".rwybtn"); if(b){ e.preventDefault(); bukaRiwayat(); } });
+
+/* ============================================================
+   PRIVASI & PERSETUJUAN
+   ============================================================ */
+const CONSENT_KEY = "egp-consent";
+let PRIV_RET = "#home";
+function sudahSetuju(){ try{ return localStorage.getItem(CONSENT_KEY) === "1"; }catch(e){ return false; } }
+function setuju(){ try{ localStorage.setItem(CONSENT_KEY, "1"); }catch(e){} $("#consent").classList.add("hidden"); }
+function privHTML(){
+  const a = rwyLoad(), np = new Set(a.map(r => kunci(r.nama))).size;
+  return `<div class="card priv"><h2>🔒 Kebijakan Privasi dan Keamanan Data</h2>
+    <p>e-GiziProlanis mengolah <b>data kesehatan</b>, yang menurut <b>UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi</b> termasuk data pribadi yang bersifat spesifik. Karena itu aplikasi ini dirancang dengan prinsip <i>privacy by design</i>: data sesedikit mungkin, diolah di HP sendiri, dan sepenuhnya di bawah kendali pengguna.</p>
+    <div class="pills">
+      <div><b>📱 Diolah di HP</b>Semua perhitungan berjalan di HP ini.</div>
+      <div><b>🚫 Tanpa server</b>Tidak ada data isian yang dikirim ke internet.</div>
+      <div><b>👤 Tanpa akun</b>Tidak perlu daftar, email, atau nomor HP.</div>
+      <div><b>🗑️ Bisa dihapus</b>Hapus satu kunjungan atau semua data kapan saja.</div>
+    </div>
+    <h3>Data apa yang diolah?</h3>
+    <ul><li>Wajib: jenis kelamin, usia, berat badan, tinggi badan, lingkar perut, penyakit (DM/hipertensi), dan tingkat aktivitas.</li>
+      <li>Opsional: nama (boleh dikosongkan), tanggal pengukuran, lingkar panggul, tinggi lutut, tekanan darah, gula darah, dan kolesterol total.</li>
+      <li>Aplikasi <b>tidak</b> meminta NIK, nomor BPJS, alamat, nomor HP, lokasi, kamera, atau kontak.</li></ul>
+    <h3>Di mana data disimpan?</h3>
+    <ul><li>Data isian hanya ada di memori aplikasi selama dipakai, dan hilang saat aplikasi ditutup.</li>
+      <li>Data <b>baru disimpan</b> bila pengguna sendiri mengetuk <b>💾 Simpan ke Riwayat</b>. Penyimpanannya di memori browser HP ini (<i>local storage</i>), bukan di server.</li>
+      <li>Gambar hasil (JPG) dan file cadangan riwayat hanya dibuat bila pengguna memintanya, lalu tersimpan di folder Download HP.</li>
+      <li>Saat ini tersimpan di HP ini: <b>${a.length} catatan kunjungan</b> dari <b>${np} ${np === 1 ? "orang" : "orang"}</b>.</li></ul>
+    <h3>Apa yang tidak dilakukan aplikasi?</h3>
+    <ul><li>Tidak mengirim data isian ke server, Google, atau pihak ketiga mana pun.</li>
+      <li>Tidak memakai iklan, pelacak (<i>tracker</i>), atau analitik.</li>
+      <li>Saat HP online, aplikasi hanya mengunduh <b>pembaruan file aplikasi</b> dari GitHub Pages. Tidak ada data isian yang ikut terkirim.</li></ul>
+    <h3>Hak pengguna</h3>
+    <ul><li><b>Melihat</b> semua data yang tersimpan lewat menu 📈 Riwayat.</li>
+      <li><b>Memperbaiki</b> data dengan menyimpan ulang pengukuran pada tanggal yang sama.</li>
+      <li><b>Menghapus</b> satu kunjungan, riwayat satu peserta, atau semua data (tombol di bawah).</li>
+      <li><b>Membawa data</b> ke HP lain lewat Ekspor/Impor.</li></ul>
+    <h3>Tanggung jawab petugas</h3>
+    <ul><li>Mintalah <b>persetujuan peserta</b> sebelum menyimpan datanya ke riwayat. Aplikasi akan mengingatkan sekali setiap sesi.</li>
+      <li>Gunakan <b>kunci layar</b> (PIN/sidik jari) pada HP yang berisi data peserta.</li>
+      <li>Jangan membagikan file cadangan atau gambar hasil ke grup WhatsApp umum; kirim hanya ke peserta yang bersangkutan.</li>
+      <li>Hapus semua data sebelum HP dipinjamkan, dijual, atau berganti pemegang.</li></ul>
+    <h3>Batasan</h3>
+    <p>Hasil e-GiziProlanis bersifat panduan berbasis pedoman (PERKENI 2024, PNPK Hipertensi 2026, Penuntun Diet ed. 5) dan <b>bukan diagnosis</b>. Keputusan terapi tetap oleh dokter dan petugas gizi.</p>
+    <div class="actions">
+      ${sudahSetuju() ? "" : `<button class="btn primary" type="button" id="privSetuju">Saya mengerti dan setuju</button>`}
+      <button class="btn danger" type="button" id="hapusSemua">🗑️ Hapus semua data di HP ini</button>
+      <button class="btn ghost" type="button" id="privBack">← Kembali</button>
+    </div></div>`;
+}
+function bukaPrivasi(){
+  $("#consent").classList.add("hidden");
+  const now = seksiAktif();
+  if(now !== "#privSec") PRIV_RET = now;
+  const sec = $("#privSec");
+  sec.innerHTML = privHTML();
+  tampilkan("#privSec");
+  if($("#privSetuju")) $("#privSetuju").addEventListener("click", () => { setuju(); toast("Terima kasih. Silakan lanjutkan."); bukaPrivasi(); });
+  $("#hapusSemua").addEventListener("click", hapusSemuaData);
+  $("#privBack").addEventListener("click", tutupPrivasi);
+}
+function tutupPrivasi(){
+  if(PRIV_RET === "#rwySec") renderRiwayat();
+  tampilkan(PRIV_RET);
+  if(!sudahSetuju()) $("#consent").classList.remove("hidden");
+}
+function hapusSemuaData(){
+  if(!confirm("Hapus SEMUA data e-GiziProlanis di HP ini (riwayat, persetujuan, dan pengaturan)?\n\nTindakan ini tidak bisa dibatalkan. Ekspor dulu bila perlu cadangan.")) return;
+  try{ Object.keys(localStorage).filter(k => k.startsWith("egp-")).forEach(k => localStorage.removeItem(k)); }catch(e){}
+  try{ Object.keys(sessionStorage).filter(k => k.startsWith("egp-")).forEach(k => sessionStorage.removeItem(k)); }catch(e){}
+  LAST = null; RWY_SEL = null; resetForm(); $("#result").innerHTML = "";
+  if(PRIV_RET === "#result" || PRIV_RET === "#rwySec") PRIV_RET = "#home";
+  toast("Semua data di HP ini sudah dihapus.");
+  bukaPrivasi();
+}
+document.addEventListener("click", e => { const b = e.target.closest && e.target.closest(".privbtn"); if(b){ e.preventDefault(); bukaPrivasi(); } });
+$("#consentYes").addEventListener("click", setuju);
+
 // Kembali ke mode terakhir
 try{ const m = localStorage.getItem("egp-mode"); if(m === "petugas" || m === "peserta") setMode(m); }catch(e){}
+// Persetujuan penggunaan data (sekali di setiap HP)
+if(!sudahSetuju()) $("#consent").classList.remove("hidden");
 
 /* ============================================================
    PWA: offline & pemasangan
