@@ -1,6 +1,6 @@
 # e-GiziProlanis
 
-Kalkulator status gizi peserta **Prolanis** (Diabetes Melitus Tipe 2 dan Hipertensi) untuk petugas gizi Puskesmas dan peserta Prolanis. Aplikasi berbentuk PWA: bisa dipasang di HP dan dipakai **tanpa internet**.
+Kalkulator status gizi peserta **Prolanis** (Diabetes Melitus Tipe 2 dan Hipertensi) untuk petugas atau pengelola Prolanis di Puskesmas (tenaga gizi, perawat, bidan, atau dokter) dan peserta Prolanis. Aplikasi berbentuk PWA: bisa dipasang di HP dan dipakai **tanpa internet**.
 
 Aplikasi dikembangkan oleh: **Ainun Thahirah H., Aminah Razaq, dan Andi Marhamatul Ginayah**  
 Mahasiswa Prodi Gizi dan Dietetika Poltekkes Kemenkes Makassar  
@@ -32,6 +32,7 @@ Dibimbing oleh **Manjilala, S.Gz, M.Gizi** dan **Dr. Nadimin, SKM, M.Kes**
 **Kedua mode**
 - **Kebutuhan energi** (PERKENI 2024) juga ditampilkan di mode peserta dalam bahasa sederhana
 - **Riwayat pemantauan**: simpan hasil tiap kunjungan, grafik BB, lingkar perut, tekanan darah, gula darah, kolesterol, ringkasan perubahan terhadap target, dan tombol *Ukur lagi* (isi identitas otomatis)
+- **Panduan singkat** 5 layar saat pertama dibuka (bisa diulang dari beranda) dan **ringkasan perkembangan satu kalimat** di riwayat (v1.7, tindak lanjut uji SUS)
 - **Ekspor/impor** riwayat (file JSON) untuk pindah HP
 - **Privasi**: persetujuan saat pertama dipakai, halaman Kebijakan Privasi (selaras UU No. 27/2022 tentang PDP), konfirmasi persetujuan peserta sebelum petugas menyimpan riwayat, hapus per kunjungan/per peserta/semua data
 - Isian opsional tekanan darah, gula darah (puasa / 2 jam setelah makan), dan kolesterol total

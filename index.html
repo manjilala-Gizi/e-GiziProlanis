@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>e-GiziProlanis</title>
-<meta name="description" content="Kalkulator status gizi peserta Prolanis (DM Tipe 2 dan Hipertensi) untuk petugas gizi dan peserta.">
+<meta name="description" content="Kalkulator status gizi peserta Prolanis (DM Tipe 2 dan Hipertensi) untuk petugas atau pengelola Prolanis dan peserta.">
 <meta name="theme-color" content="#00756E">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="assets/favicon.png">
@@ -201,6 +201,22 @@ ul.rec li{margin:.25em 0}
 #consent li{margin:.35em 0}
 @media (min-width:600px){#consent{align-items:center}}
 footer.bottom a{color:var(--teal);font-weight:600}
+/* v1.7: ringkasan riwayat & tur singkat */
+.ringkas{background:var(--teal-soft);border-left:5px solid var(--teal);border-radius:12px;padding:12px 14px;margin:6px 0 10px;font-size:1rem;line-height:1.5}
+.ringkas b{color:var(--teal)}
+details.rinci{margin:4px 0 12px}
+details.rinci>summary{cursor:pointer;color:var(--teal);font-weight:600;font-size:.92rem;padding:4px 0}
+#tour{position:fixed;inset:0;background:rgba(29,42,46,.55);z-index:45;display:flex;align-items:flex-end;justify-content:center;padding:12px}
+#tour .box{background:#fff;border-radius:18px;max-width:480px;width:100%;padding:20px;font-size:16px}
+#tour .ic{font-size:2.4rem;line-height:1}
+#tour h2{margin:8px 0 6px}
+#tour p{margin:.3em 0 .6em;color:var(--ink)}
+#tour .dots{display:flex;gap:6px;justify-content:center;margin:10px 0 4px}
+#tour .dots span{width:8px;height:8px;border-radius:50%;background:var(--line)}
+#tour .dots span.on{background:var(--teal);width:20px;border-radius:4px}
+#tour .act{display:flex;gap:10px;margin-top:10px}
+#tour .act .btn{flex:1}
+@media (min-width:600px){#tour{align-items:center}}
 /* Cek Pola Makan (v1.6) */
 #optPola summary small{font-weight:400;color:var(--muted)}
 .pq{margin:14px 0 4px}
@@ -275,6 +291,7 @@ footer.bottom .credit{line-height:1.5;margin-bottom:6px}
       <button class="btn ghost rwybtn" type="button">📈 Riwayat Pemantauan</button>
       <button class="btn ghost privbtn" type="button">🔒 Privasi &amp; Keamanan Data</button>
     </div>
+    <button class="btn ghost" type="button" id="tourBtn" style="width:100%;margin-top:10px;padding:12px">👋 Lihat panduan singkat (1 menit)</button>
     <div class="guide noprint">
       <h2>📘 Panduan Penggunaan</h2>
       <details>
@@ -490,6 +507,19 @@ footer.bottom .credit{line-height:1.5;margin-bottom:6px}
   <div style="margin-top:4px">🔒 Data hanya tersimpan di HP Anda · <a href="#" class="privbtn">Kebijakan Privasi</a></div>
 </footer>
 
+<div id="tour" class="hidden" role="dialog" aria-modal="true" aria-labelledby="tourTitle">
+  <div class="box">
+    <div class="ic" id="tourIc"></div>
+    <h2 id="tourTitle"></h2>
+    <p id="tourTxt"></p>
+    <div class="dots" id="tourDots"></div>
+    <div class="act">
+      <button class="btn ghost" type="button" id="tourSkip">Lewati</button>
+      <button class="btn primary" type="button" id="tourNext">Lanjut</button>
+    </div>
+  </div>
+</div>
+
 <div id="consent" class="hidden" role="dialog" aria-modal="true" aria-labelledby="consentTitle">
   <div class="box">
     <h2 id="consentTitle">🔒 Sebelum mulai</h2>
@@ -518,7 +548,7 @@ footer.bottom .credit{line-height:1.5;margin-bottom:6px}
 <script src="assets/lib/html2canvas.min.js" defer></script>
 <script>
 "use strict";
-const APP_VERSION = "1.6.0";
+const APP_VERSION = "1.7.0";
 document.getElementById("ver").textContent = APP_VERSION;
 
 /* ============================================================
@@ -1314,7 +1344,7 @@ function renderPetugas(o){
   h += `<div class="card"><h2>Rekomendasi Gizi dan Gaya Hidup</h2>`;
   rekomendasi(o,"petugas").forEach(g => { h += `<h3>${g.judul}</h3><ul class="rec">${g.isi.map(x=>`<li>${x}</li>`).join("")}</ul>`; });
   h += `<p class="disclaimer">Rekomendasi bersifat panduan umum dan perlu disesuaikan dengan kondisi klinis, terapi obat, dan kebiasaan makan peserta melalui konseling gizi.</p>
-    <div class="sign"><div>Petugas Gizi,<br><br><br><br>( ${d.petugas ? esc(d.petugas) : "...................................."} )</div></div></div>`;
+    <div class="sign"><div>Petugas,<br><br><br><br>( ${d.petugas ? esc(d.petugas) : "...................................."} )</div></div></div>`;
 
 
   h += printFoot();
@@ -1439,7 +1469,7 @@ function pdfPetugas(o){
   h += pembagianMakanHTML(o, true);
   h += polaHTML(o, true);
   h += `<h2>Rekomendasi gizi dan gaya hidup</h2>` + duaKolom(rekomendasi(o,"petugas"));
-  h += `<div class="sg">Petugas Gizi,<br><br><br>( ${d.petugas ? esc(d.petugas) : "............................................"} )</div>`;
+  h += `<div class="sg">Petugas,<br><br><br>( ${d.petugas ? esc(d.petugas) : "............................................"} )</div>`;
   return h + pdfFoot();
 }
 
@@ -2018,12 +2048,33 @@ function progresHTML(L){
   return `<div class="prog">${out.join("")}</div>`;
 }
 
+/* Satu kalimat ringkasan perubahan (v1.7) */
+function ringkasHTML(L){
+  const a = L[0], z = L[L.length - 1];
+  const hari = Math.round((new Date(z.tgl) - new Date(a.tgl)) / 864e5);
+  const durasi = hari >= 14 ? `${Math.round(hari / 7)} minggu` : `${hari} hari`;
+  const arah = (d, sat, des) => Math.abs(d) < 1e-9 ? `tetap` : `${d < 0 ? "turun" : "naik"} <b>${fmt(Math.abs(d), des)} ${sat}</b>`;
+  const bat = z.jk === "L" ? 90 : 80;
+  const part = [`berat badan ${arah(z.bb - a.bb, "kg", 1)}`, `lingkar perut ${arah(z.lp - a.lp, "cm", 0)}`];
+  const tdA = L.find(r => r.sis && r.dia), tdZ = [...L].reverse().find(r => r.sis && r.dia);
+  if(tdA && tdZ && tdA !== tdZ) part.push(`tekanan darah ${tdA.sis}/${tdA.dia} → <b>${tdZ.sis}/${tdZ.dia}</b> mmHg`);
+  const gA = L.find(r => r.gdp), gZ = [...L].reverse().find(r => r.gdp);
+  if(gA && gZ && gA !== gZ) part.push(`gula darah ${gA.gdp} → <b>${gZ.gdp}</b> mg/dL`);
+  const sisa = [];
+  const m = z.tb / 100, bbMax = 22.9 * m * m;
+  if(z.bb > bbMax) sisa.push(`berat badan masih ${fmt(z.bb - bbMax, 1)} kg di atas batas sehat`);
+  if(z.lp > bat) sisa.push(`lingkar perut masih ${fmt(z.lp - bat, 0)} cm di atas batas`);
+  const kal = part.length > 1 ? part.slice(0, -1).join(", ") + ", dan " + part[part.length - 1] : part[0];
+  return `<div class="ringkas">Dalam <b>${durasi}</b> (${L.length} kunjungan), ${kal}.` +
+    (sisa.length ? `<br><span class="muted">Target berikutnya: ${sisa.join("; ")}.</span>` : `<br><span class="muted">Berat badan dan lingkar perut sudah dalam batas sehat. Pertahankan.</span>`) + `</div>`;
+}
 function detailHTML(grp){
   const L = grp.list, a = L[0], z = L[L.length - 1], n = L.length;
   let h = `<div class="card"><h2>${esc(grp.nama)}</h2>
     <p class="muted" style="margin-top:0">${dxLabel(z.dx)} · ${z.jk === "L" ? "Laki-laki" : "Perempuan"} · ${n} kunjungan${n > 1 ? ` (${tanggalID(a.tgl)} – ${tanggalID(z.tgl)})` : ` (${tanggalID(z.tgl)})`}</p>`;
   if(n >= 2){
-    h += `<h3 style="margin-top:4px">Perubahan sejak kunjungan pertama</h3>` + progresHTML(L);
+    h += `<h3 style="margin-top:4px">Ringkasan perkembangan</h3>${ringkasHTML(L)}
+      <details class="rinci"><summary>Lihat rincian perubahan</summary>${progresHTML(L)}</details>`;
     const lab = L.map(r => tglPendek(r.tgl)), m = z.tb / 100;
     let c = lineChart({judul: "Berat badan (kg)", sub: `Rentang sehat ${fmt(18.5 * m * m)}–${fmt(22.9 * m * m)} kg (TB ${fmt(z.tb, 0)} cm)`, labels: lab,
       series: [{nama: "BB", warna: "#00756E", vals: L.map(r => r.bb)}], band: [18.5 * m * m, 22.9 * m * m]});
@@ -2243,7 +2294,36 @@ function hapusSemuaData(){
   bukaPrivasi();
 }
 document.addEventListener("click", e => { const b = e.target.closest && e.target.closest(".privbtn"); if(b){ e.preventDefault(); bukaPrivasi(); } });
-$("#consentYes").addEventListener("click", setuju);
+$("#consentYes").addEventListener("click", () => { setuju(); bukaTur(false); });
+
+/* ============================================================
+   TUR SINGKAT (v1.7) — muncul sekali setelah persetujuan; bisa diulang dari beranda
+   ============================================================ */
+const TUR = [
+  {ic:"👋", t:"Selamat datang", x:"e-GiziProlanis membantu menilai status gizi peserta Prolanis dalam 4 langkah. Panduan ini hanya 1 menit."},
+  {ic:"📏", t:"1. Isi hasil pengukuran", x:"Pilih <b>Saya Petugas</b> atau <b>Saya Peserta</b>, lalu isi jenis kelamin, usia, berat badan, tinggi badan, lingkar perut, dan penyakit. Isian lain boleh dikosongkan."},
+  {ic:"🧮", t:"2. Ketuk Hitung Status Gizi", x:"Hasil langsung muncul: status gizi, kebutuhan energi, target, dan pesan gizi. Warna <b style='color:var(--ok)'>hijau</b> berarti sehat, <b style='color:#B98500'>kuning</b> perlu perhatian, <b style='color:var(--bad)'>merah</b> perlu diperbaiki."},
+  {ic:"💾", t:"3. Simpan atau bagikan", x:"Ketuk <b>Simpan ke Riwayat</b> agar hasil tersimpan di HP ini, atau <b>Simpan Gambar</b> untuk dikirim lewat WhatsApp."},
+  {ic:"📈", t:"4. Pantau di kunjungan berikutnya", x:"Buka <b>Riwayat</b>, pilih nama peserta, lalu ketuk <b>Ukur lagi</b>. Identitas terisi otomatis dan perkembangannya tampil dalam satu kalimat ringkas."}
+];
+let TUR_I = 0;
+function tampilTur(){
+  const s = TUR[TUR_I];
+  $("#tourIc").textContent = s.ic; $("#tourTitle").textContent = s.t; $("#tourTxt").innerHTML = s.x;
+  $("#tourDots").innerHTML = TUR.map((_, i) => `<span class="${i === TUR_I ? "on" : ""}"></span>`).join("");
+  $("#tourNext").textContent = TUR_I === TUR.length - 1 ? "Mulai pakai" : "Lanjut";
+  $("#tourSkip").classList.toggle("hidden", TUR_I === TUR.length - 1);
+}
+function bukaTur(paksa){
+  let sudah = false; try{ sudah = localStorage.getItem("egp-tour") === "1"; }catch(e){}
+  if(sudah && !paksa) return;
+  TUR_I = 0; tampilTur(); $("#tour").classList.remove("hidden");
+}
+function tutupTur(){ $("#tour").classList.add("hidden"); try{ localStorage.setItem("egp-tour", "1"); }catch(e){} }
+$("#tourNext").addEventListener("click", () => { if(TUR_I < TUR.length - 1){ TUR_I++; tampilTur(); } else tutupTur(); });
+$("#tourSkip").addEventListener("click", tutupTur);
+$("#tourBtn").addEventListener("click", () => bukaTur(true));
+if(sudahSetuju()) bukaTur(false);
 
 // Kembali ke mode terakhir
 try{ const m = localStorage.getItem("egp-mode"); if(m === "petugas" || m === "peserta") setMode(m); }catch(e){}

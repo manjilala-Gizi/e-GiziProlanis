@@ -1,7 +1,7 @@
 {
   "name": "e-GiziProlanis",
   "short_name": "GiziProlanis",
-  "description": "Kalkulator status gizi peserta Prolanis (DM Tipe 2 dan Hipertensi) untuk petugas gizi dan peserta.",
+  "description": "Kalkulator status gizi peserta Prolanis (DM Tipe 2 dan Hipertensi) untuk petugas atau pengelola Prolanis dan peserta.",
   "lang": "id",
   "start_url": "./",
   "scope": "./",
